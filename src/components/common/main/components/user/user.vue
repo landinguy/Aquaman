@@ -8,7 +8,12 @@
         <!--<Icon :size="12" type="arrow-down-b"></Icon>-->
         <div style="line-height:18px;height: 18px">
           <img :src="user_icon" style="height: 18px; float: left"/>
-          <div style=" float: left">&nbsp;{{accountNickname}}</div>
+          <div style=" float: left">
+            &nbsp;
+            admin
+            &nbsp;
+            <!--{{accountNickname}}-->
+          </div>
           <Icon :size="16" type="arrow-down-b"></Icon>
         </div>
       </Button>
@@ -22,7 +27,7 @@
       title="修改密码"
       @on-ok="ok"
       @on-cancel="cancel">
-      <Form  ref="pwd" :model="pwd" :label-width="120">
+      <Form ref="pwd" :model="pwd" :label-width="120">
         <FormItem label="当前登录密码：" prop="currentPwd">
           <Input v-model="pwd.current" type="password" placeholder="请填写当前登录密码"></Input>
         </FormItem>
@@ -38,80 +43,81 @@
 </template>
 
 <script>
-import './user.less'
-import { mapActions,mapGetters } from 'vuex'
-import user_icon from '@/assets/images/user.png'
-export default {
-  name: 'User',
-  data(){
-    return {
-      user_icon,
-      show:false,
-      pwd:{
-        current:"",
-        newPwd:"",
-        confirm:"",
-      },
-    }
-  },
-  methods: {
-    ...mapActions([
-      'handleLogOut',
-      'handleUpdatePassword'
-    ]),
-    handleClick (name) {
-      switch (name) {
-        case 'logout':
-            this.handleLogOut().then(res=>{
-              this.$router.push({name: 'login'});
-              sessionStorage.removeItem("tabFlag");
-            }, err=>{})
-          break;
-        case 'password':
-          this.show = true;
-          break;
-      }
-    },
-    ok () {
-      console.log("-------", this.pwd.current, this.pwd.newPwd, this.pwd.confirm)
-      if(this.pwd.current == ""){
-        this.$Message.error("当前密码不能为空");
-        return;
-      }
-      if(this.pwd.confirm == "" || this.pwd.newPwd == ""){
-        this.$Message.error("新密码密码不能为空");
-        return;
-      }
-      if(this.pwd.newPwd != this.pwd.confirm){
-        this.$Message.error("两次输入密码不一致");
-        return;
-      }
-      if(this.pwd.newPwd.length < 8){
-        this.$Message.error("密码长度不能低于8位");
-        return;
-      }
-      this.handleUpdatePassword({accountId:this.accountId,oriPwd:this.pwd.current, pwd:this.pwd.confirm}).then(
-        res =>{
-          if(res.code == 0){
-            this.$Message.info("密码修改成功，请重新登录");
-            this.changePwd = true;
-            this.$router.push({
-              name: 'login'
-            })
-          }
+  import './user.less'
+  import {mapActions, mapGetters} from 'vuex'
+  import user_icon from '@/assets/images/user.png'
 
+  export default {
+    name: 'User',
+    data() {
+      return {
+        user_icon,
+        show: false,
+        pwd: {
+          current: "",
+          newPwd: "",
+          confirm: "",
         },
-        err =>{
-          this.$Message.info("修改失败");
-        }
-      );
+      }
     },
-    cancel () {
+    methods: {
+      ...mapActions([
+        'handleLogOut',
+        'handleUpdatePassword'
+      ]),
+      handleClick(name) {
+        switch (name) {
+          case 'logout':
+            // this.handleLogOut().then(res=>{
+            this.$router.push({name: 'login'});
+            // sessionStorage.removeItem("tabFlag");
+            // }, err=>{})
+            break;
+          case 'password':
+            this.show = true;
+            break;
+        }
+      },
+      ok() {
+        console.log("-------", this.pwd.current, this.pwd.newPwd, this.pwd.confirm)
+        if (this.pwd.current == "") {
+          this.$Message.error("当前密码不能为空");
+          return;
+        }
+        if (this.pwd.confirm == "" || this.pwd.newPwd == "") {
+          this.$Message.error("新密码密码不能为空");
+          return;
+        }
+        if (this.pwd.newPwd != this.pwd.confirm) {
+          this.$Message.error("两次输入密码不一致");
+          return;
+        }
+        if (this.pwd.newPwd.length < 8) {
+          this.$Message.error("密码长度不能低于8位");
+          return;
+        }
+        this.handleUpdatePassword({accountId: this.accountId, oriPwd: this.pwd.current, pwd: this.pwd.confirm}).then(
+          res => {
+            if (res.code == 0) {
+              this.$Message.info("密码修改成功，请重新登录");
+              this.changePwd = true;
+              this.$router.push({
+                name: 'login'
+              })
+            }
 
+          },
+          err => {
+            this.$Message.info("修改失败");
+          }
+        );
+      },
+      cancel() {
+
+      }
+    },
+    computed: {
+      ...mapGetters(['accountNumber', 'accountId', 'accountNickname'])
     }
-  },
-  computed:{
-    ...mapGetters(['accountNumber','accountId','accountNickname'])
   }
-}
 </script>

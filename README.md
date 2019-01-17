@@ -1,4 +1,4 @@
-# supersms
+# Aquaman
 
 > A Vue.js project
 

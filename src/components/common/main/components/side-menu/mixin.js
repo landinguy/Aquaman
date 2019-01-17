@@ -1,8 +1,8 @@
-import CommonIcon from '@/components/common/common/common-icon'
+// import CommonIcon from '@/components/common/common/common-icon'
 export default {
-  components: {
-    CommonIcon
-  },
+  // components: {
+  //   CommonIcon
+  // },
   methods: {
     showTitle (item) {
       return (item.meta && item.meta.title) || item.name

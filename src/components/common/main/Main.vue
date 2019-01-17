@@ -4,10 +4,8 @@
 
 
     <div style="height: 64px;background-color: #495060;">
-      <img style="margin-left: 16px; margin-top: 8px;height: 48px;display: block;float: left" :src="wotec"
-           key="max-logo"/>
+      <img style="margin-left: 16px; margin-top: 8px;height: 48px;display: block;float: left" :src="wotec" key="max-logo"/>
       <div style="float: right;margin-top: 16px">
-
         <!--</Button>-->
         <user style="float: right;"/>
       </div>
