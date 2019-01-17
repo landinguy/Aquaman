@@ -6,6 +6,7 @@ const templateData = [
   {"id": "4", "name": "模板4", "status": "已失效",},
 ];
 Mock.mock("/tmpls", "post", {msg: '', code: 0, data: templateData});
+Mock.mock("/test", "post", {msg: '', code: 0, data: "jack"});
 
 
 

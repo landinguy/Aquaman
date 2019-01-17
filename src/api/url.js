@@ -20,4 +20,5 @@ export default {
   addGroup: "/sm/account/relate",
   queryRelate: "/sm/account/relate/query",
   resetApiSecret: "/sm/subaccount/resetApiSecret",
+  test: "/test"
 };
