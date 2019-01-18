@@ -4,7 +4,7 @@
 const fs = require('fs');
 
 const dirName = process.argv[2];
-const filename = process.argv[3];
+let filename = process.argv[3];
 
 if (!dirName) {
   console.log('文件夹名称不能为空！');
@@ -15,6 +15,9 @@ if (!filename) {
   console.log('文件名不能为空！');
   console.log('示例：npm run temp test Demo');
   process.exit(0);
+} else {
+  const [a, ...rest] = filename;
+  filename = a.toUpperCase() + rest.join('');
 }
 
 // 页面模版
@@ -40,9 +43,13 @@ const template = `<template>
 </script>`;
 
 const dir = `./src/components/index/`;
-fs.mkdirSync(`${dir}${dirName}`);// mkdir $1
-process.chdir(`${dir}${dirName}`); // cd $1
-fs.writeFileSync(filename + '.vue', template);
-
-console.log(`>>>>>>组件${filename}已创建<<<<<<`);
-process.exit(0);
+fs.stat(`${dir}${dirName}`, (err, stats) => {
+  if (err) {
+    fs.mkdirSync(`${dir}${dirName}`);// mkdir $1
+    // return console.error(err);
+  }
+  process.chdir(`${dir}${dirName}`); // cd $1
+  fs.writeFileSync(filename + '.vue', template);
+  console.log(`>>>>>>组件${filename}已创建<<<<<<`);
+  process.exit(0);
+});

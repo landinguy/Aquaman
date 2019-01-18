@@ -30,68 +30,144 @@ export default [
     component: Main,
     children: [
       {
-        path: '/home_index',
-        name: 'home_index',
+        path: '/home',
+        name: 'home',
         meta: {
-          title: '首页'
+          title: '作业总览'
         },
         component: () => import('@/components/index/home/Home')
       }
     ]
   },
   {
-    path: '/account',
-    name: 'account',
+    path: '/subject',
+    name: 'subject',
     type: 0,
     meta: {
-      title: '账户管理',
+      hide: true,
     },
     component: Main,
     children: [
       {
-        path: 'account_info',
-        name: 'account_info',
+        path: '/subject',
+        name: 'subject',
         meta: {
-          title: '账户信息',
+          title: '科目分析'
         },
-        component: () => import('@/components/index/account/Account.vue')
-      },
-      {
-        path: 'child_account',
-        name: 'child_account',
-        meta: {
-          title: '账户权限管理',
-          // access: ['0']
-        },
-        component: () => import('@/components/index/account/SubAccount.vue')
+        component: () => import('@/components/index/home/Home')
       }
     ]
   },
   {
-    path: '/test',
-    name: 'test',
+    path: '/grade',
+    name: 'grade',
     type: 0,
     meta: {
-      title: '测试',
+      hide: true,
     },
     component: Main,
     children: [
       {
-        path: 'testPage',
-        name: 'testPage',
+        path: '/grade',
+        name: 'grade',
         meta: {
-          title: '测试页面1',
+          title: '年级分析'
         },
-        component: () => import('@/components/index/test/Test.vue')
-      },
+        component: () => import('@/components/index/home/Home')
+      }
+    ]
+  },
+  {
+    path: '/teacher',
+    name: 'teacher',
+    type: 0,
+    meta: {
+      hide: true,
+    },
+    component: Main,
+    children: [
       {
-        path: 'testPage1',
-        name: 'testPage1',
+        path: '/teacher',
+        name: 'teacher',
         meta: {
-          title: '测试页面2',
+          title: '教师分析'
         },
-        component: () => import('@/components/index/test/Test.vue')
+        component: () => import('@/components/index/home/Home')
+      }
+    ]
+  },
+  {
+    path: '/student',
+    name: 'student',
+    type: 0,
+    meta: {
+      hide: true,
+    },
+    component: Main,
+    children: [
+      {
+        path: '/student',
+        name: 'student',
+        meta: {
+          title: '学生分析'
+        },
+        component: () => import('@/components/index/home/Home')
       }
     ]
   }
+  // {
+  //   path: '/account',
+  //   name: 'account',
+  //   type: 0,
+  //   meta: {
+  //     title: '账户管理',
+  //   },
+  //   component: Main,
+  //   children: [
+  //     {
+  //       path: 'account_info',
+  //       name: 'account_info',
+  //       meta: {
+  //         title: '账户信息',
+  //       },
+  //       component: () => import('@/components/index/account/Account.vue')
+  //     },
+  //     {
+  //       path: 'child_account',
+  //       name: 'child_account',
+  //       meta: {
+  //         title: '账户权限管理',
+  //         // access: ['0']
+  //       },
+  //       component: () => import('@/components/index/account/SubAccount.vue')
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/test',
+  //   name: 'test',
+  //   type: 0,
+  //   meta: {
+  //     title: '测试',
+  //   },
+  //   component: Main,
+  //   children: [
+  //     {
+  //       path: 'testPage',
+  //       name: 'testPage',
+  //       meta: {
+  //         title: '测试页面1',
+  //       },
+  //       component: () => import('@/components/index/test/Test.vue')
+  //     },
+  //     {
+  //       path: 'testPage1',
+  //       name: 'testPage1',
+  //       meta: {
+  //         title: '测试页面2',
+  //       },
+  //       component: () => import('@/components/index/test/Test.vue')
+  //     }
+  //   ]
+  // }
 ]

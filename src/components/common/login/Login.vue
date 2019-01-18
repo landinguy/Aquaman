@@ -53,7 +53,7 @@
         //         localStorage.setItem("remember",0)
         //       }
         this.setTabFlag(0);
-        this.$router.push({name: 'home_index'})
+        this.$router.push({name: 'home'})
         //   }
         // },
         // err => {

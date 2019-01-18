@@ -136,24 +136,11 @@
     background-color: white;
     width: 100%;
     height: 100%;
-    padding: 32px 32px 0px;
+    padding: 32px;
   }
 
   .gray {
     color: gray;
-  }
-
-  .row {
-    margin-top: 16px;
-  }
-
-  .right {
-    text-align: right;
-  }
-
-  .userType {
-    font-weight: bold;
-    color: #FF9900;
   }
 
   .red {
