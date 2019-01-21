@@ -114,7 +114,7 @@ export default [
         component: () => import('@/components/index/student/Student')
       }
     ]
-  }
+  },
   // {
   //   path: '/account',
   //   name: 'account',
@@ -143,31 +143,4 @@ export default [
   //     }
   //   ]
   // },
-  // {
-  //   path: '/test',
-  //   name: 'test',
-  //   type: 0,
-  //   meta: {
-  //     title: '测试',
-  //   },
-  //   component: Main,
-  //   children: [
-  //     {
-  //       path: 'testPage',
-  //       name: 'testPage',
-  //       meta: {
-  //         title: '测试页面1',
-  //       },
-  //       component: () => import('@/components/index/test/Test.vue')
-  //     },
-  //     {
-  //       path: 'testPage1',
-  //       name: 'testPage1',
-  //       meta: {
-  //         title: '测试页面2',
-  //       },
-  //       component: () => import('@/components/index/test/Test.vue')
-  //     }
-  //   ]
-  // }
 ]
