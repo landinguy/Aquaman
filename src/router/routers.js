@@ -54,7 +54,7 @@ export default [
         meta: {
           title: '科目分析'
         },
-        component: () => import('@/components/index/home/Home')
+        component: () => import('@/components/index/subject/Subject')
       }
     ]
   },
@@ -73,7 +73,7 @@ export default [
         meta: {
           title: '年级分析'
         },
-        component: () => import('@/components/index/home/Home')
+        component: () => import('@/components/index/grade/Grade')
       }
     ]
   },
@@ -92,7 +92,7 @@ export default [
         meta: {
           title: '教师分析'
         },
-        component: () => import('@/components/index/home/Home')
+        component: () => import('@/components/index/teacher/Teacher')
       }
     ]
   },
@@ -111,7 +111,7 @@ export default [
         meta: {
           title: '学生分析'
         },
-        component: () => import('@/components/index/home/Home')
+        component: () => import('@/components/index/student/Student')
       }
     ]
   }

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bg">
     hello,landing guy!
   </div>
 </template>
@@ -18,3 +18,11 @@
     mounted() {}
   }
 </script>
+<style scoped>
+  .bg {
+    background-color: white;
+    width: 100%;
+    height: 100%;
+    padding: 32px;
+  }
+</style>
