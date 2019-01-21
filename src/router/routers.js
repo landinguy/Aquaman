@@ -54,7 +54,7 @@ export default [
         meta: {
           title: '科目分析'
         },
-        component: () => import('@/components/index/home/Home')
+        component: () => import('@/components/index/subject/Subject')
       }
     ]
   },
@@ -73,7 +73,7 @@ export default [
         meta: {
           title: '年级分析'
         },
-        component: () => import('@/components/index/home/Home')
+        component: () => import('@/components/index/grade/Grade')
       }
     ]
   },
@@ -92,7 +92,7 @@ export default [
         meta: {
           title: '教师分析'
         },
-        component: () => import('@/components/index/home/Home')
+        component: () => import('@/components/index/teacher/Teacher')
       }
     ]
   },
@@ -111,10 +111,10 @@ export default [
         meta: {
           title: '学生分析'
         },
-        component: () => import('@/components/index/home/Home')
+        component: () => import('@/components/index/student/Student')
       }
     ]
-  }
+  },
   // {
   //   path: '/account',
   //   name: 'account',
@@ -143,31 +143,4 @@ export default [
   //     }
   //   ]
   // },
-  // {
-  //   path: '/test',
-  //   name: 'test',
-  //   type: 0,
-  //   meta: {
-  //     title: '测试',
-  //   },
-  //   component: Main,
-  //   children: [
-  //     {
-  //       path: 'testPage',
-  //       name: 'testPage',
-  //       meta: {
-  //         title: '测试页面1',
-  //       },
-  //       component: () => import('@/components/index/test/Test.vue')
-  //     },
-  //     {
-  //       path: 'testPage1',
-  //       name: 'testPage1',
-  //       meta: {
-  //         title: '测试页面2',
-  //       },
-  //       component: () => import('@/components/index/test/Test.vue')
-  //     }
-  //   ]
-  // }
 ]
