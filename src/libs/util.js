@@ -22,7 +22,7 @@ export const getMenuByRouter = (list, access) => {
         icon: (item.meta && item.meta.icon) || '',
         name: item.name,
         meta: item.meta,
-        type: item.type
+        // type: item.type
       }
       if (hasChild(item) && showThisMenuEle(item, access)) {
         obj.children = getMenuByRouter(item.children, access)

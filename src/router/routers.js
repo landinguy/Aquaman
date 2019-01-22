@@ -23,7 +23,6 @@ export default [
   {
     path: '/home',
     name: 'home',
-    type: 0,
     meta: {
       hide: true,
     },
@@ -42,7 +41,6 @@ export default [
   {
     path: '/subject',
     name: 'subject',
-    type: 0,
     meta: {
       hide: true,
     },
@@ -61,7 +59,6 @@ export default [
   {
     path: '/grade',
     name: 'grade',
-    type: 0,
     meta: {
       hide: true,
     },
@@ -80,7 +77,6 @@ export default [
   {
     path: '/teacher',
     name: 'teacher',
-    type: 0,
     meta: {
       hide: true,
     },
@@ -99,7 +95,6 @@ export default [
   {
     path: '/student',
     name: 'student',
-    type: 0,
     meta: {
       hide: true,
     },
@@ -115,10 +110,51 @@ export default [
       }
     ]
   },
+  {
+    path: '/system',
+    name: 'system',
+    meta: {
+      title: '系统管理',
+    },
+    component: Main,
+    children: [
+      {
+        path: 'school',
+        name: 'schoolManage',
+        meta: {
+          title: '学校管理',
+        },
+        component: () => import('@/components/index/system/school/School')
+      },
+      {
+        path: 'class',
+        name: 'classManage',
+        meta: {
+          title: '班级管理',
+        },
+        component: () => import('@/components/index/system/class/Class')
+      },
+      {
+        path: 'teacher',
+        name: 'teacherManage',
+        meta: {
+          title: '教师管理',
+        },
+        component: () => import('@/components/index/system/teacher/Teacher')
+      },
+      {
+        path: 'student',
+        name: 'studentManage',
+        meta: {
+          title: '学生管理',
+        },
+        component: () => import('@/components/index/system/student/Student')
+      }
+    ]
+  },
   // {
   //   path: '/account',
   //   name: 'account',
-  //   type: 0,
   //   meta: {
   //     title: '账户管理',
   //   },

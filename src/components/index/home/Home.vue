@@ -6,13 +6,13 @@
     </div>
     <Row type="flex" justify="space-between">
       <Col span="7">
-        <Table :columns="columns1" :data="data"></Table>
+        <Table :columns="columns1" :data="data1"></Table>
       </Col>
       <Col span="7">
-        <Table :columns="columns2" :data="data"></Table>
+        <Table :columns="columns2" :data="data2"></Table>
       </Col>
       <Col span="7">
-        <Table :columns="columns3" :data="data"></Table>
+        <Table :columns="columns3" :data="data3"></Table>
       </Col>
     </Row>
     <div class="teacher">
@@ -37,23 +37,58 @@
       return {
         columns1: [
           {
-            title: '批改情况',
-            align: 'center'
+            title: '发布作业情况',
+            align: 'center',
+            children: [
+              {
+                title: '教师姓名',
+                key: 'name',
+                align: 'center'
+              },
+              {
+                title: '次数',
+                key: 'number',
+                align: 'center'
+              }
+            ]
           }
         ],
         columns2: [
           {
-            title: '评价情况',
-            align: 'center'
+            title: '批改情况',
+            align: 'center',
+            children: [
+              {
+                title: '教师姓名',
+                key: 'name',
+                align: 'center'
+              },
+              {
+                title: '次数',
+                key: 'number',
+                align: 'center'
+              }
+            ]
           }
         ],
         columns3: [
           {
-            title: '活跃程度',
-            align: 'center'
+            title: '评价情况',
+            align: 'center',
+            children: [
+              {
+                title: '学生姓名',
+                key: 'name',
+                align: 'center'
+              },
+              {
+                title: '次数',
+                key: 'number',
+                align: 'center'
+              }
+            ]
           }
         ],
-        data: [],
         columns4: [
           {
             title: '分析项目',
@@ -82,6 +117,48 @@
           {
             title: '迄今为止',
             key: 'a7'
+          }
+        ],
+        data1: [
+          {
+            name: 'xxx',
+            number: '12',
+          },
+          {
+            name: 'xxx',
+            number: '10',
+          },
+          {
+            name: 'xxx',
+            number: '9',
+          }
+        ],
+        data2: [
+          {
+            name: 'xxx',
+            number: '12',
+          },
+          {
+            name: 'xxx',
+            number: '10',
+          },
+          {
+            name: 'xxx',
+            number: '9',
+          }
+        ],
+        data3: [
+          {
+            name: 'xxx',
+            number: '12',
+          },
+          {
+            name: 'xxx',
+            number: '10',
+          },
+          {
+            name: 'xxx',
+            number: '9',
           }
         ],
         data4: []
@@ -123,7 +200,7 @@
 
   .title {
     text-align: center;
-    margin-bottom: 16px;
+    margin-bottom: 32px;
 
     p {
       position: relative;
@@ -132,7 +209,8 @@
   }
 
   .teacher, .student {
-    margin-top: 16px;
+    margin-top: 32px;
+
     h3 {
       margin-bottom: 5px;
     }
