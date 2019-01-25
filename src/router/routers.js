@@ -127,6 +127,14 @@ export default [
         component: () => import('@/components/index/system/school/School')
       },
       {
+        path: 'grade',
+        name: 'gradeManage',
+        meta: {
+          title: '年级管理',
+        },
+        component: () => import('@/components/index/system/grade/Grade')
+      },
+      {
         path: 'class',
         name: 'classManage',
         meta: {
