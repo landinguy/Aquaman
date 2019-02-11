@@ -15,6 +15,7 @@
   import LoginForm from './components/login-form/index'
   import {mapActions, mapMutations} from 'vuex'
   import bg from '@/assets/images/login_bg.jpg'
+  import axios from 'axios'
 
   export default {
     data() {
@@ -37,27 +38,12 @@
         this.$refs.loginForm.handleSubmit()
       },
       handleSubmit({username, password}) {
-        this.handleLogin({username, password}).then(
-          res => {
-            console.log(res.data);
-            if (res.code == 0) {
-              // if (remember == true) {
-              //   localStorage.setItem("userName", userName)
-              //   localStorage.setItem("password", password)
-              //   localStorage.setItem("remember", 1)
-              // } else {
-              //   localStorage.setItem("userName", null)
-              //   localStorage.setItem("password", null)
-              //   localStorage.setItem("remember", 0)
-              // }
-              this.setTabFlag(0);
-              this.$router.push({name: 'home'})
-            }
-          },
-          err => {
-            console.log(err)
-          }
-        );
+        this.handleLogin({
+          username,
+          password
+        }).then(res => {
+          if (res) this.$router.push({name: 'home'})
+        }).catch(err => console.log(err));
       }
     }
   }

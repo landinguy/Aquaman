@@ -1,5 +1,7 @@
 import axios from '@/libs/axios'
 import url from './url'
+import ax from 'axios'
+import baseUrl from "../libs/url"
 
 export const login = ({username, password}) => {
   const rest = {
@@ -13,11 +15,14 @@ export const login = ({username, password}) => {
     password,
     ...rest
   };
-  return axios.request({
-    url: url.login,
-    data: data,
-    method: 'post',
-    contentType: 'application/x-www-form-urlencoded'
+  return ax({
+    method: "post",
+    url: baseUrl.base + url.login,
+    params: data,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic Ynl0ZWNvZGVzLXdlYi1jbGllbnQ6ZDNlYjM1ZjktNmJiMC00NTBmLThmMDEtZjMwYWZiN2VlMjhk'
+    }
   })
 }
 

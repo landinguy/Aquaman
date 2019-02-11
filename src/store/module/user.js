@@ -95,9 +95,7 @@ export default {
           // commit('setSuperMsg', res.data.superMsg);
           // commit('setSimpleMsg', res.data.simpleMsg);
           resolve(res)
-        }).catch(err => {
-          reject(err)
-        })
+        }).catch(err => reject(err))
       })
     },
     // 退出登录
@@ -112,6 +110,5 @@ export default {
         })
       })
     },
-
   }
 }
