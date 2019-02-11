@@ -1,7 +1,7 @@
 <template>
   <Form ref="loginForm" :model="form" :rules="rules">
-    <FormItem prop="userName">
-      <Input v-model="form.userName" autofocus placeholder="请输入用户名">
+    <FormItem prop="username">
+      <Input v-model="form.username" autofocus placeholder="请输入用户名">
         <span slot="prepend">
           <Icon :size="16" type="person"></Icon>
         </span>
@@ -14,9 +14,9 @@
         </span>
       </Input>
     </FormItem>
-    <FormItem>
-      <Checkbox v-model="form.remember">记住我（网吧或他人电脑上请勿勾选）</Checkbox>
-    </FormItem>
+    <!--<FormItem>-->
+      <!--<Checkbox v-model="form.remember">记住我（网吧或他人电脑上请勿勾选）</Checkbox>-->
+    <!--</FormItem>-->
     <FormItem>
       <Button @click="handleSubmit" type="primary" long>登录</Button>
     </FormItem>
@@ -47,7 +47,7 @@ export default {
   data () {
     return {
       form: {
-        userName: '',
+        username: '',
         password: '',
         remember:false
       }
@@ -56,7 +56,7 @@ export default {
   computed: {
     rules () {
       return {
-        userName: this.userNameRules,
+        username: this.userNameRules,
         password: this.passwordRules
       }
     }
@@ -65,11 +65,11 @@ export default {
     var record = localStorage.getItem("remember")
 
     if(record == 1){
-      var userName = localStorage.getItem("userName")
+      var username = localStorage.getItem("username")
       var password = localStorage.getItem("password")
-      console.log(userName,password)
-      if(userName != null){
-        this.form.userName = userName
+      console.log(username,password)
+      if(username != null){
+        this.form.username = username
       }
       if(password != null){
         this.form.password = password
@@ -85,9 +85,9 @@ export default {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.$emit('on-success-valid', {
-            userName: this.form.userName,
+            username: this.form.username,
             password: this.form.password,
-            remember:this.form.remember
+            // remember:this.form.remember
           })
         }
       })

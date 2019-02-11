@@ -8,7 +8,7 @@ import iView from 'iview'
 import 'iview/dist/styles/iview.css'
 import '../static/common.less'
 import axios from 'axios'
-require('@/mock');
+// require('@/mock');
 
 Vue.use(iView);
 

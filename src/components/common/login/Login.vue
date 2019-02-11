@@ -36,30 +36,28 @@
         console.log("enter login")
         this.$refs.loginForm.handleSubmit()
       },
-      handleSubmit({userName, password, remember}) {
-        // this.handleLogin({username: userName, passwd: password}).then(
-        //   res => {
-        //     console.log(res.data);
-        //     if (res.code == 0) {
-        //       if(remember == true){
-        //         localStorage.setItem("userName", userName)
-        //         localStorage.setItem("password",password)
-        //         localStorage.setItem("remember",1)
-        //       }
-        //       else
-        //       {
-        //         localStorage.setItem("userName",null)
-        //         localStorage.setItem("password",null)
-        //         localStorage.setItem("remember",0)
-        //       }
-        this.setTabFlag(0);
-        this.$router.push({name: 'home'})
-        //   }
-        // },
-        // err => {
-        //   console.log(err)
-        // }
-        // );
+      handleSubmit({username, password}) {
+        this.handleLogin({username, password}).then(
+          res => {
+            console.log(res.data);
+            if (res.code == 0) {
+              // if (remember == true) {
+              //   localStorage.setItem("userName", userName)
+              //   localStorage.setItem("password", password)
+              //   localStorage.setItem("remember", 1)
+              // } else {
+              //   localStorage.setItem("userName", null)
+              //   localStorage.setItem("password", null)
+              //   localStorage.setItem("remember", 0)
+              // }
+              this.setTabFlag(0);
+              this.$router.push({name: 'home'})
+            }
+          },
+          err => {
+            console.log(err)
+          }
+        );
       }
     }
   }

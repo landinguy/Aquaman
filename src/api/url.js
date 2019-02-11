@@ -1,8 +1,8 @@
 export default {
   base: "",
   //登录
-  login: "/sm/login",
-  logout: "/sm/logout",
+  login: "/api/uaa/oauth/token",
+  logout: "/api/uaa/logout",
   //首页
   homeTotal: "/sm/index/total/",
   homeTrend: "/sm/index/trend/",
