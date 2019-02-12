@@ -8,12 +8,7 @@
         <!--<Icon :size="12" type="arrow-down-b"></Icon>-->
         <div style="line-height:18px;height: 18px">
           <img :src="user_icon" style="height: 18px; float: left"/>
-          <div style=" float: left">
-            &nbsp;
-            admin
-            &nbsp;
-            <!--{{accountNickname}}-->
-          </div>
+          <div style=" float: left">{{accountNickname}}</div>
           <Icon :size="16" type="arrow-down-b"></Icon>
         </div>
       </Button>
@@ -68,10 +63,10 @@
       handleClick(name) {
         switch (name) {
           case 'logout':
-            // this.handleLogOut().then(res=>{
-            this.$router.push({name: 'login'});
-            // sessionStorage.removeItem("tabFlag");
-            // }, err=>{})
+            let token = 'Bearer ' + this.accessToken;
+            this.handleLogOut({token}).then(res => {
+              if (res.status == 200) this.$router.push({name: 'login'});
+            }).catch(err => console.log(err));
             break;
           case 'password':
             this.show = true;
@@ -117,7 +112,7 @@
       }
     },
     computed: {
-      ...mapGetters(['accountNumber', 'accountId', 'accountNickname'])
+      ...mapGetters(['accountNumber', 'accountId', 'accountNickname', 'accessToken'])
     }
   }
 </script>

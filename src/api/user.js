@@ -26,11 +26,12 @@ export const login = ({username, password}) => {
   })
 }
 
-export const logout = () => {
-  const data = {}
-  return axios.request({
-    url: url.logout,
-    data: data,
-    method: 'post'
+export const logout = ({token}) => {
+  return ax({
+    method: "post",
+    url: baseUrl.base + url.logout,
+    headers: {
+      'Authorization': token
+    }
   })
 }

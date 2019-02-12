@@ -71,13 +71,13 @@ class httpRequest {
   }
 
   // 创建实例
-  create(contentType) {
+  create() {
     let conf = {
       baseURL: baseUrl.base,//baseUrl
       timeout: 10000,
       withCredentials: true,
       headers: {
-        'Content-Type': contentType,
+        'Content-Type': 'application/json; charset=utf-8',
         'Authorization': 'Basic Ynl0ZWNvZGVzLXdlYi1jbGllbnQ6ZDNlYjM1ZjktNmJiMC00NTBmLThmMDEtZjMwYWZiN2VlMjhk'
       }
     }
@@ -92,8 +92,7 @@ class httpRequest {
   // 请求实例
   request(options) {
     console.log("options", options);
-    let contentType = options.contentType ? options.contentType : 'application/json; charset=utf-8';
-    let instance = this.create(contentType);
+    let instance = this.create();
     // options.url =  options.url + "?m=" + sessionStorage.getItem("tab")
     this.interceptors(instance, options.url);
     options = Object.assign({}, options);

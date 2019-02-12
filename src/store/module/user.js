@@ -99,15 +99,15 @@ export default {
       })
     },
     // 退出登录
-    handleLogOut({state, commit}) {
+    handleLogOut({state, commit}, {token}) {
       return new Promise((resolve, reject) => {
-        logout().then(res => {
-          commit('setAccountId', '');
-          commit('setAccountNumber', '');
+        logout({token}).then(res => {
+          sessionStorage.removeItem('accountId');
+          sessionStorage.removeItem('accountNickname');
+          sessionStorage.removeItem('roleId');
+          sessionStorage.removeItem('accessToken');
           resolve(res)
-        }).catch(err => {
-          reject(err)
-        })
+        }).catch(err => reject(err))
       })
     },
   }
