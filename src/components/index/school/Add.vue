@@ -38,17 +38,13 @@
       <FormItem label="校徽图片">
         <Upload ref="upload"
                 :action="uploadUrl"
-                :format="getFormat"
+                :format="['jpg','jpeg','png']"
                 :show-upload-list="false"
                 :before-upload="handleBeforeUpload"
                 :on-success="handleSuccess"
-                :data="extraParam"
                 :with-credentials="true"
                 style="display: inline-block">
-          <a @click="setType('PIC')">
-            <Icon type="image" size="40"></Icon>
-            <p>上传图片</p>
-          </a>
+          <Button type="ghost" icon="ios-cloud-upload-outline">上传文件</Button>
         </Upload>
       </FormItem>
     </Form>
@@ -67,6 +63,7 @@
   import axios from 'axios';
   import url from '@/api/url'
   import baseUrl from "@/libs/url"
+  import {post} from "@/api/ax";
 
   export default {
     name: 'Add',
@@ -96,6 +93,25 @@
       }
     },
     methods: {
+      handleBeforeUpload(file) {
+        let index = file.name.lastIndexOf(".");
+        let type = file.name.substring(index + 1);
+
+        let arr = ['jpg', 'jpeg', 'png'];
+        if (arr.indexOf(type.toLowerCase()) == -1) {
+          this.$Message.error('请上传jpg、png、jpeg图片文件');
+          return false;
+        }
+      },
+      handleSuccess(res, file) {
+        if (res.data) {
+          console.log("res ->" + JSON.stringify(res.data));
+          this.formData.badge = res.data;
+          this.$Message.success('上传成功');
+        } else {
+          this.$Message.error('上传失败');
+        }
+      },
       back() {
         this.$parent.content = 1;
       },
@@ -103,6 +119,9 @@
         this.$refs.form.validate((valid) => {
           if (valid) {
             this.disableFlag = true;
+            post(url.addSchool, this.formData).then(res => {
+
+            }).catch(err => console.log(err))
           }
         })
       },
