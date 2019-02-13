@@ -20,5 +20,12 @@ export default {
   addGroup: "/sm/account/relate",
   queryRelate: "/sm/account/relate/query",
   resetApiSecret: "/sm/subaccount/resetApiSecret",
-  test: "/test"
+  test: "/test",
+
+  //学校管理
+  addSchool: '/api/management/school',
+
+  //上传图片
+  uploadImg: '/image/upload'
+
 };

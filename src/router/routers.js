@@ -119,14 +119,6 @@ export default [
     component: Main,
     children: [
       {
-        path: 'school',
-        name: 'schoolManage',
-        meta: {
-          title: '学校管理',
-        },
-        component: () => import('@/components/index/system/school/School')
-      },
-      {
         path: 'grade',
         name: 'gradeManage',
         meta: {
@@ -160,6 +152,32 @@ export default [
       }
     ]
   },
+  {
+    path: '/school',
+    name: 'school',
+    meta: {
+      title: '学校管理',
+    },
+    component: Main,
+    children: [
+      {
+        path: 'addSchool',
+        name: 'addSchool',
+        meta: {
+          title: '添加学校',
+        },
+        component: () => import('@/components/index/school/Add')
+      },
+      {
+        path: 'schoolList',
+        name: 'schoolList',
+        meta: {
+          title: '学校列表',
+        },
+        component: () => import('@/components/index/school/SchoolList')
+      }
+    ]
+  }
   // {
   //   path: '/account',
   //   name: 'account',

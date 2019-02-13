@@ -20,7 +20,7 @@
     <!--</div>-->
 
     <div>
-      <Button type="primary" @click="showModal">
+      <Button type="primary" @click="toAddPage">
         <Icon type="plus"></Icon>
         添加
       </Button>
@@ -29,7 +29,6 @@
       <Table stripe border :columns="columns" :data="tableData"></Table>
       <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>
     </div>
-    <Add ref="AddVue"></Add>
   </div>
 </template>
 <script>
@@ -40,7 +39,7 @@
   import Add from './Add.vue'
 
   export default {
-    name: 'School',
+    name: 'SchoolList',
     data() {
       return {
         accountData: [],
@@ -186,8 +185,8 @@
       Add
     },
     methods: {
-      showModal() {
-        this.$refs.AddVue.setData("添加", null);
+      toAddPage() {
+        this.$router.push({name: 'addSchool'})
       },
       changePage(n) {
         this.params.pageNo = n;
