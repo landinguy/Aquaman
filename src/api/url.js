@@ -25,6 +25,13 @@ export default {
   //学校管理
   addSchool: '/api/management/school',
 
+  //年级管理
+  addGrade: '/api/management/grade',
+
+  //班级管理
+  addClazz: '/api/management/clazz',
+
+
   //上传图片
   uploadImg: '/image/upload'
 

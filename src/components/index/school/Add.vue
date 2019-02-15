@@ -120,6 +120,27 @@
           if (valid) {
             this.disableFlag = true;
             post(url.addSchool, this.formData).then(res => {
+              console.log("-----------", res);
+
+              this.$Message.success('提交成功');
+              // if (res.code == 0) {
+              //   this.$Message.success({
+              //     content: '提交成功',
+              //     duration: 1,
+              //     onClose: () => {
+              //       if (this.op == 'modify' || this.op == 'copy') {
+              //         this.$parent.content = 1;
+              //         this.$parent.search();
+              //       } else {
+              //         this.$router.push({name: 'template_list'});
+              //       }
+              //     }
+              //   })
+              // } else {
+              //   this.$Message.error(res.msg ? res.msg : '提交失败');
+              //   this.disableFlag = false;
+              // }
+
 
             }).catch(err => console.log(err))
           }
