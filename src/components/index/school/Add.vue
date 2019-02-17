@@ -71,7 +71,6 @@
       return {
         uploadUrl: baseUrl.base + url.uploadImg,
         disableFlag: false,
-        fileName: '',
         op: '',
         formData: {
           name: '',
@@ -82,10 +81,9 @@
           schoolTypeCode: '0',
           address: '',
           website: '',
-          badge: '',
+          badge: '/flow1/M00/00/1A/Cl_FqlxiQs2EVBeWAAAAAF4GtOc494.jpg',
           description: '',
         },
-        file: null,
         id: '',
         formValidate: {
           name: [{required: true, message: '请填写学校名称', trigger: 'blur'}]

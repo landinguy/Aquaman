@@ -78,7 +78,7 @@ class httpRequest {
       withCredentials: true,
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
-        'Authorization': 'Basic Ynl0ZWNvZGVzLXdlYi1jbGllbnQ6ZDNlYjM1ZjktNmJiMC00NTBmLThmMDEtZjMwYWZiN2VlMjhk'
+        'Authorization': 'Bearer ' + sessionStorage.getItem('accessToken')
       }
     }
     return Axios.create(conf)

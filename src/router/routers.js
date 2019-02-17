@@ -39,74 +39,44 @@ export default [
     ]
   },
   {
-    path: '/subject',
-    name: 'subject',
+    path: '/analysis',
+    name: 'analysis',
     meta: {
-      hide: true,
+      title: '分析管理',
     },
     component: Main,
     children: [
       {
-        path: '/subject',
+        path: 'subject',
         name: 'subject',
         meta: {
           title: '科目分析'
         },
-        component: () => import('@/components/index/subject/Subject')
-      }
-    ]
-  },
-  {
-    path: '/grade',
-    name: 'grade',
-    meta: {
-      hide: true,
-    },
-    component: Main,
-    children: [
+        component: () => import('@/components/index/analysis/subject/Subject')
+      },
       {
-        path: '/grade',
+        path: 'grade',
         name: 'grade',
         meta: {
           title: '年级分析'
         },
-        component: () => import('@/components/index/grade/Grade')
-      }
-    ]
-  },
-  {
-    path: '/teacher',
-    name: 'teacher',
-    meta: {
-      hide: true,
-    },
-    component: Main,
-    children: [
+        component: () => import('@/components/index/analysis/grade/Grade')
+      },
       {
-        path: '/teacher',
+        path: 'teacher',
         name: 'teacher',
         meta: {
           title: '教师分析'
         },
-        component: () => import('@/components/index/teacher/Teacher')
-      }
-    ]
-  },
-  {
-    path: '/student',
-    name: 'student',
-    meta: {
-      hide: true,
-    },
-    component: Main,
-    children: [
+        component: () => import('@/components/index/analysis/teacher/Teacher')
+      },
       {
-        path: '/student',
+        path: 'student',
         name: 'student',
         meta: {
           title: '学生分析'
         },
-        component: () => import('@/components/index/student/Student')
+        component: () => import('@/components/index/analysis/student/Student')
       }
     ]
   },
@@ -118,14 +88,6 @@ export default [
     },
     component: Main,
     children: [
-      {
-        path: 'grade',
-        name: 'gradeManage',
-        meta: {
-          title: '年级管理',
-        },
-        component: () => import('@/components/index/system/grade/Grade')
-      },
       {
         path: 'class',
         name: 'classManage',
@@ -175,6 +137,32 @@ export default [
           title: '学校列表',
         },
         component: () => import('@/components/index/school/SchoolList')
+      }
+    ]
+  },
+  {
+    path: '/grade',
+    name: 'grade',
+    meta: {
+      title: '年级管理',
+    },
+    component: Main,
+    children: [
+      {
+        path: 'addGrade',
+        name: 'addGrade',
+        meta: {
+          title: '添加年级',
+        },
+        component: () => import('@/components/index/grade/Add')
+      },
+      {
+        path: 'gradeList',
+        name: 'gradeList',
+        meta: {
+          title: '年级列表',
+        },
+        component: () => import('@/components/index/grade/GradeList')
       }
     ]
   }
