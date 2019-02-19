@@ -39,9 +39,10 @@
         <Upload ref="upload"
                 :action="uploadUrl"
                 :format="['jpg','jpeg','png']"
-                :show-upload-list="false"
+                :show-upload-list="true"
                 :before-upload="handleBeforeUpload"
                 :on-success="handleSuccess"
+                :on-remove="handleRemove"
                 :with-credentials="true"
                 style="display: inline-block">
           <Button type="ghost" icon="ios-cloud-upload-outline">上传文件</Button>
@@ -81,7 +82,7 @@
           schoolTypeCode: '0',
           address: '',
           website: '',
-          badge: '/flow1/M00/00/1A/Cl_FqlxiQs2EVBeWAAAAAF4GtOc494.jpg',
+          badge: '',
           description: '',
         },
         id: '',
@@ -100,6 +101,9 @@
           this.$Message.error('请上传jpg、png、jpeg图片文件');
           return false;
         }
+        if (this.$refs.upload.fileList.length > 0) {
+          this.$refs.upload.clearFiles();
+        }
       },
       handleSuccess(res, file) {
         if (res.data) {
@@ -110,13 +114,16 @@
           this.$Message.error('上传失败');
         }
       },
+      handleRemove() {
+        this.formData.badge = '';
+      },
       back() {
         this.$parent.content = 1;
       },
       confirm() {
         this.$refs.form.validate((valid) => {
           if (valid) {
-            this.disableFlag = true;
+            // this.disableFlag = true;
             post(url.addSchool, this.formData).then(res => {
               console.log("-----------", res);
 

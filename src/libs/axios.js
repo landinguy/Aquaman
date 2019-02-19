@@ -48,7 +48,7 @@ class httpRequest {
     // 添加拦截器
     instance.interceptors.response.use(res => {
       console.log("response:", res);
-      if (res.status == 200) {
+      if (res.status == 200 || res.status == 201) {
         if (res.data.code == -1) {
           Message.error(res.data.msg)
         }
@@ -58,7 +58,7 @@ class httpRequest {
       Spin.hide()
     }, err => {
       Spin.hide();
-      console.log("err:", err)
+      console.log(err)
 
       if (err.toString().search("401") != -1) {
         window.location.href = '/#/login'

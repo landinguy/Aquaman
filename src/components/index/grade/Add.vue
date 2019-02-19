@@ -14,7 +14,7 @@
     </Form>
     <div class="btn_div">
       <template v-if="op!='view'">
-        <Button type="primary" class="radio_len" @click="confirm" :disabled="disableFlag">提交</Button>
+        <Button type="primary" class="radio_len" @click="confirm">提交</Button>
         <Button type="ghost" class="radio_len" style="margin-left: 20px" @click="cancel">取消</Button>
       </template>
       <template v-if="op=='view'">
@@ -33,7 +33,6 @@
     name: 'Add',
     data() {
       return {
-        disableFlag: false,
         op: '',
         formData: {
           stageId: '1',
@@ -53,30 +52,23 @@
       confirm() {
         this.$refs.form.validate((valid) => {
           if (valid) {
-            this.disableFlag = true;
             post(url.addGrade, this.formData).then(res => {
-              console.log("-----------", res);
-
-              this.$Message.success('提交成功');
-              // if (res.code == 0) {
-              //   this.$Message.success({
-              //     content: '提交成功',
-              //     duration: 1,
-              //     onClose: () => {
-              //       if (this.op == 'modify' || this.op == 'copy') {
-              //         this.$parent.content = 1;
-              //         this.$parent.search();
-              //       } else {
-              //         this.$router.push({name: 'template_list'});
-              //       }
-              //     }
-              //   })
-              // } else {
-              //   this.$Message.error(res.msg ? res.msg : '提交失败');
-              //   this.disableFlag = false;
-              // }
-
-
+              if (res.ret_code && res.ret_code == 400) {
+                this.$Message.error('该年级已存在');
+              } else if (res == 'success') {
+                this.$Message.success({
+                  content: '提交成功',
+                  duration: 1,
+                  onClose: () => {
+                    // if (this.op == 'modify' || this.op == 'copy') {
+                    //   this.$parent.content = 1;
+                    //   this.$parent.search();
+                    // } else {
+                    //   this.$router.push({name: 'template_list'});
+                    // }
+                  }
+                })
+              }
             }).catch(err => console.log(err))
           }
         })

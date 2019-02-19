@@ -89,12 +89,12 @@ export default [
     component: Main,
     children: [
       {
-        path: 'class',
-        name: 'classManage',
+        path: 'addClass',
+        name: 'addClass',
         meta: {
-          title: '班级管理',
+          title: '添加班级',
         },
-        component: () => import('@/components/index/system/class/Class')
+        component: () => import('@/components/index/system/class/Add')
       },
       {
         path: 'teacher',

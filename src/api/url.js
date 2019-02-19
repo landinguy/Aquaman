@@ -27,6 +27,7 @@ export default {
 
   //年级管理
   addGrade: '/api/management/grade',
+  getGradesByStageId: '/api/management/grade/stage/',
 
   //班级管理
   addClazz: '/api/management/clazz',
