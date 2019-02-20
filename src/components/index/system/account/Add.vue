@@ -10,16 +10,30 @@
       <FormItem label="昵称" prop="nickname">
         <Input v-model.trim="formData.nickname" placeholder="请填写昵称"/>
       </FormItem>
-
       <FormItem label="角色" prop="role">
-        <Select v-model="formData.role" multiple>
-          <Option value="PRESIDENT">校长</Option>
-          <Option value="GRADE_LEADER">年级主任</Option>
-          <Option value="CLASS_TEACHER">班主任</Option>
-          <Option value="TEACHER">任课教师</Option>
-          <Option value="STUDENT">学生</Option>
+        <Select v-model="formData.role" multiple @on-change="changeRole">
+          <Option value="PRESIDENT" :disabled="flag1">校长</Option>
+          <Option value="GRADE_LEADER" :disabled="flag1">年级主任</Option>
+          <Option value="CLASS_TEACHER" :disabled="flag1">班主任</Option>
+          <Option value="TEACHER" :disabled="flag1">任课教师</Option>
+          <Option value="STUDENT" :disabled="flag2">学生</Option>
         </Select>
       </FormItem>
+      <FormItem label="学段" prop="stageId">
+        <Select v-model="formData.stageId" @on-change="getGrades">
+          <Option value="1">小学</Option>
+          <Option value="2">初中</Option>
+          <Option value="3">高中</Option>
+        </Select>
+      </FormItem>
+
+      <!--<FormItem label="年级" prop="gradeId" v-if="showFlag1">-->
+        <!--<Select v-model="formData.gradeId">-->
+          <!--<Option v-for="item in grades" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
+        <!--</Select>-->
+      <!--</FormItem>-->
+
+
     </Form>
     <div class="btn_div">
       <template v-if="op!='view'">
@@ -48,6 +62,8 @@
           password: '',
           nickname: '',
           role: [],
+          stageId: '1',
+          gradeId: '',
         },
         id: '',
         formValidate: {
@@ -55,10 +71,24 @@
           password: [{required: true, message: '请填写密码', trigger: 'blur'}],
           nickname: [{required: true, message: '请填写昵称', trigger: 'blur'}],
           role: [{required: true, type: 'array', min: 1, message: '请选择至少一个角色', trigger: 'change'}],
+          stageId: [{required: true, message: '请选择学段', trigger: 'change'}],
+          gradeId: [{required: true, message: '请选择年级', trigger: 'change'}],
         },
+        flag1: false,
+        flag2: false,
+        grades: []
       }
     },
     methods: {
+      changeRole(val) {
+        if (val.length > 0 && val.indexOf('STUDENT') != -1) {
+          this.flag1 = true;
+        } else if (val.length == 0) {
+          this.flag2 = this.flag1 = false;
+        } else {
+          this.flag2 = true;
+        }
+      },
       back() {
         this.$parent.content = 1;
       },
@@ -101,6 +131,16 @@
           this.id = data.id;
           this.formData.content = data.content;
         }
+      },
+      getGrades() {
+        this.grades = [];
+        this.formData.gradeId = '';
+        let stageId = this.formData.stageId;
+        get(url.getGradesByStageId + stageId, {}).then(res => {
+          if (res) {
+            res.forEach(item => this.grades.push({label: item.gradeName, value: item.gradeId}))
+          }
+        }).catch(err => console.log(err))
       }
     },
     mounted() {
