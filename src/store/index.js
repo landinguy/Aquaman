@@ -4,8 +4,6 @@ import Vuex from 'vuex'
 import user from './module/user'
 import app from './module/app'
 import home from './module/home'
-import account from './module/account'
-import subAccount from "./module/subAccount"
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -21,8 +19,6 @@ export default new Vuex.Store({
   modules: {
     user,
     app,
-    home,
-    account,
-    subAccount
+    home
   }
 })

@@ -89,6 +89,22 @@ export default [
     component: Main,
     children: [
       {
+        path: 'addSchool',
+        name: 'addSchool',
+        meta: {
+          title: '添加学校',
+        },
+        component: () => import('@/components/index/system/school/Add')
+      },
+      {
+        path: 'addGrade',
+        name: 'addGrade',
+        meta: {
+          title: '添加年级',
+        },
+        component: () => import('@/components/index/system/grade/Add')
+      },
+      {
         path: 'addClass',
         name: 'addClass',
         meta: {
@@ -97,100 +113,29 @@ export default [
         component: () => import('@/components/index/system/class/Add')
       },
       {
-        path: 'teacher',
-        name: 'teacherManage',
+        path: 'addAccount',
+        name: 'addAccount',
         meta: {
-          title: '教师管理',
+          title: '添加账号',
         },
-        component: () => import('@/components/index/system/teacher/Teacher')
+        component: () => import('@/components/index/system/account/Add')
       },
-      {
-        path: 'student',
-        name: 'studentManage',
-        meta: {
-          title: '学生管理',
-        },
-        component: () => import('@/components/index/system/student/Student')
-      }
-    ]
-  },
-  {
-    path: '/school',
-    name: 'school',
-    meta: {
-      title: '学校管理',
-    },
-    component: Main,
-    children: [
-      {
-        path: 'addSchool',
-        name: 'addSchool',
-        meta: {
-          title: '添加学校',
-        },
-        component: () => import('@/components/index/school/Add')
-      },
-      {
-        path: 'schoolList',
-        name: 'schoolList',
-        meta: {
-          title: '学校列表',
-        },
-        component: () => import('@/components/index/school/SchoolList')
-      }
-    ]
-  },
-  {
-    path: '/grade',
-    name: 'grade',
-    meta: {
-      title: '年级管理',
-    },
-    component: Main,
-    children: [
-      {
-        path: 'addGrade',
-        name: 'addGrade',
-        meta: {
-          title: '添加年级',
-        },
-        component: () => import('@/components/index/grade/Add')
-      },
-      {
-        path: 'gradeList',
-        name: 'gradeList',
-        meta: {
-          title: '年级列表',
-        },
-        component: () => import('@/components/index/grade/GradeList')
-      }
+      // {
+      //   path: 'teacher',
+      //   name: 'teacherManage',
+      //   meta: {
+      //     title: '教师管理',
+      //   },
+      //   component: () => import('@/components/index/system/teacher/Teacher')
+      // },
+      // {
+      //   path: 'student',
+      //   name: 'studentManage',
+      //   meta: {
+      //     title: '学生管理',
+      //   },
+      //   component: () => import('@/components/index/system/student/Student')
+      // }
     ]
   }
-  // {
-  //   path: '/account',
-  //   name: 'account',
-  //   meta: {
-  //     title: '账户管理',
-  //   },
-  //   component: Main,
-  //   children: [
-  //     {
-  //       path: 'account_info',
-  //       name: 'account_info',
-  //       meta: {
-  //         title: '账户信息',
-  //       },
-  //       component: () => import('@/components/index/account/Account.vue')
-  //     },
-  //     {
-  //       path: 'child_account',
-  //       name: 'child_account',
-  //       meta: {
-  //         title: '账户权限管理',
-  //         // access: ['0']
-  //       },
-  //       component: () => import('@/components/index/account/SubAccount.vue')
-  //     }
-  //   ]
-  // },
 ]
