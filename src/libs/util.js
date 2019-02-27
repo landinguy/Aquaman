@@ -257,25 +257,9 @@ export const getTableDataFromArray = (array) => {
  */
 export const showTip = (h, t) => {
   if (!t) t = "----";
-  return h("div", {
-    attrs: {
-      title: t
-    }
-  }, t)
+  return h("div", {attrs: {title: t}}, t)
 };
-/**
- * 完整显示表格数据
- * @param h
- * @param t
- * @returns {*}
- */
-export const showTipNum = (h, t) => {
-  return h("div", {
-    attrs: {
-      title: t
-    }
-  }, t)
-};
+
 /**
  * 时间戳转日期
  * @param timestamp

@@ -34,7 +34,7 @@ export default [
         meta: {
           title: '作业总览'
         },
-        component: () => import('@/components/index/home/Home')
+        component: () => import('@/components/home/Home')
       }
     ]
   },
@@ -52,7 +52,7 @@ export default [
         meta: {
           title: '科目分析'
         },
-        component: () => import('@/components/index/analysis/subject/Subject')
+        component: () => import('@/components/analysis/subject/Subject')
       },
       {
         path: 'grade',
@@ -60,7 +60,7 @@ export default [
         meta: {
           title: '年级分析'
         },
-        component: () => import('@/components/index/analysis/grade/Grade')
+        component: () => import('@/components/analysis/grade/Grade')
       },
       {
         path: 'teacher',
@@ -68,7 +68,7 @@ export default [
         meta: {
           title: '教师分析'
         },
-        component: () => import('@/components/index/analysis/teacher/Teacher')
+        component: () => import('@/components/analysis/teacher/Teacher')
       },
       {
         path: 'student',
@@ -76,7 +76,7 @@ export default [
         meta: {
           title: '学生分析'
         },
-        component: () => import('@/components/index/analysis/student/Student')
+        component: () => import('@/components/analysis/student/Student')
       }
     ]
   },
@@ -94,7 +94,7 @@ export default [
         meta: {
           title: '添加学校',
         },
-        component: () => import('@/components/index/system/school/Add')
+        component: () => import('@/components/system/school/Add')
       },
       {
         path: 'addGrade',
@@ -102,7 +102,7 @@ export default [
         meta: {
           title: '添加年级',
         },
-        component: () => import('@/components/index/system/grade/Add')
+        component: () => import('@/components/system/grade/Add')
       },
       {
         path: 'addClass',
@@ -110,7 +110,7 @@ export default [
         meta: {
           title: '添加班级',
         },
-        component: () => import('@/components/index/system/class/Add')
+        component: () => import('@/components/system/class/Add')
       },
       {
         path: 'addAccount',
@@ -118,7 +118,15 @@ export default [
         meta: {
           title: '添加账号',
         },
-        component: () => import('@/components/index/system/account/Add')
+        component: () => import('@/components/system/account/Add')
+      },
+      {
+        path: 'accountList',
+        name: 'accountList',
+        meta: {
+          title: '账号列表',
+        },
+        component: () => import('@/components/system/account/List')
       },
       // {
       //   path: 'teacher',
@@ -126,7 +134,7 @@ export default [
       //   meta: {
       //     title: '教师管理',
       //   },
-      //   component: () => import('@/components/index/system/teacher/Teacher')
+      //   component: () => import('@/components/system/teacher/Teacher')
       // },
       // {
       //   path: 'student',
@@ -134,7 +142,7 @@ export default [
       //   meta: {
       //     title: '学生管理',
       //   },
-      //   component: () => import('@/components/index/system/student/Student')
+      //   component: () => import('@/components/system/student/Student')
       // }
     ]
   }

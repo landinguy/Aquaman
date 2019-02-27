@@ -20,6 +20,8 @@ export default {
 
   //账号管理
   addAccount: '/api/management/user',
+  getAccountCount: '',
+  getAccounts: '',
 
   getSubjectByStageId: '/api/basic/subjects/stage/'
 
