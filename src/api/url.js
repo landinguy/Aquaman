@@ -23,6 +23,9 @@ export default {
   getAccountCount: '',
   getAccounts: '',
 
-  getSubjectByStageId: '/api/basic/subjects/stage/'
+  getSubjectByStageId: '/api/basic/subjects/stage/',
+
+  //分析管理
+  teacherAnalysis: '/api/management/stat/teacher',
 
 };
