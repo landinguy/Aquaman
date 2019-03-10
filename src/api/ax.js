@@ -8,6 +8,14 @@ export const send = (url, type, data) => {
   })
 }
 
+export const $get = (url, data) => {
+  return axios.request({
+    url: url,
+    params: data,
+    method: 'get'
+  })
+}
+
 export const post = (url, data) => {
   return new Promise((resolve, reject) => {
     send(url, "post", data).then(res => {

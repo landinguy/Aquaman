@@ -2,10 +2,12 @@
   <div class="content">
     <Row type="flex" justify="space-between" style="min-width: 800px">
       <Col span="10">
-        <div id="bar"></div>
+        <div  id="bar"></div>
+        <!--<div v-show="!showBarOrPie" class="nodata">暂无数据</div>-->
       </Col>
       <Col span="10">
-        <div id="pie"></div>
+        <div  id="pie"></div>
+        <!--<div v-show="!showBarOrPie" class="nodata">暂无数据</div>-->
       </Col>
     </Row>
     <div id="line"></div>
@@ -15,17 +17,19 @@
   import url from '@/api/url'
   import {post, get} from "@/api/ax"
 
-
   let echarts = require('echarts');
-
   export default {
     name: 'Chart',
     components: {},
     data() {
       return {
+        showBarOrPie: false,
+        barChart: null,
+        pieChart: null,
+        lineChart: null,
         barOption: {
           title: {
-            text: '',
+            text: '合计：0',
             // subtext: '副标题',
             x: 'center',
             y: 'top'
@@ -48,13 +52,13 @@
           },
           yAxis: {
             type: 'category',
-            data: ['九年级', '八年级', '七年级']
+            data: []
           },
           series: [
             {
               type: 'bar',
               barWidth: 30,//柱图宽度
-              data: [25, 15, 10]
+              data: []
             }
           ]
         },
@@ -71,7 +75,7 @@
           legend: {
             orient: 'vertical',
             left: 'left',
-            data: ['九年级', '八年级', '七年级']
+            data: []
           },
           series: [
             {
@@ -79,11 +83,7 @@
               type: 'pie',
               radius: '55%',
               center: ['50%', '60%'],
-              data: [
-                {value: 25, name: '九年级'},
-                {value: 15, name: '八年级'},
-                {value: 10, name: '七年级'}
-              ],
+              data: [],
               itemStyle: {
                 emphasis: {
                   shadowBlur: 10,
@@ -143,18 +143,31 @@
         }
       }
     },
-    methods: {},
+    methods: {
+      reloadChart({total, barX, barY, pieData}) {
+        this.barOption.series[0].data = barX;
+        this.barOption.yAxis.data = barY;
+        this.barOption.title.text = '合计：' + total;
+        this.barChart.setOption(this.barOption);
+
+        this.pieOption.legend.data = barY;
+        this.pieOption.series[0].data = pieData;
+        this.pieChart.setOption(this.pieOption);
+      }
+    },
     computed: {},
     mounted() {
       let bar = echarts.init(document.getElementById('bar'));
-      this.barOption.title.text = '合计：' + 120;
       bar.setOption(this.barOption);
+      this.barChart = bar;
 
       let pie = echarts.init(document.getElementById('pie'));
       pie.setOption(this.pieOption);
+      this.pieChart = pie;
 
       let line = echarts.init(document.getElementById('line'));
       line.setOption(this.lineOption);
+      this.lineChart = line;
 
       /** 浏览器窗口大小改变时，图表宽高自适应  **/
       setTimeout(() => {
@@ -179,6 +192,14 @@
       height: 300px;
       margin-top: 32px;
       min-width: 800px
+    }
+
+    .nodata {
+      text-align: center;
+      line-height: 300px;
+      color: darkgrey;
+      font-size: 14px;
+
     }
   }
 </style>

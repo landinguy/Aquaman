@@ -27,5 +27,8 @@ export default {
 
   //分析管理
   teacherAnalysis: '/api/management/stat/teacher',
+  gradeAnalysis: '/api/management/stat/grade',
+  clazzAnalysis: '/api/management/stat/clazz',
+  subjectAnalysis: '/api/management/stat/subject',
 
 };

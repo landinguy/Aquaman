@@ -42,7 +42,7 @@
 </template>
 <script>
   import url from '@/api/url';
-  import {post, get} from "@/api/ax";
+  import {post, get, $get} from "@/api/ax";
   import {showTip, timestampToTime} from '@/libs/util'
 
   export default {
@@ -102,7 +102,7 @@
         this.getData();
       },
       getData() {
-        get(url.teacherAnalysis, this.params).then(res => this.tableData = res.data).catch(err => console.log(err))
+        $get(url.teacherAnalysis, this.params).then(res => this.tableData = res.data).catch(err => console.log(err))
       },
       // getTotal() {
       //   const {find} = this.params;
