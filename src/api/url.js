@@ -31,4 +31,8 @@ export default {
   clazzAnalysis: '/api/management/stat/clazz',
   subjectAnalysis: '/api/management/stat/subject',
 
+  //总览页面
+  overview: '/api/management/stat/overview',
+
+
 };

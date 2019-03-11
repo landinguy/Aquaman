@@ -28,67 +28,65 @@
 <script>
   import {mapMutations, mapGetters} from 'vuex'
   import url from '@/api/url'
-  import {post} from "@/api/ax"
+  import {post, get, $get} from "@/api/ax"
+  import {showTip, timestampToTime} from '@/libs/util'
 
   export default {
     name: 'Home',
     components: {},
     data() {
       return {
-        columns1: [
-          {
-            title: '发布作业情况',
-            align: 'center',
-            children: [
-              {
-                title: '教师姓名',
-                key: 'name',
-                align: 'center'
-              },
-              {
-                title: '次数',
-                key: 'number',
-                align: 'center'
-              }
-            ]
-          }
-        ],
-        columns2: [
-          {
-            title: '批改情况',
-            align: 'center',
-            children: [
-              {
-                title: '教师姓名',
-                key: 'name',
-                align: 'center'
-              },
-              {
-                title: '次数',
-                key: 'number',
-                align: 'center'
-              }
-            ]
-          }
-        ],
-        columns3: [
-          {
-            title: '评价情况',
-            align: 'center',
-            children: [
-              {
-                title: '学生姓名',
-                key: 'name',
-                align: 'center'
-              },
-              {
-                title: '次数',
-                key: 'number',
-                align: 'center'
-              }
-            ]
-          }
-        ],
+        columns1: [{
+          title: '布置统计', align: 'center',
+          children: [
+            {
+              title: '教师姓名', key: 'teacherName', align: 'center', ellipsis: true, minWidth: 150,
+              render: (h, params) => showTip(h, params.row.teacherName)
+            },
+            {
+              title: '班级科目', key: 'category', align: 'center', ellipsis: true, minWidth: 150,
+              render: (h, params) => showTip(h, params.row.category)
+            },
+            {
+              title: '次数', key: 'cnt', align: 'center', ellipsis: true, minWidth: 150,
+              render: (h, params) => showTip(h, params.row.cnt)
+            }
+          ]
+        }],
+        columns2: [{
+          title: '批改统计', align: 'center',
+          children: [
+            {
+              title: '教师姓名', key: 'teacherName', align: 'center', ellipsis: true, minWidth: 150,
+              render: (h, params) => showTip(h, params.row.teacherName)
+            },
+            {
+              title: '班级科目', key: 'category', align: 'center', ellipsis: true, minWidth: 150,
+              render: (h, params) => showTip(h, params.row.category)
+            },
+            {
+              title: '次数', key: 'cnt', align: 'center', ellipsis: true, minWidth: 150,
+              render: (h, params) => showTip(h, params.row.cnt)
+            }
+          ]
+        }],
+        columns3: [{
+          title: '评价统计', align: 'center',
+          children: [
+            {
+              title: '教师姓名', key: 'teacherName', align: 'center', ellipsis: true, minWidth: 150,
+              render: (h, params) => showTip(h, params.row.teacherName)
+            },
+            {
+              title: '班级科目', key: 'category', align: 'center', ellipsis: true, minWidth: 150,
+              render: (h, params) => showTip(h, params.row.category)
+            },
+            {
+              title: '次数', key: 'cnt', align: 'center', ellipsis: true, minWidth: 150,
+              render: (h, params) => showTip(h, params.row.cnt)
+            }
+          ]
+        }],
         columns4: [
           {
             title: '分析项目',
@@ -119,73 +117,30 @@
             key: 'a7'
           }
         ],
-        data1: [
-          {
-            name: 'xxx',
-            number: '12',
-          },
-          {
-            name: 'xxx',
-            number: '10',
-          },
-          {
-            name: 'xxx',
-            number: '9',
-          }
-        ],
-        data2: [
-          {
-            name: 'xxx',
-            number: '12',
-          },
-          {
-            name: 'xxx',
-            number: '10',
-          },
-          {
-            name: 'xxx',
-            number: '9',
-          }
-        ],
-        data3: [
-          {
-            name: 'xxx',
-            number: '12',
-          },
-          {
-            name: 'xxx',
-            number: '10',
-          },
-          {
-            name: 'xxx',
-            number: '9',
-          }
-        ],
-        data4: []
+        data1: [], data2: [], data3: [], data4: []
       }
     },
     methods: {
       search() {
-        let today = this.getToday();
-        let st = today + " 00:00:00";
-        let et = today + " 23:59:59";
-        post(url.home + this.accountId, {st: st, et: et}).then(res => {
-          this.mms = res.data.superStats;
-          this.sms = res.data.simpleStats;
-        }).catch(err => console.log(err));
       },
-      getToday() {
-        let date = new Date();
-        let y = date.getFullYear();
-        let m = date.getMonth() + 1;
-        m = m < 10 ? ('0' + m) : m;
-        let d = date.getDate();
-        d = d < 10 ? ('0' + d) : d;
-        return y + '-' + m + '-' + d;
-      }
+      getData(type) {
+        $get(url.overview, {type}).then(res => {
+          let data = res.data;
+          console.log("data#{}", data);
+          if (type == 1) {
+            this.data1 = data;
+          } else if (type == 2) {
+            this.data2 = data;
+          } else if (type == 3) {
+            this.data3 = data;
+          }
+        }).catch(err => console.log(err))
+      },
     },
     mounted() {
-      // this.search();
+      this.getData(1);
+      this.getData(2);
+      this.getData(3);
     },
     computed: {}
   }

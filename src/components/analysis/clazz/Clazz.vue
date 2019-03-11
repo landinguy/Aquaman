@@ -31,11 +31,11 @@
       </div>
     </div>
     <RadioGroup v-model="params.type" @on-change="changeItem" type="button" style="margin-bottom: 32px">
-      <Radio label="1"><span>布置统计</span></Radio>
+      <Radio label="1"><span>发布统计</span></Radio>
       <Radio label="2"><span>批改统计</span></Radio>
       <Radio label="3"><span>评价统计</span></Radio>
     </RadioGroup>
-    <Chart></Chart>
+    <Chart ref="chart"></Chart>
   </div>
 </template>
 <script>
@@ -44,10 +44,11 @@
   import Chart from '@/components/common/chart/Chart'
 
   export default {
-    name: 'Subject',
+    name: 'Clazz',
     components: {Chart},
     data() {
       return {
+        showPie: false,
         params: {
           timeType: '1',
           stageId: '',
@@ -80,17 +81,17 @@
         this.getData();
       },
       getData() {
-        $get(url.subjectAnalysis, this.params).then(res => {
+        $get(url.clazzAnalysis, this.params).then(res => {
           console.log("-----", res.data)
           const {total, stat} = res.data;
           let barX = [];
           let barY = [];
           let pieData = [];
           stat.forEach(item => {
-            const {subjectName, cnt} = item;
+            const {clazzName, cnt} = item;
             barX.push(cnt);
-            barY.push(subjectName);
-            pieData.push({value: cnt, name: subjectName});
+            barY.push(clazzName);
+            pieData.push({value: cnt, name: clazzName});
           })
           this.$refs.chart.reloadChart({total, barX, barY, pieData});
         }).catch(err => console.log(err))
@@ -98,6 +99,7 @@
     },
     computed: {},
     mounted() {
+      this.search();
     }
   }
 </script>

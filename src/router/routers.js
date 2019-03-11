@@ -63,6 +63,14 @@ export default [
         component: () => import('@/components/analysis/grade/Grade')
       },
       {
+        path: 'clazz',
+        name: 'clazz',
+        meta: {
+          title: '班级分析'
+        },
+        component: () => import('@/components/analysis/clazz/Clazz')
+      },
+      {
         path: 'teacher',
         name: 'teacher',
         meta: {
