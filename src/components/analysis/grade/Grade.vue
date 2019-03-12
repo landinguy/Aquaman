@@ -65,18 +65,21 @@
       },
       getData() {
         $get(url.gradeAnalysis, this.params).then(res => {
-          console.log("-----", res.data)
-          const {total, stat} = res.data;
           let barX = [];
           let barY = [];
           let pieData = [];
-          stat.forEach(item => {
-            const {gradeName, cnt} = item;
-            barX.push(cnt);
-            barY.push(gradeName);
-            pieData.push({value: cnt, name: gradeName});
-          })
-          this.$refs.chart.reloadChart({total, barX, barY, pieData});
+          if (res.data) {
+            const {total, stat} = res.data;
+            stat.forEach(item => {
+              const {gradeName, cnt} = item;
+              barX.push(cnt);
+              barY.push(gradeName);
+              pieData.push({value: cnt, name: gradeName});
+            })
+            this.$refs.chart.reloadChart({total, barX, barY, pieData});
+          } else {
+            this.$refs.chart.reloadChart({barX, barY, pieData});
+          }
         }).catch(err => console.log(err))
       },
     },

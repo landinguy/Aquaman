@@ -6,7 +6,7 @@
     <div v-if="content==1">
       <div class="sub">
         <div class="sel">
-          <label>模板名称</label>
+          <label>用户名</label>
           <Input v-model="params.find" placeholder="快速查找" class="width"/>
         </div>
         <div class="sel">

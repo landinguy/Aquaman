@@ -35,7 +35,7 @@
       <Radio label="2"><span>批改统计</span></Radio>
       <Radio label="3"><span>评价统计</span></Radio>
     </RadioGroup>
-    <Chart></Chart>
+    <Chart ref="chart"></Chart>
   </div>
 </template>
 <script>
@@ -81,23 +81,27 @@
       },
       getData() {
         $get(url.subjectAnalysis, this.params).then(res => {
-          console.log("-----", res.data)
-          const {total, stat} = res.data;
           let barX = [];
           let barY = [];
           let pieData = [];
-          stat.forEach(item => {
-            const {subjectName, cnt} = item;
-            barX.push(cnt);
-            barY.push(subjectName);
-            pieData.push({value: cnt, name: subjectName});
-          })
-          this.$refs.chart.reloadChart({total, barX, barY, pieData});
+          if (res.data) {
+            const {total, stat} = res.data;
+            stat.forEach(item => {
+              const {subjectName, cnt} = item;
+              barX.push(cnt);
+              barY.push(subjectName);
+              pieData.push({value: cnt, name: subjectName});
+            })
+            this.$refs.chart.reloadChart({total, barX, barY, pieData});
+          } else {
+            this.$refs.chart.reloadChart({barX, barY, pieData});
+          }
         }).catch(err => console.log(err))
       },
     },
     computed: {},
     mounted() {
+      this.search()
     }
   }
 </script>

@@ -2,7 +2,7 @@
   <div class="bg">
     <div class="title">
       <h2>作业情况总览</h2>
-      <p>——全校总共发布作业16份，其中统一假期作业5份</p>
+      <!--<p>——全校总共发布作业16份，其中统一假期作业5份</p>-->
     </div>
     <Row type="flex" justify="space-between">
       <Col span="7">
@@ -126,7 +126,6 @@
       getData(type) {
         $get(url.overview, {type}).then(res => {
           let data = res.data;
-          console.log("data#{}", data);
           if (type == 1) {
             this.data1 = data;
           } else if (type == 2) {

@@ -2,15 +2,16 @@
   <div class="content">
     <Row type="flex" justify="space-between" style="min-width: 800px">
       <Col span="10">
-        <div  id="bar"></div>
-        <!--<div v-show="!showBarOrPie" class="nodata">暂无数据</div>-->
+        <div v-show="showBarOrPie" id="bar"></div>
+        <div v-show="!showBarOrPie" class="nodata">暂无数据</div>
       </Col>
       <Col span="10">
-        <div  id="pie"></div>
-        <!--<div v-show="!showBarOrPie" class="nodata">暂无数据</div>-->
+        <div v-show="showBarOrPie" id="pie"></div>
+        <div v-show="!showBarOrPie" class="nodata">暂无数据</div>
       </Col>
     </Row>
-    <div id="line"></div>
+    <!--<div id="line"></div>-->
+    <div class="line-nodata">暂无数据</div>
   </div>
 </template>
 <script>
@@ -23,7 +24,7 @@
     components: {},
     data() {
       return {
-        showBarOrPie: false,
+        showBarOrPie: true,
         barChart: null,
         pieChart: null,
         lineChart: null,
@@ -145,14 +146,21 @@
     },
     methods: {
       reloadChart({total, barX, barY, pieData}) {
-        this.barOption.series[0].data = barX;
-        this.barOption.yAxis.data = barY;
-        this.barOption.title.text = '合计：' + total;
-        this.barChart.setOption(this.barOption);
+        console.log("#####{}", barY.length);
+        if (barY.length > 0) {
+          this.showBarOrPie = true;
 
-        this.pieOption.legend.data = barY;
-        this.pieOption.series[0].data = pieData;
-        this.pieChart.setOption(this.pieOption);
+          this.barOption.series[0].data = barX;
+          this.barOption.yAxis.data = barY;
+          this.barOption.title.text = '合计：' + total;
+          this.barChart.setOption(this.barOption);
+
+          this.pieOption.legend.data = barY;
+          this.pieOption.series[0].data = pieData;
+          this.pieChart.setOption(this.pieOption);
+        } else {
+          this.showBarOrPie = false
+        }
       }
     },
     computed: {},
@@ -165,16 +173,16 @@
       pie.setOption(this.pieOption);
       this.pieChart = pie;
 
-      let line = echarts.init(document.getElementById('line'));
-      line.setOption(this.lineOption);
-      this.lineChart = line;
+      // let line = echarts.init(document.getElementById('line'));
+      // line.setOption(this.lineOption);
+      // this.lineChart = line;
 
       /** 浏览器窗口大小改变时，图表宽高自适应  **/
       setTimeout(() => {
         window.onresize = () => {
           bar.resize();
           pie.resize();
-          line.resize();
+          // line.resize();
         }
       }, 200)
     }
@@ -199,7 +207,12 @@
       line-height: 300px;
       color: darkgrey;
       font-size: 14px;
+      /*border: 1px solid black;*/
+    }
 
+    .line-nodata {
+      .nodata;
+      margin-top: 32px;
     }
   }
 </style>

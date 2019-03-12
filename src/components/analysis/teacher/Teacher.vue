@@ -94,7 +94,7 @@
         }).catch(err => console.log(err));
       },
       changeItem() {
-        // this.getData()
+        this.search()
       },
       search() {
         // this.params.pageNo = 1;

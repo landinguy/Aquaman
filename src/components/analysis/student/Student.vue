@@ -1,6 +1,7 @@
 <template>
   <div class="bg">
-    <Chart></Chart>
+    学生分析
+    <!--<Chart ref="chart"></Chart>-->
   </div>
 </template>
 <script>
