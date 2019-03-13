@@ -6,23 +6,23 @@
     </div>
     <Row type="flex" justify="space-between">
       <Col span="7">
-        <Table :columns="columns1" :data="data1"></Table>
+        <Item title="布置统计" :data="data1"></Item>
       </Col>
       <Col span="7">
-        <Table :columns="columns2" :data="data2"></Table>
+        <Item title="批改统计" :data="data2"></Item>
       </Col>
       <Col span="7">
-        <Table :columns="columns3" :data="data3"></Table>
+        <Item title="评价统计" :data="data3"></Item>
       </Col>
     </Row>
     <div class="teacher">
       <h3>教师使用情况分析</h3>
       <Table :columns="columns4" :data="data4"></Table>
     </div>
-    <div class="student">
-      <h3>学生使用情况分析</h3>
-      <Table :columns="columns4" :data="data4"></Table>
-    </div>
+    <!--<div class="student">-->
+    <!--<h3>学生使用情况分析</h3>-->
+    <!--<Table :columns="columns4" :data="data5"></Table>-->
+    <!--</div>-->
   </div>
 </template>
 <script>
@@ -30,116 +30,70 @@
   import url from '@/api/url'
   import {post, get, $get} from "@/api/ax"
   import {showTip, timestampToTime} from '@/libs/util'
+  import Item from './component/Item'
 
   export default {
     name: 'Home',
-    components: {},
+    components: {Item},
     data() {
       return {
-        columns1: [{
-          title: '布置统计', align: 'center',
-          children: [
-            {
-              title: '教师姓名', key: 'teacherName', align: 'center', ellipsis: true, minWidth: 150,
-              render: (h, params) => showTip(h, params.row.teacherName)
-            },
-            {
-              title: '班级科目', key: 'category', align: 'center', ellipsis: true, minWidth: 150,
-              render: (h, params) => showTip(h, params.row.category)
-            },
-            {
-              title: '次数', key: 'cnt', align: 'center', ellipsis: true, minWidth: 150,
-              render: (h, params) => showTip(h, params.row.cnt)
-            }
-          ]
-        }],
-        columns2: [{
-          title: '批改统计', align: 'center',
-          children: [
-            {
-              title: '教师姓名', key: 'teacherName', align: 'center', ellipsis: true, minWidth: 150,
-              render: (h, params) => showTip(h, params.row.teacherName)
-            },
-            {
-              title: '班级科目', key: 'category', align: 'center', ellipsis: true, minWidth: 150,
-              render: (h, params) => showTip(h, params.row.category)
-            },
-            {
-              title: '次数', key: 'cnt', align: 'center', ellipsis: true, minWidth: 150,
-              render: (h, params) => showTip(h, params.row.cnt)
-            }
-          ]
-        }],
-        columns3: [{
-          title: '评价统计', align: 'center',
-          children: [
-            {
-              title: '教师姓名', key: 'teacherName', align: 'center', ellipsis: true, minWidth: 150,
-              render: (h, params) => showTip(h, params.row.teacherName)
-            },
-            {
-              title: '班级科目', key: 'category', align: 'center', ellipsis: true, minWidth: 150,
-              render: (h, params) => showTip(h, params.row.category)
-            },
-            {
-              title: '次数', key: 'cnt', align: 'center', ellipsis: true, minWidth: 150,
-              render: (h, params) => showTip(h, params.row.cnt)
-            }
-          ]
-        }],
         columns4: [
           {
-            title: '分析项目',
-            key: 'a1'
+            title: '分析项目', key: 'name', align: 'center', ellipsis: true, minWidth: 150,
+            render: (h, params) => showTip(h, params.row.name)
           },
           {
-            title: '昨日',
-            key: 'a2'
+            title: '昨日', key: 'yesterday', align: 'center', ellipsis: true, minWidth: 150,
+            render: (h, params) => showTip(h, params.row.yesterday)
           },
           {
-            title: '近7日',
-            key: 'a3'
+            title: '近7日', key: 'week', align: 'center', ellipsis: true, minWidth: 150,
+            render: (h, params) => showTip(h, params.row.week)
           },
           {
-            title: '近30日',
-            key: 'a4'
+            title: '近30日', key: 'month', align: 'center', ellipsis: true, minWidth: 150,
+            render: (h, params) => showTip(h, params.row.month)
           },
           {
-            title: '当前学期',
-            key: 'a5'
+            title: '当前学期', key: 'semester', align: 'center', ellipsis: true, minWidth: 150,
+            render: (h, params) => showTip(h, params.row.semester)
           },
           {
-            title: '当前学年',
-            key: 'a6'
+            title: '当前学年', key: 'year', align: 'center', ellipsis: true, minWidth: 150,
+            render: (h, params) => showTip(h, params.row.year)
           },
           {
-            title: '迄今为止',
-            key: 'a7'
+            title: '迄今为止', key: 'total', align: 'center', ellipsis: true, minWidth: 150,
+            render: (h, params) => showTip(h, params.row.total)
           }
         ],
-        data1: [], data2: [], data3: [], data4: []
+        data1: [], data2: [], data3: [], data4: [], data5: []
       }
     },
     methods: {
       search() {
       },
-      getData(type) {
-        $get(url.overview, {type}).then(res => {
-          let data = res.data;
-          if (type == 1) {
-            this.data1 = data;
-          } else if (type == 2) {
-            this.data2 = data;
-          } else if (type == 3) {
-            this.data3 = data;
-          }
-        }).catch(err => console.log(err))
+      getData() {
+        for (let i = 1; i <= 6; i++) {
+          $get(url.overview, {type: i}).then(res => {
+            let subjectStat = res.data.subjectStat;
+            let homeworkStat = res.data.homeworkStat;
+            if (i == 1) {
+              this.data1 = subjectStat;
+            } else if (i == 2) {
+              this.data2 = subjectStat;
+            } else if (i == 3) {
+              this.data3 = subjectStat;
+            } else if (i == 4 || i == 5 || i == 6) {
+              homeworkStat.name = i == 4 ? '作业布置次数' : i == 5 ? '批改作业次数' : i == 6 ? '评价作业次数' : '';
+              this.data4.push(homeworkStat);
+            }
+          }).catch(err => console.log(err))
+        }
       },
     },
     mounted() {
-      this.getData(1);
-      this.getData(2);
-      this.getData(3);
+      this.getData()
     },
     computed: {}
   }

@@ -42,7 +42,7 @@ const template = `<template>
   }
 </script>`;
 
-const dir = `./src/components/index/`;
+const dir = `./src/components/`;
 fs.stat(`${dir}${dirName}`, (err, stats) => {
   if (err) {
     fs.mkdirSync(`${dir}${dirName}`);// mkdir $1
