@@ -21,20 +21,20 @@ export default [
     },
   },
   {
-    path: '/home',
-    name: 'home',
+    path: '/school',
+    name: 'school',
     meta: {
       hide: true,
     },
     component: Main,
     children: [
       {
-        path: '/home',
-        name: 'home',
+        path: '/info',
+        name: 'info',
         meta: {
-          title: '作业总览'
+          title: '首页'
         },
-        component: () => import('@/components/home/Home')
+        component: () => import('@/components/school/Info')
       }
     ]
   },
@@ -46,6 +46,14 @@ export default [
     },
     component: Main,
     children: [
+      {
+        path: '/overview',
+        name: 'overview',
+        meta: {
+          title: '作业总览'
+        },
+        component: () => import('@/components/analysis/overview/Overview')
+      },
       {
         path: 'subject',
         name: 'subject',
@@ -89,69 +97,89 @@ export default [
     ]
   },
   {
-    path: '/system',
-    name: 'system',
+    path: '/grade',
+    name: 'grade',
     meta: {
-      title: '系统管理',
+      title: '年级管理',
     },
     component: Main,
     children: [
-      {
-        path: 'addSchool',
-        name: 'addSchool',
-        meta: {
-          title: '添加学校',
-        },
-        component: () => import('@/components/system/school/Add')
-      },
       {
         path: 'addGrade',
         name: 'addGrade',
         meta: {
           title: '添加年级',
         },
-        component: () => import('@/components/system/grade/Add')
+        component: () => import('@/components/grade/Add')
       },
+      {
+        path: 'grades',
+        name: 'grades',
+        meta: {
+          title: '年级查询',
+        },
+        component: () => import('@/components/grade/List')
+      },
+    ]
+  },
+  {
+    path: '/class',
+    name: 'class',
+    meta: {
+      title: '班级管理',
+    },
+    component: Main,
+    children: [
       {
         path: 'addClass',
         name: 'addClass',
         meta: {
           title: '添加班级',
         },
-        component: () => import('@/components/system/class/Add')
+        component: () => import('@/components/class/Add')
       },
+      {
+        path: 'classes',
+        name: 'classes',
+        meta: {
+          title: '班级查询',
+        },
+        component: () => import('@/components/class/List')
+      },
+    ]
+  },
+  {
+    path: '/account',
+    name: 'account',
+    meta: {
+      title: '用户管理',
+    },
+    component: Main,
+    children: [
       {
         path: 'addAccount',
         name: 'addAccount',
         meta: {
           title: '添加账号',
         },
-        component: () => import('@/components/system/account/Add')
+        component: () => import('@/components/account/Add')
       },
       {
-        path: 'accountList',
-        name: 'accountList',
+        path: 'students',
+        name: 'students',
         meta: {
-          title: '账号列表',
+          title: '学生查询',
         },
-        component: () => import('@/components/system/account/List')
+        component: () => import('@/components/account/StudentList')
       },
-      // {
-      //   path: 'teacher',
-      //   name: 'teacherManage',
-      //   meta: {
-      //     title: '教师管理',
-      //   },
-      //   component: () => import('@/components/system/teacher/Teacher')
-      // },
-      // {
-      //   path: 'student',
-      //   name: 'studentManage',
-      //   meta: {
-      //     title: '学生管理',
-      //   },
-      //   component: () => import('@/components/system/student/Student')
-      // }
+      {
+        path: 'teachers',
+        name: 'teachers',
+        meta: {
+          title: '教师查询',
+        },
+        component: () => import('@/components/account/TeacherList')
+      },
     ]
   }
 ]

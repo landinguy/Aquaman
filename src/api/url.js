@@ -6,11 +6,13 @@ export default {
 
   //学校管理
   addSchool: '/api/management/school',
+  getSchool: '/api/management/getSchool',
 
   //年级管理
   addGrade: '/api/management/grade',
   getGradesByStageId: '/api/management/grade/stage/',
   getClazzByGradeId: '/api/management/clazz/grade/',
+  getClazzByStageId: '/api/management/clazz/stage/',
 
   //班级管理
   addClazz: '/api/management/clazz',

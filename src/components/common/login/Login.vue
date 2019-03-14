@@ -42,7 +42,7 @@
           username,
           password
         }).then(res => {
-          if (res) this.$router.push({name: 'home'})
+          if (res) this.$router.push({name: 'info'})
         }).catch(err => console.log(err));
       }
     }

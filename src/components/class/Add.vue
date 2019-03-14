@@ -2,20 +2,27 @@
   <div class="bg">
     <Form ref="form" :model="formData" :rules="formValidate" :label-width="100">
       <FormItem label="学段" prop="stageId">
-        <Select v-model="formData.stageId">
+        <Select v-model="formData.stageId" @on-change="getGrades">
           <Option value="1">小学</Option>
           <Option value="2">初中</Option>
           <Option value="3">高中</Option>
         </Select>
       </FormItem>
-      <FormItem label="年级名称" prop="gradeName">
-        <Input v-model.trim="formData.gradeName" placeholder="请填写年级名称"/>
+
+      <FormItem label="年级" prop="gradeId">
+        <Select v-model="formData.gradeId">
+          <Option v-for="item in grades" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        </Select>
+      </FormItem>
+
+      <FormItem label="班级" prop="clazzName">
+        <Input v-model.trim="formData.clazzName" placeholder="请填写班级名称"/>
       </FormItem>
     </Form>
     <div class="btn_div">
       <template v-if="op!='view'">
-        <Button type="primary" class="radio_len" @click="confirm">提交</Button>
-        <Button type="ghost" class="radio_len" style="margin-left: 20px" @click="cancel">取消</Button>
+        <Button type="primary" shape="circle" class="radio_len" @click="confirm">提交</Button>
+        <Button type="ghost" shape="circle" class="radio_len" style="margin-left: 20px" @click="cancel">取消</Button>
       </template>
       <template v-if="op=='view'">
         <Button type="ghost" class="radio_len" style="margin-left: 20px" @click="back">返回</Button>
@@ -27,7 +34,7 @@
   import axios from 'axios';
   import url from '@/api/url'
   import baseUrl from "@/libs/url"
-  import {post} from "@/api/ax";
+  import {post, get} from "@/api/ax";
 
   export default {
     name: 'Add',
@@ -36,13 +43,16 @@
         op: '',
         formData: {
           stageId: '1',
-          gradeName: '',
+          gradeId: '',
+          clazzName: '',
         },
         id: '',
         formValidate: {
           stageId: [{required: true, message: '请选择学段', trigger: 'change'}],
-          gradeName: [{required: true, message: '请填写年级', trigger: 'blur'}]
+          gradeId: [{required: true, message: '请选择年级', trigger: 'change'}],
+          clazzName: [{required: true, message: '请填写班级名称', trigger: 'blur'}]
         },
+        grades: []
       }
     },
     methods: {
@@ -52,9 +62,10 @@
       confirm() {
         this.$refs.form.validate((valid) => {
           if (valid) {
-            post(url.addGrade, this.formData).then(res => {
+            const {stageId, ...rest} = this.formData;
+            post(url.addClazz, rest).then(res => {
               if (res.ret_code && res.ret_code == 400) {
-                this.$Message.error('该年级已存在');
+                this.$Message.error('该班级已存在');
               } else if (res == 'success') {
                 this.$Message.success({
                   content: '提交成功',
@@ -87,9 +98,21 @@
           this.id = data.id;
           this.formData.content = data.content;
         }
+      },
+      getGrades() {
+        this.grades = [];
+        this.formData.gradeId = '';
+        let stageId = this.formData.stageId;
+        get(url.getGradesByStageId + stageId, {}).then(res => {
+          if (res) {
+            res.forEach(item => this.grades.push({label: item.gradeName, value: item.gradeId}))
+          }
+        }).catch(err => console.log(err))
       }
     },
     mounted() {
+      this.getGrades();
+
       // VueEvent.$on('on-open-page', name => this.back());
       // this.getSignList();
       // this.id = this.$store.state.template.id;

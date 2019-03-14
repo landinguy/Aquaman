@@ -33,7 +33,7 @@
   import Item from './component/Item'
 
   export default {
-    name: 'Home',
+    name: 'Overview',
     components: {Item},
     data() {
       return {
