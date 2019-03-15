@@ -8,13 +8,13 @@
           <Option value="2">初中</Option>
           <Option value="3">高中</Option>
         </Select>
-      </div>
-      <div class="search-div-item">
-        <label>年级</label>
-        <Select v-model="params.gradeId" class="width">
-          <Option v-for="item in grades" :value="item.value" :key="item.value">{{ item.label }}</Option>
-        </Select>
-      </div>
+      </div> <div class="search-div-item">
+      <label>年级</label>
+      <Select v-model="params.gradeId" class="width">
+        <Option v-for="item in grades" :value="item.value" :key="item.value">{{ item.label }}</Option>
+      </Select>
+    </div>
+
       <div class="search-div-item width">
         <Button type="primary" @click="search">查询</Button>
         <Button type="ghost" @click="clear" style="margin-left: 16px">重置</Button>
@@ -29,25 +29,29 @@
     </div>
     <div style="margin-top: 8px">
       <Table stripe border :columns="columns" :data="tableData"></Table>
-      <!--<Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>-->
+      <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>
     </div>
   </div>
 </template>
 <script>
   import {showTip, timestampToTime} from '@/libs/util'
   import url from '@/api/url'
-  import {post, get, $del} from "@/api/ax"
+  import {post, get, $get, $del} from "@/api/ax"
   import Add from './Add.vue'
 
   export default {
     name: 'List',
     data() {
       return {
-        params: {pageNo: 1, pageSize: 10, stageId: '1', gradeId: ''},
+        params: {pageNum: 1, pageSize: 10, stageId: '1', gradeId: ''},
         columns: [
           {
             title: '班级ID', key: 'clazzId', align: 'center', ellipsis: true, minWidth: 150,
             render: (h, params) => showTip(h, params.row.clazzId)
+          },
+          {
+            title: '所属学段', key: 'stageName', align: 'center', ellipsis: true, minWidth: 150,
+            render: (h, params) => showTip(h, params.row.stageName)
           },
           {
             title: '所属年级', key: 'gradeName', align: 'center', ellipsis: true, minWidth: 150,
@@ -66,52 +70,31 @@
       getGrades() {
         this.grades = [];
         const {stageId} = this.params;
-        get(url.getGradesByStageId + stageId, {}).then(res => {
-          if (res) {
-            res.forEach(item => this.grades.push({label: item.gradeName, value: item.gradeId}))
-          }
-        }).catch(err => console.log(err));
+        get(url.getGradesByStageId + stageId, {}).then(res =>
+          res.data.forEach(item => this.grades.push({label: item.gradeName, value: item.gradeId}))
+        ).catch(err => console.log(err));
       },
       toAddPage() {
         this.$router.push({name: 'addClass'})
       },
       changePage(n) {
-        this.params.pageNo = n;
+        this.params.pageNum = n;
         this.getData();
       },
       getData() {
         this.tableData = [];
-        const {stageId, gradeId} = this.params;
-        let u = gradeId == '' ? url.getClazzByStageId : url.getClazzByGradeId;
-        let p = gradeId == '' ? stageId : gradeId;
-
-        get(u + p, {}).then(res => {
-          if (gradeId == '') {
-            res.forEach(item => {
-              const {gradeName} = item;
-              item.clazzList.forEach(clazz => this.tableData.push({...clazz, gradeName}))
-            })
-          } else {
-            const {gradeName} = res;
-            res.clazzList.forEach(clazz => this.tableData.push({...clazz, gradeName}))
-          }
+        $get(url.getClazz, this.params).then(res => {
+          const {total, list} = res.data;
+          this.tableData = list;
+          this.total = total;
         }).catch(err => console.log(err))
       },
-      // getTotal() {
-      //   post(url.getSignsCount, {
-      //     status: this.params.status,
-      //     find: this.params.find,
-      //   }).then(res => {
-      //     if (res) {
-      //       this.total = res.data;
-      //     }
-      //   })
-      // },
+
       search() {
-        // this.params.pageNo = 1;
-        // this.getTotal();
+        this.params.pageNum = 1;
         this.getData();
-      },
+      }
+      ,
       clear() {
         this.params.stageId = '1';
         this.params.gradeId = '';

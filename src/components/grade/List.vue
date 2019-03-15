@@ -22,7 +22,7 @@
     </div>
     <div style="margin-top: 8px">
       <Table stripe border :columns="columns" :data="tableData"></Table>
-      <!--<Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>-->
+      <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>
     </div>
   </div>
 </template>
@@ -37,7 +37,7 @@
     data() {
       return {
         params: {
-          pageNo: 1,
+          pageNum: 1,
           pageSize: 10,
           stageId: '1',
         },
@@ -65,31 +65,21 @@
         this.$router.push({name: 'addGrade'})
       },
       changePage(n) {
-        this.params.pageNo = n;
+        this.params.pageNum = n;
         this.getData();
       },
       getData() {
         const {stageId} = this.params;
         get(url.getGradesByStageId + stageId, {}).then(res => this.tableData = res).catch(err => console.log(err))
       },
-      // getTotal() {
-      //   post(url.getSignsCount, {
-      //     status: this.params.status,
-      //     find: this.params.find,
-      //   }).then(res => {
-      //     if (res) {
-      //       this.total = res.data;
-      //     }
-      //   })
-      // },
+
       search() {
-        // this.params.pageNo = 1;
-        // this.getTotal();
+        this.params.pageNum = 1;
         this.getData();
       },
     },
     mounted() {
-      this.search();
+      // this.search();
     },
     computed: {}
   }

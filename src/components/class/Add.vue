@@ -103,11 +103,9 @@
         this.grades = [];
         this.formData.gradeId = '';
         let stageId = this.formData.stageId;
-        get(url.getGradesByStageId + stageId, {}).then(res => {
-          if (res) {
-            res.forEach(item => this.grades.push({label: item.gradeName, value: item.gradeId}))
-          }
-        }).catch(err => console.log(err))
+        get(url.getGradesByStageId + stageId, {}).then(res =>
+          res.data.forEach(item => this.grades.push({label: item.gradeName, value: item.gradeId}))
+        ).catch(err => console.log(err))
       }
     },
     mounted() {

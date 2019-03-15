@@ -30,7 +30,7 @@
         <Button type="primary" @click="search">查询</Button>
       </div>
     </div>
-    <RadioGroup v-model="params.type" @on-change="changeItem" type="button">
+    <RadioGroup v-model="params.type" @on-change="search" type="button">
       <Radio label="1"><span>发布统计</span></Radio>
       <Radio label="2"><span>批改统计</span></Radio>
     </RadioGroup>
@@ -55,13 +55,12 @@
           stageId: '',
           gradeId: '',
           type: '1',
-          startDate: '',
-          endDate: '',
+          // startDate: '',
+          // endDate: '',
           // pageNo: 1,
           // pageSize: 10
         },
-        grades: [],
-        tableData: [],
+        grades: [], tableData: [],
         total: 0,
         columns: [
           {
@@ -87,14 +86,9 @@
       getGrades() {
         this.grades = [];
         let stageId = this.params.stageId;
-        get(url.getGradesByStageId + stageId, {}).then(res => {
-          if (res) {
-            res.forEach(item => this.grades.push({label: item.gradeName, value: item.gradeId}))
-          }
-        }).catch(err => console.log(err));
-      },
-      changeItem() {
-        this.search()
+        get(url.getGradesByStageId + stageId, {}).then(res =>
+          res.data.forEach(item => this.grades.push({label: item.gradeName, value: item.gradeId}))
+        ).catch(err => console.log(err));
       },
       search() {
         // this.params.pageNo = 1;
@@ -111,7 +105,7 @@
     },
     computed: {},
     mounted() {
-      // this.search();
+      this.search();
     }
   }
 </script>

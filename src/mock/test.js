@@ -2,7 +2,7 @@ const Mock = require("mockjs");
 
 Mock.mock("/test", "post", {msg: '', code: 0, data: "jack"});
 
-Mock.mock("/api/management/getSchool", "post", {
+Mock.mock("/api/management/school", "get", {
   msg: '', code: 0,
   data: {
     name: '北京大学',

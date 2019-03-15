@@ -8,10 +8,10 @@
         <p slot="title">学校简介</p>
         <Row type="flex" justify="space-between" align="middle">
           <Col span="4">
-            <img :src="data.badge" style="height: 160px;width: 160px">
+            <img :src="school.badge" style="height: 160px;width: 160px">
           </Col>
           <Col span="18">
-            <P class="desc">{{data.description}}</P>
+            <P class="desc">{{school.description}}</P>
           </Col>
         </Row>
       </Card>
@@ -19,16 +19,16 @@
         <p slot="title">其他信息</p>
         <Row>
           <Col span="12">
-            <div class="line"><label>校名</label><span>{{data.name}}</span></div>
-            <div class="line"><label>英文名</label><span>{{data.englishName}}</span></div>
-            <div class="line"><label>校训</label><span>{{data.motto}}</span></div>
-            <div class="line"><label>学校类型</label><span>{{data.schoolTypeCode==1?'公立学校':'私立学校'}}</span></div>
+            <div class="line"><label>校名</label><span>{{school.name}}</span></div>
+            <div class="line"><label>英文名</label><span>{{school.englishName}}</span></div>
+            <div class="line"><label>校训</label><span>{{school.motto}}</span></div>
+            <div class="line"><label>学校类型</label><span>{{school.schoolTypeCode==1?'公立学校':'私立学校'}}</span></div>
           </Col>
           <Col span="12">
-            <div class="line"><label>所属区域</label><span>{{data.area}}</span></div>
-            <div class="line"><label>管理单位</label><span>{{data.competentDepartment}}</span></div>
-            <div class="line"><label>学校地址</label><span>{{data.address}}</span></div>
-            <div class="line"><label>学校官网</label><span><a href="http://www.pku.edu.cn">{{data.website}}</a></span></div>
+            <div class="line"><label>所属区域</label><span>{{school.area}}</span></div>
+            <div class="line"><label>管理单位</label><span>{{school.competentDepartment}}</span></div>
+            <div class="line"><label>学校地址</label><span>{{school.address}}</span></div>
+            <div class="line"><label>学校官网</label><span><a href="http://www.pku.edu.cn">{{school.website}}</a></span></div>
           </Col>
         </Row>
       </Card>
@@ -41,7 +41,7 @@
 <script>
   import {showTip, timestampToTime} from '@/libs/util'
   import url from '@/api/url'
-  import {post, $del} from "@/api/ax"
+  import {post, get, $del} from "@/api/ax"
   import Add from './Add.vue'
 
   export default {
@@ -49,7 +49,7 @@
     data() {
       return {
         content: 1,
-        data: {}
+        school: {}
       }
     },
     components: {Add},
@@ -58,11 +58,11 @@
         this.content = 2
       },
       getData() {
-        post(url.getSchool, {}).then(res => this.data = res.data).catch(err => console.log(err))
+        get(url.getSchool, {}).then(res => this.school = res).catch(err => console.log(err))
       },
     },
     mounted() {
-      this.getData();
+      this.getData()
     },
     computed: {}
   }

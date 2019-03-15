@@ -6,7 +6,7 @@ export default {
 
   //学校管理
   addSchool: '/api/management/school',
-  getSchool: '/api/management/getSchool',
+  getSchool: '/api/management/school',
 
   //年级管理
   addGrade: '/api/management/grade',
@@ -16,14 +16,15 @@ export default {
 
   //班级管理
   addClazz: '/api/management/clazz',
+  getClazz: '/api/management/clazz',
 
   //上传图片
   uploadImg: '/image/upload',
 
   //账号管理
   addAccount: '/api/management/user',
-  getAccountCount: '',
-  getAccounts: '',
+  getStudents: '/api/management/student',
+  getTeachers: '/api/management/teacher',
 
   getSubjectByStageId: '/api/basic/subjects/stage/',
 

@@ -4,15 +4,15 @@
 
 
     <div style="height: 64px;background-color: #495060;">
-      <img style="margin-left: 16px; margin-top: 8px;height: 48px;display: block;float: left" :src="wotec" key="max-logo"/>
+      <img style="margin-left: 24px; margin-top: 8px;height: 48px;" :src="logo" key="max-logo"/>
       <div style="float: right;margin-top: 16px">
         <!--</Button>-->
         <user style="float: right;"/>
       </div>
       <!--<div class="top-bar">-->
-        <!--<a :class="{ active: tabFlag==0}" @click="changeTab(0)">首页</a>-->
-        <!--<a :class="{ active: tabFlag==1} " @click="changeTab(1)" v-if="superMsg==1">超信平台</a>-->
-        <!--<a :class="{ active: tabFlag==2}" @click="changeTab(2)" v-if="simpleMsg==1">短信平台</a>-->
+      <!--<a :class="{ active: tabFlag==0}" @click="changeTab(0)">首页</a>-->
+      <!--<a :class="{ active: tabFlag==1} " @click="changeTab(1)" v-if="superMsg==1">超信平台</a>-->
+      <!--<a :class="{ active: tabFlag==2}" @click="changeTab(2)" v-if="simpleMsg==1">短信平台</a>-->
       <!--</div>-->
     </div>
     <Layout style="height: 100%" class="main">
@@ -60,12 +60,11 @@
   import User from './components/user'
   import {mapMutations, mapActions, mapGetters} from 'vuex'
   import {getNewTagList, getNextName} from '@/libs/util'
-  import minLogo from '@/assets/images/logo2.png'
-  import maxLogo from '@/assets/images/logo1.png'
+  import logo from '@/assets/images/logo.png'
   import wotec from '@/assets/images/wotec.png'
-  import swap from '@/assets/images/swap.png'
   import './main.less'
   import VueEvent from '@/libs/vueEvent.js'
+
   export default {
     name: 'Main',
     components: {
@@ -77,10 +76,8 @@
     data() {
       return {
         collapsed: false,
-        minLogo,
-        maxLogo,
         wotec,
-        swap
+        logo
       }
     },
     computed: {

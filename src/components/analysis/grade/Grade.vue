@@ -24,7 +24,7 @@
         <Button type="primary" @click="search">查询</Button>
       </div>
     </div>
-    <RadioGroup v-model="params.type" @on-change="changeItem" type="button" style="margin-bottom: 32px">
+    <RadioGroup v-model="params.type" @on-change="search" type="button" style="margin-bottom: 32px">
       <Radio label="1"><span>发布统计</span></Radio>
       <Radio label="2"><span>批改统计</span></Radio>
       <Radio label="3"><span>评价统计</span></Radio>
@@ -47,20 +47,13 @@
           timeType: '1',
           stageId: '1',
           type: '1',
-          startDate: '',
-          endDate: '',
-          // pageNo: 1,
-          // pageSize: 10
+          // startDate: '',
+          // endDate: '',
         },
       }
     },
     methods: {
-      changeItem() {
-        // this.getData()
-      },
       search() {
-        // this.params.pageNo = 1;
-        // this.getTotal();
         this.getData();
       },
       getData() {

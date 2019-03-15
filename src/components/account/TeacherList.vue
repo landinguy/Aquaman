@@ -4,15 +4,38 @@
       <Add></Add>
     </div>
     <div v-if="content==1">
-      <div class="sub">
-        <div class="sel">
+      <div class="search-div">
+        <div class="search-div-item">
           <label>姓名</label>
-          <Input v-model="params.find" placeholder="快速查找" class="width"/>
+          <Input v-model="params.username" placeholder="请输入姓名" class="width"/>
         </div>
-        <div class="sel">
+        <div class="search-div-item">
+          <label>昵称</label>
+          <Input v-model="params.nickname" placeholder="请输入昵称" class="width"/>
+        </div>
+        <!--<div class="search-div-item">-->
+        <!--<label>学段</label>-->
+        <!--<Select v-model="params.stageId" @on-change="getGrades" class="width">-->
+        <!--<Option value="1">小学</Option>-->
+        <!--<Option value="2">初中</Option>-->
+        <!--<Option value="3">高中</Option>-->
+        <!--</Select>-->
+        <!--</div>-->
+        <!--<div class="search-div-item">-->
+        <!--<label>年级</label>-->
+        <!--<Select v-model="params.gradeId" @on-change="getClazzData" class="width">-->
+        <!--<Option v-for="item in grades" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
+        <!--</Select>-->
+        <!--</div>-->
+        <!--<div class="search-div-item">-->
+        <!--<label>班级</label>-->
+        <!--<Select v-model="params.clazzId" class="width">-->
+        <!--<Option v-for="item in clazzData" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
+        <!--</Select>-->
+        <!--</div>-->
+        <div class="search-div-item">
           <Button type="primary" @click="search">查询</Button>
         </div>
-        <div style="clear: left"></div>
       </div>
 
       <div>
@@ -33,7 +56,7 @@
   import {mapMutations, mapGetters} from 'vuex'
   import {showTip, timestampToTime} from '@/libs/util'
   import url from '@/api/url'
-  import {post, $del, get} from "@/api/ax"
+  import {post, $del, get, $get} from "@/api/ax"
   import Add from './Add'
 
   export default {
@@ -41,8 +64,8 @@
     data() {
       return {
         content: 1,
-        params: {find: '', pageNo: 1, pageSize: 10},
-        tableData: [],
+        params: {username: '', nickname: '', stageId: '1', gradeId: '', clazzId: '', pageNum: 1, pageSize: 10},
+        tableData: [], grades: [], clazzData: [],
         total: 0
       }
     },
@@ -54,23 +77,21 @@
       },
       search() {
         this.params.pageNo = 1;
-        this.getTotal();
         this.getData();
       },
       getData() {
-        post(url.getAccounts, this.params).then(res => this.tableData = res.data).catch(err => console.log(err))
+        $get(url.getTeachers, this.params).then(res => {
+          const {total, list} = res.data;
+          this.tableData = list;
+          this.total = total;
+        }).catch(err => console.log(err))
       },
       toCreatePage() {
         this.$router.push({name: 'addAccount'})
       },
-      getTotal() {
-        const {find} = this.params;
-        post(url.getAccountCount, {find}).then(res => this.total = res.data).catch(err => console.log(err))
-      }
     },
     mounted() {
-      // this.getTotal();
-      // this.getData();
+      // this.search();
     },
     computed: {
       ...mapGetters(['accountId', 'roleId']),
@@ -206,15 +227,16 @@
     padding: 32px;
   }
 
-  .sub {
-    width: 100%;
-    background-color: white;
-  }
+  .search-div {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
 
-  .sel {
-    margin-top: 4px;
-    padding-bottom: 4px;
-    float: left;
+    &-item {
+      margin-bottom: 16px;
+    }
   }
 
   label {

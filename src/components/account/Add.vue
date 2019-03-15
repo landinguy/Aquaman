@@ -179,11 +179,9 @@
         this.grades = this.subjectData = [];
         this.formData.gradeId = '';
         let stageId = this.formData.stageId;
-        get(url.getGradesByStageId + stageId, {}).then(res => {
-          if (res) {
-            res.forEach(item => this.grades.push({label: item.gradeName, value: item.gradeId}))
-          }
-        }).catch(err => console.log(err));
+        get(url.getGradesByStageId + stageId, {}).then(res =>
+          res.data.forEach(item => this.grades.push({label: item.gradeName, value: item.gradeId}))
+        ).catch(err => console.log(err));
         get(url.getSubjectByStageId + stageId, {}).then(res => {
           if (res) {
             let subjectList = res.data.subjectList;
@@ -197,10 +195,8 @@
         let gradeId = this.formData.gradeId;
         if (!this.isGradeLeader) {
           get(url.getClazzByGradeId + gradeId, {}).then(res => {
-            if (res) {
-              let classList = res.clazzList;
-              classList.forEach(item => this.clazzData.push({label: item.clazzName, value: item.clazzId}))
-            }
+            const {clazzList} = res.data;
+            clazzList.forEach(item => this.clazzData.push({label: item.clazzName, value: item.clazzId}))
           }).catch(err => console.log(err))
         }
       }
