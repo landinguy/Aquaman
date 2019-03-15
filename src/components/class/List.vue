@@ -43,12 +43,8 @@
     name: 'List',
     data() {
       return {
-        params: {pageNum: 1, pageSize: 10, stageId: '1', gradeId: ''},
+        params: {pageNum: 1, pageSize: 10, stageId: '', gradeId: ''},
         columns: [
-          {
-            title: '班级ID', key: 'clazzId', align: 'center', ellipsis: true, minWidth: 150,
-            render: (h, params) => showTip(h, params.row.clazzId)
-          },
           {
             title: '所属学段', key: 'stageName', align: 'center', ellipsis: true, minWidth: 150,
             render: (h, params) => showTip(h, params.row.stageName)
@@ -102,7 +98,6 @@
     },
     mounted() {
       this.search();
-      this.getGrades();
     },
     computed: {}
   }

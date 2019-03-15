@@ -22,7 +22,6 @@
     </div>
     <div style="margin-top: 8px">
       <Table stripe border :columns="columns" :data="tableData"></Table>
-      <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>
     </div>
   </div>
 </template>
@@ -37,9 +36,7 @@
     data() {
       return {
         params: {
-          pageNum: 1,
-          pageSize: 10,
-          stageId: '1',
+          stageId: '',
         },
         columns: [
           {
@@ -56,7 +53,6 @@
           }
         ],
         tableData: [],
-        total: 0
       }
     },
     components: {Add},
@@ -64,22 +60,15 @@
       toAddPage() {
         this.$router.push({name: 'addGrade'})
       },
-      changePage(n) {
-        this.params.pageNum = n;
-        this.getData();
-      },
       getData() {
-        const {stageId} = this.params;
-        get(url.getGradesByStageId + stageId, {}).then(res => this.tableData = res).catch(err => console.log(err))
+        get(url.getGradesByStageId + this.params.stageId, {}).then(res => this.tableData = res.data).catch(err => console.log(err))
       },
-
       search() {
-        this.params.pageNum = 1;
         this.getData();
       },
     },
     mounted() {
-      // this.search();
+      this.search();
     },
     computed: {}
   }

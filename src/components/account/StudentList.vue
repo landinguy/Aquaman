@@ -6,12 +6,12 @@
     <div v-if="content==1">
       <div class="search-div">
         <div class="search-div-item">
-          <label>姓名</label>
-          <Input v-model="params.username" placeholder="请输入姓名" class="width"/>
+          <label>账号</label>
+          <Input v-model="params.username" placeholder="请输入账号" class="width"/>
         </div>
         <div class="search-div-item">
-          <label>昵称</label>
-          <Input v-model="params.nickname" placeholder="请输入昵称" class="width"/>
+          <label>姓名</label>
+          <Input v-model="params.nickname" placeholder="请输入姓名" class="width"/>
         </div>
         <div class="search-div-item">
           <label>学段</label>
@@ -64,7 +64,7 @@
     data() {
       return {
         content: 1,
-        params: {username: '', nickname: '', stageId: '1', gradeId: '', clazzId: '', pageNum: 1, pageSize: 10},
+        params: {username: '', nickname: '', stageId: '', gradeId: '', clazzId: '', pageNum: 1, pageSize: 10},
         tableData: [], grades: [], clazzData: [],
         total: 0
       }
@@ -107,8 +107,7 @@
       },
     },
     mounted() {
-      this.search();
-      this.getGrades();
+      this.search()
     },
     computed: {
       ...mapGetters(['accountId', 'roleId']),

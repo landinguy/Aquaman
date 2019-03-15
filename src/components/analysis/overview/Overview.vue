@@ -39,31 +39,31 @@
       return {
         columns4: [
           {
-            title: '分析项目', key: 'name', align: 'center', ellipsis: true, minWidth: 150,
+            title: '分析项目', key: 'name', align: 'center', ellipsis: true, minWidth: 100,
             render: (h, params) => showTip(h, params.row.name)
           },
           {
-            title: '昨日', key: 'yesterday', align: 'center', ellipsis: true, minWidth: 150,
+            title: '昨日', key: 'yesterday', align: 'center', ellipsis: true, minWidth: 100,
             render: (h, params) => showTip(h, params.row.yesterday)
           },
           {
-            title: '近7日', key: 'week', align: 'center', ellipsis: true, minWidth: 150,
+            title: '近7日', key: 'week', align: 'center', ellipsis: true, minWidth: 100,
             render: (h, params) => showTip(h, params.row.week)
           },
           {
-            title: '近30日', key: 'month', align: 'center', ellipsis: true, minWidth: 150,
+            title: '近30日', key: 'month', align: 'center', ellipsis: true, minWidth: 100,
             render: (h, params) => showTip(h, params.row.month)
           },
           {
-            title: '当前学期', key: 'semester', align: 'center', ellipsis: true, minWidth: 150,
+            title: '当前学期', key: 'semester', align: 'center', ellipsis: true, minWidth: 100,
             render: (h, params) => showTip(h, params.row.semester)
           },
           {
-            title: '当前学年', key: 'year', align: 'center', ellipsis: true, minWidth: 150,
+            title: '当前学年', key: 'year', align: 'center', ellipsis: true, minWidth: 100,
             render: (h, params) => showTip(h, params.row.year)
           },
           {
-            title: '迄今为止', key: 'total', align: 'center', ellipsis: true, minWidth: 150,
+            title: '迄今为止', key: 'total', align: 'center', ellipsis: true, minWidth: 100,
             render: (h, params) => showTip(h, params.row.total)
           }
         ],

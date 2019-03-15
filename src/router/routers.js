@@ -39,61 +39,37 @@ export default [
     ]
   },
   {
-    path: '/analysis',
-    name: 'analysis',
+    path: '/account',
+    name: 'account',
     meta: {
-      title: '分析管理',
+      title: '用户管理',
     },
     component: Main,
     children: [
       {
-        path: '/overview',
-        name: 'overview',
+        path: 'addAccount',
+        name: 'addAccount',
         meta: {
-          title: '作业总览'
+          title: '添加账号',
         },
-        component: () => import('@/components/analysis/overview/Overview')
+        component: () => import('@/components/account/Add')
       },
       {
-        path: 'subject',
-        name: 'subject',
+        path: 'students',
+        name: 'students',
         meta: {
-          title: '科目分析'
+          title: '学生查询',
         },
-        component: () => import('@/components/analysis/subject/Subject')
+        component: () => import('@/components/account/StudentList')
       },
       {
-        path: 'grade',
-        name: 'grade',
+        path: 'teachers',
+        name: 'teachers',
         meta: {
-          title: '年级分析'
+          title: '教师查询',
         },
-        component: () => import('@/components/analysis/grade/Grade')
+        component: () => import('@/components/account/TeacherList')
       },
-      {
-        path: 'clazz',
-        name: 'clazz',
-        meta: {
-          title: '班级分析'
-        },
-        component: () => import('@/components/analysis/clazz/Clazz')
-      },
-      {
-        path: 'teacher',
-        name: 'teacher',
-        meta: {
-          title: '教师分析'
-        },
-        component: () => import('@/components/analysis/teacher/Teacher')
-      },
-      {
-        path: 'student',
-        name: 'student',
-        meta: {
-          title: '学生分析'
-        },
-        component: () => import('@/components/analysis/student/Student')
-      }
     ]
   },
   {
@@ -149,37 +125,61 @@ export default [
     ]
   },
   {
-    path: '/account',
-    name: 'account',
+    path: '/analysis',
+    name: 'analysis',
     meta: {
-      title: '用户管理',
+      title: '数据分析',
     },
     component: Main,
     children: [
       {
-        path: 'addAccount',
-        name: 'addAccount',
+        path: '/overview',
+        name: 'overview',
         meta: {
-          title: '添加账号',
+          title: '作业总览'
         },
-        component: () => import('@/components/account/Add')
+        component: () => import('@/components/analysis/overview/Overview')
       },
       {
-        path: 'students',
-        name: 'students',
+        path: 'subject',
+        name: 'subject',
         meta: {
-          title: '学生查询',
+          title: '科目分析'
         },
-        component: () => import('@/components/account/StudentList')
+        component: () => import('@/components/analysis/subject/Subject')
       },
       {
-        path: 'teachers',
-        name: 'teachers',
+        path: 'grade',
+        name: 'grade',
         meta: {
-          title: '教师查询',
+          title: '年级分析'
         },
-        component: () => import('@/components/account/TeacherList')
+        component: () => import('@/components/analysis/grade/Grade')
       },
+      {
+        path: 'clazz',
+        name: 'clazz',
+        meta: {
+          title: '班级分析'
+        },
+        component: () => import('@/components/analysis/clazz/Clazz')
+      },
+      {
+        path: 'teacher',
+        name: 'teacher',
+        meta: {
+          title: '教师分析'
+        },
+        component: () => import('@/components/analysis/teacher/Teacher')
+      },
+      {
+        path: 'student',
+        name: 'student',
+        meta: {
+          title: '学生分析'
+        },
+        component: () => import('@/components/analysis/student/Student')
+      }
     ]
-  }
+  },
 ]
