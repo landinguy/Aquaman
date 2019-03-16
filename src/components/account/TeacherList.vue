@@ -1,55 +1,51 @@
 <template>
   <div class="bg">
-    <div v-if="content==2">
-      <Add></Add>
-    </div>
-    <div v-if="content==1">
-      <div class="search-div">
-        <div class="search-div-item">
-          <label>账号</label>
-          <Input v-model="params.username" placeholder="请输入账号" class="width"/>
-        </div>
-        <div class="search-div-item">
-          <label>姓名</label>
-          <Input v-model="params.nickname" placeholder="请输入姓名" class="width"/>
-        </div>
-        <!--<div class="search-div-item">-->
-        <!--<label>学段</label>-->
-        <!--<Select v-model="params.stageId" @on-change="getGrades" class="width">-->
-        <!--<Option value="1">小学</Option>-->
-        <!--<Option value="2">初中</Option>-->
-        <!--<Option value="3">高中</Option>-->
-        <!--</Select>-->
-        <!--</div>-->
-        <!--<div class="search-div-item">-->
-        <!--<label>年级</label>-->
-        <!--<Select v-model="params.gradeId" @on-change="getClazzData" class="width">-->
-        <!--<Option v-for="item in grades" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
-        <!--</Select>-->
-        <!--</div>-->
-        <!--<div class="search-div-item">-->
-        <!--<label>班级</label>-->
-        <!--<Select v-model="params.clazzId" class="width">-->
-        <!--<Option v-for="item in clazzData" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
-        <!--</Select>-->
-        <!--</div>-->
-        <div class="search-div-item">
-          <Button type="primary" @click="search">查询</Button>
-        </div>
+    <div class="search-div">
+      <div class="search-div-item">
+        <label>用户名</label>
+        <Input v-model="params.username" placeholder="请输入用户名" class="width"/>
       </div>
+      <div class="search-div-item">
+        <label>姓名</label>
+        <Input v-model="params.nickname" placeholder="请输入姓名" class="width"/>
+      </div>
+      <!--<div class="search-div-item">-->
+      <!--<label>学段</label>-->
+      <!--<Select v-model="params.stageId" @on-change="getGrades" class="width">-->
+      <!--<Option value="1">小学</Option>-->
+      <!--<Option value="2">初中</Option>-->
+      <!--<Option value="3">高中</Option>-->
+      <!--</Select>-->
+      <!--</div>-->
+      <!--<div class="search-div-item">-->
+      <!--<label>年级</label>-->
+      <!--<Select v-model="params.gradeId" @on-change="getClazzData" class="width">-->
+      <!--<Option v-for="item in grades" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
+      <!--</Select>-->
+      <!--</div>-->
+      <!--<div class="search-div-item">-->
+      <!--<label>班级</label>-->
+      <!--<Select v-model="params.clazzId" class="width">-->
+      <!--<Option v-for="item in clazzData" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
+      <!--</Select>-->
+      <!--</div>-->
+      <div class="search-div-item">
+        <Button type="primary" @click="search">查询</Button>
+      </div>
+    </div>
 
-      <div>
-        <br>
-        <Button type="primary" @click="toCreatePage">
-          <Icon type="plus"></Icon>
-          添加账号
-        </Button>
-      </div>
-      <div style="margin-top: 16px">
-        <Table stripe border :columns="columns" :data="tableData"></Table>
-        <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>
-      </div>
+    <div>
+      <br>
+      <Button type="primary" @click="showModal">
+        <Icon type="plus"></Icon>
+        添加
+      </Button>
     </div>
+    <div style="margin-top: 16px">
+      <Table stripe border :columns="columns" :data="tableData"></Table>
+      <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>
+    </div>
+    <Add ref="AddVue"></Add>
   </div>
 </template>
 <script>
@@ -86,8 +82,8 @@
           this.total = total;
         }).catch(err => console.log(err))
       },
-      toCreatePage() {
-        this.$router.push({name: 'addAccount'})
+      showModal() {
+        this.$refs.AddVue.addModal = true;
       },
     },
     mounted() {
@@ -98,8 +94,12 @@
       columns() {
         const columns = [
           {
-            title: '姓名', key: 'username', align: 'center', ellipsis: true, minWidth: 150,
+            title: '用户名', key: 'username', align: 'center', ellipsis: true, minWidth: 150,
             render: (h, params) => showTip(h, params.row.username)
+          },
+          {
+            title: '姓名', key: 'nickname', align: 'center', ellipsis: true, minWidth: 150,
+            render: (h, params) => showTip(h, params.row.nickname)
           },
           {
             title: '角色', key: 'role', align: 'center', ellipsis: true, minWidth: 150,

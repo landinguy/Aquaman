@@ -15,7 +15,7 @@
     </div>
 
     <div>
-      <Button type="primary" @click="toAddPage">
+      <Button type="primary" @click="showModal">
         <Icon type="plus"></Icon>
         添加
       </Button>
@@ -23,6 +23,7 @@
     <div style="margin-top: 8px">
       <Table stripe border :columns="columns" :data="tableData"></Table>
     </div>
+    <Add ref="AddVue"></Add>
   </div>
 </template>
 <script>
@@ -40,10 +41,6 @@
         },
         columns: [
           {
-            title: '年级ID', key: 'gradeId', align: 'center', ellipsis: true, minWidth: 150,
-            render: (h, params) => showTip(h, params.row.gradeId)
-          },
-          {
             title: '所属学段', key: 'stageName', align: 'center', ellipsis: true, minWidth: 150,
             render: (h, params) => showTip(h, params.row.stageName)
           },
@@ -57,8 +54,8 @@
     },
     components: {Add},
     methods: {
-      toAddPage() {
-        this.$router.push({name: 'addGrade'})
+      showModal() {
+        this.$refs.AddVue.addModal = true;
       },
       getData() {
         get(url.getGradesByStageId + this.params.stageId, {}).then(res => this.tableData = res.data).catch(err => console.log(err))

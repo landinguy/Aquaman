@@ -47,19 +47,19 @@ export default [
     },
     component: Main,
     children: [
-      {
-        path: 'addAccount',
-        name: 'addAccount',
-        meta: {
-          title: '添加账号',
-        },
-        component: () => import('@/components/account/Add')
-      },
+      // {
+      //   path: 'addAccount',
+      //   name: 'addAccount',
+      //   meta: {
+      //     title: '添加用户',
+      //   },
+      //   component: () => import('@/components/account/Add')
+      // },
       {
         path: 'students',
         name: 'students',
         meta: {
-          title: '学生查询',
+          title: '学生管理',
         },
         component: () => import('@/components/account/StudentList')
       },
@@ -67,7 +67,7 @@ export default [
         path: 'teachers',
         name: 'teachers',
         meta: {
-          title: '教师查询',
+          title: '教师管理',
         },
         component: () => import('@/components/account/TeacherList')
       },
@@ -87,51 +87,15 @@ export default [
         meta: {
           title: '年级管理',
         },
-        component: parentView,
-        children: [
-          {
-            path: 'addGrade',
-            name: 'addGrade',
-            meta: {
-              title: '添加年级',
-            },
-            component: () => import('@/components/grade/Add')
-          },
-          {
-            path: 'grades',
-            name: 'grades',
-            meta: {
-              title: '年级查询',
-            },
-            component: () => import('@/components/grade/List')
-          },
-        ]
+        component: () => import('@/components/grade/List')
       },
       {
         path: 'classManage',
         name: 'classManage',
         meta: {
-          title: '班级管理',
+          title: '班级管理'
         },
-        component: parentView,
-        children: [
-          {
-            path: 'addClass',
-            name: 'addClass',
-            meta: {
-              title: '添加班级',
-            },
-            component: () => import('@/components/class/Add')
-          },
-          {
-            path: 'classes',
-            name: 'classes',
-            meta: {
-              title: '班级查询',
-            },
-            component: () => import('@/components/class/List')
-          },
-        ]
+        component: () => import('@/components/class/List')
       },
     ]
   },

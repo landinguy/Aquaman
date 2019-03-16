@@ -28,7 +28,7 @@
             <div class="line"><label>所属区域</label><span>{{school.area}}</span></div>
             <div class="line"><label>管理单位</label><span>{{school.competentDepartment}}</span></div>
             <div class="line"><label>学校地址</label><span>{{school.address}}</span></div>
-            <div class="line"><label>学校官网</label><span><a href="http://www.pku.edu.cn">{{school.website}}</a></span>
+            <div class="line"><label>学校官网</label><span><a :href="school.website">{{school.website}}</a></span>
             </div>
           </Col>
         </Row>

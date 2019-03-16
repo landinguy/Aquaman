@@ -8,13 +8,13 @@
           <Option value="2">初中</Option>
           <Option value="3">高中</Option>
         </Select>
-      </div> <div class="search-div-item">
-      <label>年级</label>
-      <Select v-model="params.gradeId" class="width">
-        <Option v-for="item in grades" :value="item.value" :key="item.value">{{ item.label }}</Option>
-      </Select>
-    </div>
-
+      </div>
+      <div class="search-div-item">
+        <label>年级</label>
+        <Select v-model="params.gradeId" class="width">
+          <Option v-for="item in grades" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        </Select>
+      </div>
       <div class="search-div-item width">
         <Button type="primary" @click="search">查询</Button>
         <Button type="ghost" @click="clear" style="margin-left: 16px">重置</Button>
@@ -22,7 +22,7 @@
     </div>
 
     <div>
-      <Button type="primary" @click="toAddPage">
+      <Button type="primary" @click="showModal">
         <Icon type="plus"></Icon>
         添加
       </Button>
@@ -31,6 +31,7 @@
       <Table stripe border :columns="columns" :data="tableData"></Table>
       <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>
     </div>
+    <Add ref="AddVue"></Add>
   </div>
 </template>
 <script>
@@ -70,8 +71,8 @@
           res.data.forEach(item => this.grades.push({label: item.gradeName, value: item.gradeId}))
         ).catch(err => console.log(err));
       },
-      toAddPage() {
-        this.$router.push({name: 'addClass'})
+      showModal() {
+        this.$refs.AddVue.addModal = true;
       },
       changePage(n) {
         this.params.pageNum = n;
@@ -92,7 +93,7 @@
       }
       ,
       clear() {
-        this.params.stageId = '1';
+        this.params.stageId = '';
         this.params.gradeId = '';
       }
     },
