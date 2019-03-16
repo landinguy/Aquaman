@@ -1,4 +1,5 @@
 import Main from '@/components/common/main/Main'
+import parentView from '@/components/common/parent-view'
 
 export default [
   {
@@ -73,54 +74,64 @@ export default [
     ]
   },
   {
-    path: '/grade',
-    name: 'grade',
+    path: '/schoolManage',
+    name: 'schoolManage',
     meta: {
-      title: '年级管理',
+      title: '学校管理',
     },
     component: Main,
     children: [
       {
-        path: 'addGrade',
-        name: 'addGrade',
+        path: 'gradeManage',
+        name: 'gradeManage',
         meta: {
-          title: '添加年级',
+          title: '年级管理',
         },
-        component: () => import('@/components/grade/Add')
+        component: parentView,
+        children: [
+          {
+            path: 'addGrade',
+            name: 'addGrade',
+            meta: {
+              title: '添加年级',
+            },
+            component: () => import('@/components/grade/Add')
+          },
+          {
+            path: 'grades',
+            name: 'grades',
+            meta: {
+              title: '年级查询',
+            },
+            component: () => import('@/components/grade/List')
+          },
+        ]
       },
       {
-        path: 'grades',
-        name: 'grades',
+        path: 'classManage',
+        name: 'classManage',
         meta: {
-          title: '年级查询',
+          title: '班级管理',
         },
-        component: () => import('@/components/grade/List')
-      },
-    ]
-  },
-  {
-    path: '/class',
-    name: 'class',
-    meta: {
-      title: '班级管理',
-    },
-    component: Main,
-    children: [
-      {
-        path: 'addClass',
-        name: 'addClass',
-        meta: {
-          title: '添加班级',
-        },
-        component: () => import('@/components/class/Add')
-      },
-      {
-        path: 'classes',
-        name: 'classes',
-        meta: {
-          title: '班级查询',
-        },
-        component: () => import('@/components/class/List')
+        component: parentView,
+        children: [
+          {
+            path: 'addClass',
+            name: 'addClass',
+            meta: {
+              title: '添加班级',
+            },
+            component: () => import('@/components/class/Add')
+          },
+          {
+            path: 'classes',
+            name: 'classes',
+            meta: {
+              title: '班级查询',
+            },
+            component: () => import('@/components/class/List')
+          },
+        ]
       },
     ]
   },
@@ -133,7 +144,7 @@ export default [
     component: Main,
     children: [
       {
-        path: '/overview',
+        path: 'overview',
         name: 'overview',
         meta: {
           title: '作业总览'

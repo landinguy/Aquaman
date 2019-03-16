@@ -25,7 +25,6 @@
     data() {
       return {
         showBarOrPie: true,
-        barChart: null,
         pieChart: null,
         lineChart: null,
         barOption: {
@@ -58,7 +57,7 @@
           series: [
             {
               type: 'bar',
-              barWidth: 30,//柱图宽度
+              barWidth: 20,//柱图宽度
               data: []
             }
           ]
@@ -153,25 +152,30 @@
           this.barOption.series[0].data = barX;
           this.barOption.yAxis.data = barY;
           this.barOption.title.text = '合计：' + total;
-          this.barChart.setOption(this.barOption);
+          this.initBar();
 
           this.pieOption.legend.data = barY;
           this.pieOption.series[0].data = pieData;
-          this.pieChart.setOption(this.pieOption);
+          this.initPie();
         } else {
           this.showBarOrPie = false
         }
+      },
+      initBar() {
+        let bar = echarts.init(document.getElementById('bar'));
+        bar.setOption(this.barOption);
+        return bar;
+      },
+      initPie() {
+        let pie = echarts.init(document.getElementById('pie'));
+        pie.setOption(this.pieOption);
+        return pie;
       }
     },
     computed: {},
     mounted() {
-      let bar = echarts.init(document.getElementById('bar'));
-      bar.setOption(this.barOption);
-      this.barChart = bar;
-
-      let pie = echarts.init(document.getElementById('pie'));
-      pie.setOption(this.pieOption);
-      this.pieChart = pie;
+      let bar = this.initBar();
+      let pie = this.initPie();
 
       // let line = echarts.init(document.getElementById('line'));
       // line.setOption(this.lineOption);

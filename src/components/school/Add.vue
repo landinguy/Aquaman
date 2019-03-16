@@ -139,7 +139,6 @@
               //   this.$Message.error(res.msg ? res.msg : '提交失败');
               //   this.disableFlag = false;
               // }
-
             }).catch(err => console.log(err))
           }
         })
@@ -148,13 +147,8 @@
         this.$refs.form.resetFields();
         this.$parent.content = 1;
       },
-      setData(op, data) {
-        this.id = '';
-        this.op = op;
-        if (data) {
-          this.id = data.id;
-          this.formData.content = data.content;
-        }
+      setData(data) {
+        this.formData = data;
       }
     },
     mounted() {
