@@ -1,4 +1,5 @@
 import {forEach, hasOneOf} from '@/libs/tools'
+import {Spin} from "iview";
 
 export const hasChild = (item) => {
   return item.children && item.children.length !== 0
@@ -290,3 +291,21 @@ export const validateNumber = (rule, value, callback) => {
     callback()
   }
 };
+
+/*** 加载中效果 ***/
+export const handleSpinCustom = () => {
+  Spin.show({
+    render: (h) => {
+      return h('div', [
+        h('Icon', {
+          style: 'animation: ani-demo-spin 1s linear infinite',
+          props: {
+            type: 'load-c',
+            size: 72
+          }
+        }),
+        h('div', '正在加载中......')
+      ])
+    }
+  })
+}

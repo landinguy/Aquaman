@@ -12,8 +12,8 @@
           <FormItem label="密码" prop="password">
             <Input v-model.trim="formData.password" type="password" placeholder="请填写密码"/>
           </FormItem>
-          <FormItem label="昵称" prop="nickname">
-            <Input v-model.trim="formData.nickname" placeholder="请填写昵称"/>
+          <FormItem label="姓名" prop="nickname">
+            <Input v-model.trim="formData.nickname" placeholder="请填写姓名"/>
           </FormItem>
           <FormItem label="角色" prop="role">
             <Select v-model="formData.role" multiple @on-change="changeRole">
@@ -83,7 +83,7 @@
         formValidate: {
           username: [{required: true, message: '请填写用户名', trigger: 'blur'}],
           password: [{required: true, message: '请填写密码', trigger: 'blur'}],
-          nickname: [{required: true, message: '请填写昵称', trigger: 'blur'}],
+          nickname: [{required: true, message: '请填写姓名', trigger: 'blur'}],
           role: [{required: true, type: 'array', min: 1, message: '请选择至少一个角色', trigger: 'change'}],
           stageId: [{required: true, message: '请选择学段', trigger: 'change'}],
           gradeId: [{required: true, message: '请选择年级', trigger: 'change'}],

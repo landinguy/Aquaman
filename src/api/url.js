@@ -10,6 +10,7 @@ export default {
 
   //年级管理
   addGrade: '/api/management/grade',
+  getGrade: '/api/management/grade',
   getGradesByStageId: '/api/management/grade/stage/',
   getClazzByGradeId: '/api/management/clazz/grade/',
   getClazzByStageId: '/api/management/clazz/stage/',

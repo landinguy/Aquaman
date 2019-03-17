@@ -2,7 +2,7 @@
   <div class="bg">
     <div class="title">
       <h2>作业情况总览</h2>
-      <!--<p>——全校总共发布作业16份，其中统一假期作业5份</p>-->
+      <p>——截止目前全校总共布置作业<span> {{total}} </span>份</p>
     </div>
     <Row type="flex" justify="space-between">
       <Col span="7">
@@ -67,6 +67,7 @@
             render: (h, params) => showTip(h, params.row.total)
           }
         ],
+        total: 0,
         data1: [], data2: [], data3: [], data4: [], data5: []
       }
     },
@@ -86,6 +87,7 @@
               this.data3 = subjectStat;
             } else if (i == 4 || i == 5 || i == 6) {
               homeworkStat.name = i == 4 ? '作业布置次数' : i == 5 ? '批改作业次数' : i == 6 ? '评价作业次数' : '';
+              if (i == 4) this.total = homeworkStat.total;
               this.data4.push(homeworkStat);
             }
           }).catch(err => console.log(err))
@@ -113,6 +115,11 @@
     p {
       position: relative;
       left: 140px;
+
+      span {
+        color: red;
+        font-weight: bold;
+      }
     }
   }
 

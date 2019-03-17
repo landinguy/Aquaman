@@ -1,6 +1,7 @@
 import Axios from 'axios'
 import baseUrl from "./url"
 import {Message, Spin} from 'iview'
+import {handleSpinCustom} from './util'
 
 class httpRequest {
   constructor() {
@@ -19,27 +20,11 @@ class httpRequest {
     return queue.length
   }
 
-  handleSpinCustom() {
-    Spin.show({
-      render: (h) => {
-        return h('div', [
-          h('Icon', {
-            style: 'animation: ani-demo-spin 1s linear infinite',
-            props: {
-              type: 'load-c',
-              size: 72
-            }
-          }),
-          h('div', '正在加载中......')
-        ])
-      }
-    });
-  }
 
   interceptors(instance, url) {
     // 添加请求拦截器
     instance.interceptors.request.use(config => {
-      this.handleSpinCustom();
+      handleSpinCustom();
       console.log("request:", config)
       return config
     }, error => {

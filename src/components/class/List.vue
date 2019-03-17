@@ -17,7 +17,6 @@
       </div>
       <div class="search-div-item width">
         <Button type="primary" @click="search">查询</Button>
-        <Button type="ghost" @click="clear" style="margin-left: 16px">重置</Button>
       </div>
     </div>
 
@@ -47,16 +46,73 @@
         params: {pageNum: 1, pageSize: 10, stageId: '', gradeId: ''},
         columns: [
           {
-            title: '所属学段', key: 'stageName', align: 'center', ellipsis: true, minWidth: 150,
+            title: '序号', type: 'index', width: 80, align: 'center'
+          },
+          {
+            title: '学段', key: 'stageName', align: 'center', ellipsis: true, minWidth: 100,
             render: (h, params) => showTip(h, params.row.stageName)
           },
           {
-            title: '所属年级', key: 'gradeName', align: 'center', ellipsis: true, minWidth: 150,
+            title: '年级', key: 'gradeName', align: 'center', ellipsis: true, minWidth: 100,
             render: (h, params) => showTip(h, params.row.gradeName)
           },
           {
-            title: '班级名称', key: 'clazzName', align: 'center', ellipsis: true, minWidth: 150,
+            title: '班级名称', key: 'clazzName', align: 'center', ellipsis: true, minWidth: 100,
             render: (h, params) => showTip(h, params.row.clazzName)
+          },
+          {
+            title: '操作', align: 'center', width: 200,
+            render: (h, params) => {
+              // const id = params.row.id;
+              const edit = h('Button', {
+                props: {
+                  type: 'primary',
+                  size: 'small'
+                },
+                style: {
+                  "margin-left": '5px'
+                },
+                on: {
+                  click: () => {
+                  }
+                }
+              }, '修改');
+              // const del = h('Button', {
+              //   props: {
+              //     type: 'error',
+              //     size: 'small'
+              //   },
+              //   style: {
+              //     "margin-left": '5px'
+              //   },
+              //   on: {
+              //     click: function () {
+              //       $vue.$Modal.confirm({
+              //         title: '删除',
+              //         content: '确认删除该模板？',
+              //         onOk() {
+              //           $del(url.delTmpl + id, {accountId: this.accountId}).then(res => {
+              //             if (res.code == 0) {
+              //               $vue.$Message.success({
+              //                 content: '已删除',
+              //                 duration: 1,
+              //                 onClose() {
+              //                   $vue.search();
+              //                 }
+              //               });
+              //             } else {
+              //               $vue.$Message.error('删除失败');
+              //             }
+              //           });
+              //         }
+              //       });
+              //     }
+              //   }
+              // }, '删除');
+              const op = [];
+              op.push(edit);
+              return h('div', op);
+            }
           }
         ],
         tableData: [], grades: [], total: 0
@@ -67,9 +123,11 @@
       getGrades() {
         this.grades = [];
         const {stageId} = this.params;
-        get(url.getGradesByStageId + stageId, {}).then(res =>
-          res.data.forEach(item => this.grades.push({label: item.gradeName, value: item.gradeId}))
-        ).catch(err => console.log(err));
+        if (stageId) {
+          get(url.getGradesByStageId + stageId, {}).then(res =>
+            res.data.forEach(item => this.grades.push({label: item.gradeName, value: item.gradeId}))
+          ).catch(err => console.log(err));
+        }
       },
       showModal() {
         this.$refs.AddVue.addModal = true;
@@ -86,15 +144,9 @@
           this.total = total;
         }).catch(err => console.log(err))
       },
-
       search() {
         this.params.pageNum = 1;
         this.getData();
-      }
-      ,
-      clear() {
-        this.params.stageId = '';
-        this.params.gradeId = '';
       }
     },
     mounted() {

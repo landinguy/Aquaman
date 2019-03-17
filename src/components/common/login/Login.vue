@@ -15,7 +15,7 @@
   import LoginForm from './components/login-form/index'
   import {mapActions, mapMutations} from 'vuex'
   import bg from '@/assets/images/login_bg.jpg'
-  import axios from 'axios'
+  import {handleSpinCustom} from '@/libs/util'
 
   export default {
     data() {
@@ -38,12 +38,19 @@
         this.$refs.loginForm.handleSubmit()
       },
       handleSubmit({username, password}) {
+        handleSpinCustom();
         this.handleLogin({
           username,
           password
         }).then(res => {
-          if (res) this.$router.push({name: 'info'})
-        }).catch(err => console.log(err));
+          if (res) {
+            this.$Spin.hide();
+            this.$router.push({name: 'info'})
+          }
+        }).catch(err => {
+          this.$Spin.hide();
+          console.log(err)
+        });
       }
     }
   }

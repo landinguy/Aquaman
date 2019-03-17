@@ -1,14 +1,14 @@
 <template>
   <div class="bg">
     <div class="search-div">
-      <div class="search-div-item">
-        <label>用户名</label>
-        <Input v-model="params.username" placeholder="请输入用户名" class="width"/>
-      </div>
-      <div class="search-div-item">
-        <label>姓名</label>
-        <Input v-model="params.nickname" placeholder="请输入姓名" class="width"/>
-      </div>
+      <!--<div class="search-div-item">-->
+      <!--<label>姓名</label>-->
+      <!--<Input v-model="params.nickname" placeholder="请输入姓名" class="width"/>-->
+      <!--</div>-->
+      <!--<div class="search-div-item">-->
+      <!--<label>用户名</label>-->
+      <!--<Input v-model="params.username" placeholder="请输入用户名" class="width"/>-->
+      <!--</div>-->
       <div class="search-div-item">
         <label>学段</label>
         <Select v-model="params.stageId" @on-change="getGrades" class="width">
@@ -29,6 +29,16 @@
           <Option v-for="item in clazzData" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </div>
+    </div>
+    <div class="search-div">
+      <div class="search-div-item">
+        <label>姓名</label>
+        <Input v-model="params.nickname" placeholder="请输入姓名" class="width"/>
+      </div>
+      <div class="search-div-item">
+        <label>用户名</label>
+        <Input v-model="params.username" placeholder="请输入用户名" class="width"/>
+      </div>
       <div class="search-div-item">
         <Button type="primary" @click="search">查询</Button>
       </div>
@@ -40,6 +50,7 @@
         <Icon type="plus"></Icon>
         添加
       </Button>
+      <Button type="primary" @click="updateAll" style="margin-left: 8px">批量升级</Button>
     </div>
     <div style="margin-top: 16px">
       <Table stripe border :columns="columns" :data="tableData"></Table>
@@ -67,6 +78,8 @@
     },
     components: {Add},
     methods: {
+      updateAll() {
+      },
       getClazzData() {
         this.clazzData = [];
         this.params.clazzId = '';
@@ -110,24 +123,98 @@
       columns() {
         const columns = [
           {
-            title: '用户名', key: 'username', align: 'center', ellipsis: true, minWidth: 150,
-            render: (h, params) => showTip(h, params.row.username)
+            type: 'selection', width: 60, align: 'center'
           },
           {
-            title: '姓名', key: 'nickname', align: 'center', ellipsis: true, minWidth: 150,
+            title: '序号', type: 'index', width: 80, align: 'center'
+          },
+          {
+            title: '姓名', key: 'nickname', align: 'center', ellipsis: true, minWidth: 100,
             render: (h, params) => showTip(h, params.row.nickname)
           },
           {
-            title: '学段', key: 'stage', align: 'center', ellipsis: true, minWidth: 150,
+            title: '用户名', key: 'username', align: 'center', ellipsis: true, minWidth: 100,
+            render: (h, params) => showTip(h, params.row.username)
+          },
+          {
+            title: '学段', key: 'stage', align: 'center', ellipsis: true, minWidth: 80,
             render: (h, params) => showTip(h, params.row.stage)
           },
           {
-            title: '年级', key: 'grade', align: 'center', ellipsis: true, minWidth: 150,
+            title: '年级', key: 'grade', align: 'center', ellipsis: true, minWidth: 80,
             render: (h, params) => showTip(h, params.row.grade)
           },
           {
-            title: '班级', key: 'clazz', align: 'center', ellipsis: true, minWidth: 150,
+            title: '班级', key: 'clazz', align: 'center', ellipsis: true, minWidth: 80,
             render: (h, params) => showTip(h, params.row.clazz)
+          },
+          {
+            title: '操作', align: 'center', width: 200,
+            render: (h, params) => {
+              // const id = params.row.id;
+              const edit = h('Button', {
+                props: {
+                  type: 'primary',
+                  size: 'small'
+                },
+                style: {
+                  "margin-left": '5px'
+                },
+                on: {
+                  click: () => {
+                  }
+                }
+              }, '修改');
+              const update = h('Button', {
+                props: {
+                  type: 'info',
+                  size: 'small'
+                },
+                style: {
+                  "margin-left": '5px'
+                },
+                on: {
+                  click: () => {
+                  }
+                }
+              }, '升级');
+              // const del = h('Button', {
+              //   props: {
+              //     type: 'error',
+              //     size: 'small'
+              //   },
+              //   style: {
+              //     "margin-left": '5px'
+              //   },
+              //   on: {
+              //     click: function () {
+              //       $vue.$Modal.confirm({
+              //         title: '删除',
+              //         content: '确认删除该模板？',
+              //         onOk() {
+              //           $del(url.delTmpl + id, {accountId: this.accountId}).then(res => {
+              //             if (res.code == 0) {
+              //               $vue.$Message.success({
+              //                 content: '已删除',
+              //                 duration: 1,
+              //                 onClose() {
+              //                   $vue.search();
+              //                 }
+              //               });
+              //             } else {
+              //               $vue.$Message.error('删除失败');
+              //             }
+              //           });
+              //         }
+              //       });
+              //     }
+              //   }
+              // }, '删除');
+              const op = [];
+              op.push(edit);
+              op.push(update);
+              return h('div', op);
+            }
           }
         ];
         return columns;

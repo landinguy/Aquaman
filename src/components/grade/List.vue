@@ -29,27 +29,82 @@
 <script>
   import {showTip, timestampToTime} from '@/libs/util'
   import url from '@/api/url'
-  import {post, get, $del} from "@/api/ax"
+  import {post, get, $del, $get} from "@/api/ax"
   import Add from './Add.vue'
 
   export default {
     name: 'List',
     data() {
       return {
-        params: {
-          stageId: '',
-        },
+        params: {stageId: '1'},
         columns: [
           {
-            title: '所属学段', key: 'stageName', align: 'center', ellipsis: true, minWidth: 150,
+            title: '序号', type: 'index', width: 80, align: 'center'
+          },
+          {
+            title: '学段', key: 'stageName', align: 'center', ellipsis: true, minWidth: 100,
             render: (h, params) => showTip(h, params.row.stageName)
           },
           {
-            title: '年级名称', key: 'gradeName', align: 'center', ellipsis: true, minWidth: 150,
+            title: '年级名称', key: 'gradeName', align: 'center', ellipsis: true, minWidth: 100,
             render: (h, params) => showTip(h, params.row.gradeName)
+          },
+          {
+            title: '操作', align: 'center', width: 200,
+            render: (h, params) => {
+              // const id = params.row.id;
+              const edit = h('Button', {
+                props: {
+                  type: 'primary',
+                  size: 'small'
+                },
+                style: {
+                  "margin-left": '5px'
+                },
+                on: {
+                  click: () => {
+                  }
+                }
+              }, '修改');
+              // const del = h('Button', {
+              //   props: {
+              //     type: 'error',
+              //     size: 'small'
+              //   },
+              //   style: {
+              //     "margin-left": '5px'
+              //   },
+              //   on: {
+              //     click: function () {
+              //       $vue.$Modal.confirm({
+              //         title: '删除',
+              //         content: '确认删除该模板？',
+              //         onOk() {
+              //           $del(url.delTmpl + id, {accountId: this.accountId}).then(res => {
+              //             if (res.code == 0) {
+              //               $vue.$Message.success({
+              //                 content: '已删除',
+              //                 duration: 1,
+              //                 onClose() {
+              //                   $vue.search();
+              //                 }
+              //               });
+              //             } else {
+              //               $vue.$Message.error('删除失败');
+              //             }
+              //           });
+              //         }
+              //       });
+              //     }
+              //   }
+              // }, '删除');
+              const op = [];
+              op.push(edit);
+              return h('div', op);
+            }
           }
         ],
-        tableData: [],
+        tableData: []
       }
     },
     components: {Add},
@@ -58,7 +113,7 @@
         this.$refs.AddVue.addModal = true;
       },
       getData() {
-        get(url.getGradesByStageId + this.params.stageId, {}).then(res => this.tableData = res.data).catch(err => console.log(err))
+        $get(url.getGrade, this.params).then(res => this.tableData = res.data).catch(err => console.log(err))
       },
       search() {
         this.getData();

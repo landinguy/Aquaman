@@ -64,7 +64,7 @@
         total: 0,
         columns: [
           {
-            title: '姓名', key: 'nickname', align: 'center', ellipsis: true, minWidth: 150,
+            title: '姓名', key: 'nickname', align: 'center', ellipsis: true, minWidth: 100,
             render: (h, params) => showTip(h, params.row.nickname)
           },
           {
@@ -72,7 +72,7 @@
             render: (h, params) => showTip(h, params.row.teachClazz)
           },
           {
-            title: '次数', key: 'cnt', align: 'center', ellipsis: true, minWidth: 150,
+            title: '次数', key: 'cnt', align: 'center', ellipsis: true, minWidth: 80,
             render: (h, params) => showTip(h, params.row.cnt)
           }
         ]
