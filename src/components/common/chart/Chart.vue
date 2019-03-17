@@ -2,12 +2,10 @@
   <div class="content">
     <Row type="flex" justify="space-between" style="min-width: 800px">
       <Col span="10">
-        <div v-show="showBarOrPie" id="bar"></div>
-        <div v-show="!showBarOrPie" class="nodata">暂无数据</div>
+        <Bar ref="BarVue" :has-data="showBarOrPie"></Bar>
       </Col>
       <Col span="10">
-        <div v-show="showBarOrPie" id="pie"></div>
-        <div v-show="!showBarOrPie" class="nodata">暂无数据</div>
+        <Pie ref="PieVue" :has-data="showBarOrPie"></Pie>
       </Col>
     </Row>
     <!--<div id="line"></div>-->
@@ -15,85 +13,17 @@
   </div>
 </template>
 <script>
-  import url from '@/api/url'
   import {post, get} from "@/api/ax"
+  import Bar from './Bar'
+  import Pie from './Pie'
 
   let echarts = require('echarts');
   export default {
     name: 'Chart',
-    components: {},
+    components: {Bar, Pie},
     data() {
       return {
         showBarOrPie: true,
-        pieChart: null,
-        lineChart: null,
-        barOption: {
-          title: {
-            text: '合计：0',
-            // subtext: '副标题',
-            x: 'center',
-            y: 'top'
-          },
-          tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-              type: 'shadow'
-            }
-          },
-          grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
-          },
-          xAxis: {
-            type: 'value',
-            boundaryGap: [0, 0.01]
-          },
-          yAxis: {
-            type: 'category',
-            data: []
-          },
-          series: [
-            {
-              type: 'bar',
-              barWidth: 20,//柱图宽度
-              data: []
-            }
-          ]
-        },
-        pieOption: {
-          // title: {
-          //   text: '某站点用户访问来源',
-          //   subtext: '纯属虚构',
-          //   x: 'center'
-          // },
-          tooltip: {
-            trigger: 'item',
-            formatter: "{a} <br/>{b} : {c} ({d}%)"
-          },
-          legend: {
-            orient: 'vertical',
-            left: 'left',
-            data: []
-          },
-          series: [
-            {
-              name: '占比',
-              type: 'pie',
-              radius: '55%',
-              center: ['50%', '60%'],
-              data: [],
-              itemStyle: {
-                emphasis: {
-                  shadowBlur: 10,
-                  shadowOffsetX: 0,
-                  shadowColor: 'rgba(0, 0, 0, 0.5)'
-                }
-              }
-            }
-          ]
-        },
         lineOption: {
           // title: {
           //   text: '折线图堆叠'
@@ -148,35 +78,15 @@
         console.log("#####{}", barY.length);
         if (barY.length > 0) {
           this.showBarOrPie = true;
-
-          this.barOption.series[0].data = barX;
-          this.barOption.yAxis.data = barY;
-          this.barOption.title.text = '合计：' + total;
-          this.initBar();
-
-          this.pieOption.legend.data = barY;
-          this.pieOption.series[0].data = pieData;
-          this.initPie();
+          this.$refs.BarVue.reloadBar({barX, barY, total});
+          this.$refs.PieVue.reloadPie({barY, pieData});
         } else {
           this.showBarOrPie = false
         }
-      },
-      initBar() {
-        let bar = echarts.init(document.getElementById('bar'));
-        bar.setOption(this.barOption);
-        return bar;
-      },
-      initPie() {
-        let pie = echarts.init(document.getElementById('pie'));
-        pie.setOption(this.pieOption);
-        return pie;
       }
     },
     computed: {},
     mounted() {
-      let bar = this.initBar();
-      let pie = this.initPie();
-
       // let line = echarts.init(document.getElementById('line'));
       // line.setOption(this.lineOption);
       // this.lineChart = line;
@@ -184,8 +94,8 @@
       /** 浏览器窗口大小改变时，图表宽高自适应  **/
       setTimeout(() => {
         window.onresize = () => {
-          bar.resize();
-          pie.resize();
+          this.$refs.BarVue.bar.resize();
+          this.$refs.PieVue.pie.resize();
           // line.resize();
         }
       }, 200)
@@ -195,10 +105,6 @@
 <style scoped lang="less">
   .content {
     overflow: auto;
-
-    #bar, #pie {
-      height: 300px;
-    }
 
     #line {
       height: 300px;

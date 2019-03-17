@@ -1,14 +1,6 @@
 <template>
   <div class="bg">
     <div class="search-div">
-      <!--<div class="search-div-item">-->
-      <!--<label>姓名</label>-->
-      <!--<Input v-model="params.nickname" placeholder="请输入姓名" class="width"/>-->
-      <!--</div>-->
-      <!--<div class="search-div-item">-->
-      <!--<label>用户名</label>-->
-      <!--<Input v-model="params.username" placeholder="请输入用户名" class="width"/>-->
-      <!--</div>-->
       <div class="search-div-item">
         <label>学段</label>
         <Select v-model="params.stageId" @on-change="getGrades" class="width">

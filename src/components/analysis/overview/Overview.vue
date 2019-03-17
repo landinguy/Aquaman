@@ -19,10 +19,10 @@
       <h3>教师使用情况分析</h3>
       <Table :columns="columns4" :data="data4"></Table>
     </div>
-    <!--<div class="student">-->
-    <!--<h3>学生使用情况分析</h3>-->
-    <!--<Table :columns="columns4" :data="data5"></Table>-->
-    <!--</div>-->
+    <div class="student">
+      <h3>学生使用情况分析</h3>
+      <Table :columns="columns4" :data="data5"></Table>
+    </div>
   </div>
 </template>
 <script>
@@ -68,7 +68,27 @@
           }
         ],
         total: 0,
-        data1: [], data2: [], data3: [], data4: [], data5: []
+        data1: [], data2: [], data3: [], data4: [],
+        data5: [
+          {
+            name: '完成率',
+            yesterday: '92%',
+            week: '90%',
+            month: '86%',
+            semester: '85%',
+            year: '82%',
+            total: '82%'
+          },
+          {
+            name: '得分率',
+            yesterday: '90%',
+            week: '90%',
+            month: '85%',
+            semester: '84%',
+            year: '80%',
+            total: '80%'
+          }
+        ]
       }
     },
     methods: {

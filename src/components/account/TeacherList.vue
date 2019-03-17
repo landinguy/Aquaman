@@ -2,6 +2,28 @@
   <div class="bg">
     <div class="search-div">
       <div class="search-div-item">
+        <label>学段</label>
+        <Select v-model="params.stageId" @on-change="getGrades" class="width">
+          <Option value="1">小学</Option>
+          <Option value="2">初中</Option>
+          <Option value="3">高中</Option>
+        </Select>
+      </div>
+      <div class="search-div-item">
+        <label>年级</label>
+        <Select v-model="params.gradeId" @on-change="getClazzData" class="width">
+          <Option v-for="item in grades" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        </Select>
+      </div>
+      <div class="search-div-item">
+        <label>班级</label>
+        <Select v-model="params.clazzId" class="width">
+          <Option v-for="item in clazzData" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        </Select>
+      </div>
+    </div>
+    <div class="search-div">
+      <div class="search-div-item">
         <label>姓名</label>
         <Input v-model="params.nickname" placeholder="请输入姓名" class="width"/>
       </div>
@@ -9,26 +31,6 @@
         <label>用户名</label>
         <Input v-model="params.username" placeholder="请输入用户名" class="width"/>
       </div>
-      <!--<div class="search-div-item">-->
-      <!--<label>学段</label>-->
-      <!--<Select v-model="params.stageId" @on-change="getGrades" class="width">-->
-      <!--<Option value="1">小学</Option>-->
-      <!--<Option value="2">初中</Option>-->
-      <!--<Option value="3">高中</Option>-->
-      <!--</Select>-->
-      <!--</div>-->
-      <!--<div class="search-div-item">-->
-      <!--<label>年级</label>-->
-      <!--<Select v-model="params.gradeId" @on-change="getClazzData" class="width">-->
-      <!--<Option v-for="item in grades" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
-      <!--</Select>-->
-      <!--</div>-->
-      <!--<div class="search-div-item">-->
-      <!--<label>班级</label>-->
-      <!--<Select v-model="params.clazzId" class="width">-->
-      <!--<Option v-for="item in clazzData" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
-      <!--</Select>-->
-      <!--</div>-->
       <div class="search-div-item">
         <Button type="primary" @click="search">查询</Button>
       </div>
@@ -72,12 +74,29 @@
             clazz: '高一1班',
             subject: '高一1班数学'
           }
-        ], grades: [], clazzData: [],
+        ],
+        grades: [], clazzData: [],
         total: 0
       }
     },
     components: {Add, ExpandRow},
     methods: {
+      getClazzData() {
+        this.clazzData = [];
+        this.params.clazzId = '';
+        let gradeId = this.params.gradeId;
+        get(url.getClazzByGradeId + gradeId, {}).then(res => {
+          const {clazzList} = res.data;
+          clazzList.forEach(item => this.clazzData.push({label: item.clazzName, value: item.clazzId}))
+        }).catch(err => console.log(err))
+      },
+      getGrades() {
+        this.grades = [];
+        const {stageId} = this.params;
+        get(url.getGradesByStageId + stageId, {}).then(res =>
+          res.data.forEach(item => this.grades.push({label: item.gradeName, value: item.gradeId}))
+        ).catch(err => console.log(err));
+      },
       changePage(n) {
         this.params.pageNum = n;
         this.getData();
@@ -87,19 +106,18 @@
         this.getData();
       },
       getData() {
-        get(url.getTeachers, {}).then(res => {
-          console.log(res)
-          // const {total, list} = res.data;
-          // this.tableData = list;
-          // this.total = total;
+        $get(url.getTeachers, this.params).then(res => {
+          const {total, list} = res.data;
+          this.tableData = list;
+          this.total = total;
         }).catch(err => console.log(err))
       },
       showModal() {
         this.$refs.AddVue.addModal = true;
-      },
+      }
     },
     mounted() {
-      // this.search();
+      this.search();
     },
     computed: {
       ...mapGetters(['accountId', 'roleId']),
@@ -131,23 +149,24 @@
             render: (h, params) => showTip(h, params.row.username)
           },
           {
-            title: '角色', key: 'role', align: 'center', ellipsis: true, minWidth: 150,
+            title: '角色', key: 'role', align: 'left', ellipsis: true, minWidth: 100,
             render: (h, params) => {
-              const {role, schoolName, grade, clazz, subject} = params.row;
               let arr = [];
-              role.split('、').forEach(r => {
-                let title = r == '校长' ? '学校' : r == '年级主任' ? '年级' : r == '班主任' ? '班级' : '任教信息';
-                let type = r == '校长' ? 'error' : r == '年级主任' ? 'primary' : r == '班主任' ? 'info' : 'ghost';
-                let content = r == '校长' ? schoolName : r == '年级主任' ? grade : r == '班主任' ? clazz : subject;
+              const {roleInfoList} = params.row;
+              roleInfoList.forEach(item => {
+                const {type, tip} = item;
+                let title = type == 'PRESIDENT' ? '学校' : type == 'GRADE_LEADER' ? '年级' : type == 'CLASS_TEACHER' ? '班级' : '任教信息';
+                let t = type == 'PRESIDENT' ? 'error' : type == 'GRADE_LEADER' ? 'primary' : type == 'CLASS_TEACHER' ? 'info' : 'ghost';
+                let roleName = type == 'PRESIDENT' ? '校长' : type == 'GRADE_LEADER' ? '年级主任' : type == 'CLASS_TEACHER' ? '班主任' : '任课教师';
                 const icon = h('Poptip', {
-                    props: {trigger: 'hover', title: title, content: content},
+                    props: {trigger: 'hover', title: title, content: tip},
                   },
                   [h('Button', {
-                    props: {type: type, size: 'small'},
+                    props: {type: t, size: 'small'},
                     style: {marginRight: '5px'}
-                  }, r)]);
+                  }, roleName)]);
                 arr.push(icon);
-              });
+              })
               return h('div', arr)
             }
           },
