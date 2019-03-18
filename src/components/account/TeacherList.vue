@@ -55,7 +55,7 @@
   import {mapMutations, mapGetters} from 'vuex'
   import {showTip, timestampToTime} from '@/libs/util'
   import url from '@/api/url'
-  import {post, $del, get, $get} from "@/api/ax"
+  import {post, $del, get, $get, patch} from "@/api/ax"
   import Add from './Add'
   import ExpandRow from './ExpandRow'
 
@@ -111,7 +111,7 @@
         }).catch(err => console.log(err))
       },
       showModal() {
-        this.$refs.AddVue.addModal = true;
+        this.$refs.AddVue.showModal();
       }
     },
     mounted() {
@@ -199,6 +199,26 @@
                   }
                 }
               }, '升级');
+              const reset = h('Button', {
+                props: {
+                  type: 'ghost',
+                  size: 'small'
+                },
+                style: {
+                  "margin-left": '5px'
+                },
+                on: {
+                  click: () => {
+                    patch(url.resetPassword, {username: params.row.username}).then(res => {
+                      if (res.ret_code == 0) {
+                        this.$Message.success('重置成功')
+                      } else {
+                        this.$Message.error('重置失败')
+                      }
+                    }).catch(err => console.log(err))
+                  }
+                }
+              }, '重置密码');
               // const del = h('Button', {
               //   props: {
               //     type: 'error',
@@ -234,6 +254,7 @@
               const op = [];
               op.push(edit);
               // op.push(update);
+              op.push(reset);
               return h('div', op);
             }
           }

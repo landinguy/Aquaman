@@ -10,6 +10,7 @@ export default {
 
   //年级管理
   addGrade: '/api/management/grade',
+  updateGrade: '/api/management/grade',
   getGrade: '/api/management/grade',
   getGradesByStageId: '/api/management/grade/stage/',
   getClazzByGradeId: '/api/management/clazz/grade/',
@@ -26,6 +27,7 @@ export default {
   addAccount: '/api/management/user',
   getStudents: '/api/management/student',
   getTeachers: '/api/management/teacher',
+  resetPassword: '/api/management/user/password',
 
   getSubjectByStageId: '/api/basic/subjects/stage/',
 

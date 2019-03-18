@@ -16,12 +16,12 @@
             <Input v-model.trim="formData.nickname" placeholder="请填写姓名"/>
           </FormItem>
           <FormItem label="角色" prop="role">
-            <Select v-model="formData.role" multiple @on-change="changeRole">
+            <Select v-model="formData.role" multiple @on-change="changeRole" :disabled="isStudent">
               <Option value="PRESIDENT" :disabled="flag1">校长</Option>
               <Option value="GRADE_LEADER" :disabled="flag1">年级主任</Option>
               <Option value="CLASS_TEACHER" :disabled="flag1">班主任</Option>
               <Option value="TEACHER" :disabled="flag1">任课教师</Option>
-              <Option value="STUDENT" :disabled="flag2">学生</Option>
+              <Option value="STUDENT" v-if="isStudent" :disabled="flag2">学生</Option>
             </Select>
           </FormItem>
           <template v-if="!isPresident">
@@ -87,19 +87,37 @@
           role: [{required: true, type: 'array', min: 1, message: '请选择至少一个角色', trigger: 'change'}],
           stageId: [{required: true, message: '请选择学段', trigger: 'change'}],
           gradeId: [{required: true, message: '请选择年级', trigger: 'change'}],
-          clazzName: [{required: true, type: 'array', min: 1, message: '请选择班级', trigger: 'change'}]
+          clazzName: [
+            {required: true, type: 'array', min: 1, message: '请选择班级', trigger: 'change'},
+            {validator: this.validateClazz, trigger: 'change'}
+          ]
         },
         flag1: false,
         flag2: false,
         isPresident: false,
         isGradeLeader: false,
         isTeacher: false,
+        isStudent: false,
         grades: [],
         clazzData: [],
         subjectData: []
       }
     },
     methods: {
+      validateClazz(rule, value, callback) {
+        if (this.isStudent && value.length > 1) {
+          callback(new Error("只能选择一个班级"));
+        } else {
+          callback()
+        }
+      },
+      showModal(isStudent = false) {
+        this.isStudent = isStudent;
+        if (isStudent) {
+          this.formData.role = ['STUDENT'];
+        }
+        this.addModal = true;
+      },
       changeRole(val) {
         this.isPresident = this.isGradeLeader = this.isTeacher = false
 

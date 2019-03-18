@@ -46,5 +46,25 @@ export const $del = (url, data) => {
   })
 }
 
+export const put = (url, data) => {
+  return new Promise((resolve, reject) => {
+    send(url, "put", data).then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}
+
+export const patch = (url, data) => {
+  return new Promise((resolve, reject) => {
+    send(url, "patch", data).then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}
+
 
 
