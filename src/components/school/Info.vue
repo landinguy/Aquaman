@@ -56,7 +56,8 @@
     components: {Add},
     methods: {
       edit() {
-        this.content = 2;
+        // this.content = 2;
+        this.$Message.info('请联系管理员获得修改权限')
       },
       getData() {
         get(url.getSchool, {}).then(res => this.school = res).catch(err => console.log(err))

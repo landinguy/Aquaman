@@ -6,8 +6,8 @@
       </p>
       <div>
         <Form ref="form" :model="formData" :rules="formValidate" :label-width="100">
-          <FormItem label="用户名" prop="username">
-            <Input v-model.trim="formData.username" placeholder="请填写用户名"/>
+          <FormItem label="账号" prop="username">
+            <Input v-model.trim="formData.username" placeholder="请填写账号"/>
           </FormItem>
           <FormItem label="密码" prop="password">
             <Input v-model.trim="formData.password" type="password" placeholder="请填写密码"/>
@@ -81,7 +81,7 @@
         },
         id: '',
         formValidate: {
-          username: [{required: true, message: '请填写用户名', trigger: 'blur'}],
+          username: [{required: true, message: '请填写账号', trigger: 'blur'}],
           password: [{required: true, message: '请填写密码', trigger: 'blur'}],
           nickname: [{required: true, message: '请填写姓名', trigger: 'blur'}],
           role: [{required: true, type: 'array', min: 1, message: '请选择至少一个角色', trigger: 'change'}],

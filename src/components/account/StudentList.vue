@@ -28,11 +28,12 @@
         <Input v-model="params.nickname" placeholder="请输入姓名" class="width"/>
       </div>
       <div class="search-div-item">
-        <label>用户名</label>
-        <Input v-model="params.username" placeholder="请输入用户名" class="width"/>
+        <label>账号</label>
+        <Input v-model="params.username" placeholder="请输入账号" class="width"/>
       </div>
       <div class="search-div-item">
         <Button type="primary" @click="search">查询</Button>
+        <Button type="ghost" @click="clear" style="margin-left: 16px">清空</Button>
       </div>
     </div>
 
@@ -70,23 +71,31 @@
     },
     components: {Add},
     methods: {
+      clear() {
+        this.params = {username: '', nickname: '', stageId: '', gradeId: '', clazzId: '', pageNum: 1, pageSize: 10}
+      },
       updateAll() {
+        this.$Message.warning(' 未到学年结束时间，禁止升级')
       },
       getClazzData() {
         this.clazzData = [];
         this.params.clazzId = '';
         let gradeId = this.params.gradeId;
-        get(url.getClazzByGradeId + gradeId, {}).then(res => {
-          const {clazzList} = res.data;
-          clazzList.forEach(item => this.clazzData.push({label: item.clazzName, value: item.clazzId}))
-        }).catch(err => console.log(err))
+        if (gradeId) {
+          get(url.getClazzByGradeId + gradeId, {}).then(res => {
+            const {clazzList} = res.data;
+            clazzList.forEach(item => this.clazzData.push({label: item.clazzName, value: item.clazzId}))
+          }).catch(err => console.log(err))
+        }
       },
       getGrades() {
         this.grades = [];
         const {stageId} = this.params;
-        get(url.getGradesByStageId + stageId, {}).then(res =>
-          res.data.forEach(item => this.grades.push({label: item.gradeName, value: item.gradeId}))
-        ).catch(err => console.log(err));
+        if (stageId) {
+          get(url.getGradesByStageId + stageId, {}).then(res =>
+            res.data.forEach(item => this.grades.push({label: item.gradeName, value: item.gradeId}))
+          ).catch(err => console.log(err));
+        }
       },
       changePage(n) {
         this.params.pageNum = n;
@@ -125,7 +134,7 @@
             render: (h, params) => showTip(h, params.row.nickname)
           },
           {
-            title: '用户名', key: 'username', align: 'center', ellipsis: true, minWidth: 100,
+            title: '账号', key: 'username', align: 'center', ellipsis: true, minWidth: 100,
             render: (h, params) => showTip(h, params.row.username)
           },
           {
@@ -154,6 +163,7 @@
                 },
                 on: {
                   click: () => {
+                    this.$Message.info('请联系管理员获得修改权限')
                   }
                 }
               }, '修改');
@@ -167,6 +177,7 @@
                 },
                 on: {
                   click: () => {
+                    this.$Message.warning(' 未到学年结束时间，禁止升级')
                   }
                 }
               }, '升级');

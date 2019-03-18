@@ -28,11 +28,12 @@
         <Input v-model="params.nickname" placeholder="请输入姓名" class="width"/>
       </div>
       <div class="search-div-item">
-        <label>用户名</label>
-        <Input v-model="params.username" placeholder="请输入用户名" class="width"/>
+        <label>账号</label>
+        <Input v-model="params.username" placeholder="请输入账号" class="width"/>
       </div>
       <div class="search-div-item">
         <Button type="primary" @click="search">查询</Button>
+        <Button type="ghost" @click="clear" style="margin-left: 16px">清空</Button>
       </div>
     </div>
 
@@ -64,38 +65,35 @@
       return {
         content: 1,
         params: {username: '', nickname: '', stageId: '', gradeId: '', clazzId: '', pageNum: 1, pageSize: 10},
-        tableData: [
-          {
-            username: 'test',
-            nickname: 'test',
-            role: '年级主任、班主任、任课教师',
-            schoolName: '衡水中学',
-            grade: '----',
-            clazz: '高一1班',
-            subject: '高一1班数学'
-          }
-        ],
+        tableData: [],
         grades: [], clazzData: [],
         total: 0
       }
     },
     components: {Add, ExpandRow},
     methods: {
+      clear() {
+        this.params = {username: '', nickname: '', stageId: '', gradeId: '', clazzId: '', pageNum: 1, pageSize: 10}
+      },
       getClazzData() {
         this.clazzData = [];
         this.params.clazzId = '';
         let gradeId = this.params.gradeId;
-        get(url.getClazzByGradeId + gradeId, {}).then(res => {
-          const {clazzList} = res.data;
-          clazzList.forEach(item => this.clazzData.push({label: item.clazzName, value: item.clazzId}))
-        }).catch(err => console.log(err))
+        if (gradeId) {
+          get(url.getClazzByGradeId + gradeId, {}).then(res => {
+            const {clazzList} = res.data;
+            clazzList.forEach(item => this.clazzData.push({label: item.clazzName, value: item.clazzId}))
+          }).catch(err => console.log(err))
+        }
       },
       getGrades() {
         this.grades = [];
         const {stageId} = this.params;
-        get(url.getGradesByStageId + stageId, {}).then(res =>
-          res.data.forEach(item => this.grades.push({label: item.gradeName, value: item.gradeId}))
-        ).catch(err => console.log(err));
+        if (stageId) {
+          get(url.getGradesByStageId + stageId, {}).then(res =>
+            res.data.forEach(item => this.grades.push({label: item.gradeName, value: item.gradeId}))
+          ).catch(err => console.log(err));
+        }
       },
       changePage(n) {
         this.params.pageNum = n;
@@ -135,21 +133,21 @@
           //   }
           // },
           {
-            type: 'selection', minWidth: 60, align: 'center'
+            type: 'selection', width: 60, align: 'center'
           },
           {
-            title: '序号', type: 'index', minWidth: 80, align: 'center'
+            title: '序号', type: 'index', width: 80, align: 'center'
           },
           {
             title: '姓名', key: 'nickname', align: 'center', ellipsis: true, minWidth: 100,
             render: (h, params) => showTip(h, params.row.nickname)
           },
           {
-            title: '用户名', key: 'username', align: 'center', ellipsis: true, minWidth: 100,
+            title: '账号', key: 'username', align: 'center', ellipsis: true, minWidth: 100,
             render: (h, params) => showTip(h, params.row.username)
           },
           {
-            title: '角色', key: 'role', align: 'left', ellipsis: true, minWidth: 100,
+            title: '角色', align: 'left', ellipsis: true, minWidth: 100,
             render: (h, params) => {
               let arr = [];
               const {roleInfoList} = params.row;
@@ -157,7 +155,7 @@
                 const {type, tip} = item;
                 let title = type == 'PRESIDENT' ? '学校' : type == 'GRADE_LEADER' ? '年级' : type == 'CLASS_TEACHER' ? '班级' : '任教信息';
                 let t = type == 'PRESIDENT' ? 'error' : type == 'GRADE_LEADER' ? 'primary' : type == 'CLASS_TEACHER' ? 'info' : 'ghost';
-                let roleName = type == 'PRESIDENT' ? '校长' : type == 'GRADE_LEADER' ? '年级主任' : type == 'CLASS_TEACHER' ? '班主任' : '任课教师';
+                let roleName = type == 'PRESIDENT' ? '校领导' : type == 'GRADE_LEADER' ? '年级主任' : type == 'CLASS_TEACHER' ? '班主任' : '任课教师';
                 const icon = h('Poptip', {
                     props: {trigger: 'hover', title: title, content: tip},
                   },
@@ -184,6 +182,7 @@
                 },
                 on: {
                   click: () => {
+                    this.$Message.info('请联系管理员获得修改权限')
                   }
                 }
               }, '修改');

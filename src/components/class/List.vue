@@ -17,6 +17,7 @@
       </div>
       <div class="search-div-item width">
         <Button type="primary" @click="search">查询</Button>
+        <Button type="ghost" @click="clear" style="margin-left: 16px">清空</Button>
       </div>
     </div>
 
@@ -74,6 +75,7 @@
                 },
                 on: {
                   click: () => {
+                    this.$Message.info('请联系管理员获得修改权限')
                   }
                 }
               }, '修改');
@@ -120,6 +122,9 @@
     },
     components: {Add},
     methods: {
+      clear() {
+        this.params = {pageNum: 1, pageSize: 10, stageId: '', gradeId: ''}
+      },
       getGrades() {
         this.grades = [];
         const {stageId} = this.params;

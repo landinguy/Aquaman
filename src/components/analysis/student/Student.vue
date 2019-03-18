@@ -30,28 +30,39 @@
         <Button type="primary" @click="search">查询</Button>
       </div>
     </div>
-    <Chart ref="chart"></Chart>
+
+    <Row type="flex" justify="center" style="min-width: 800px">
+      <Col span="12">
+        <Pie ref="Pie1" :has-data="hasData"></Pie>
+      </Col>
+    </Row>
+    <Row type="flex" justify="center" style="min-width: 800px;margin-top: 32px">
+      <Col span="12">
+        <Pie2 ref="Pie2" :has-data="hasData"></Pie2>
+      </Col>
+    </Row>
   </div>
 </template>
 <script>
   import url from '@/api/url';
   import {post, get, $get} from "@/api/ax";
-  import Chart from '@/components/common/chart/Chart'
+  import Pie from '@/components/common/chart/Pie'
+  import Pie2 from '@/components/common/chart/Pie2'
 
   export default {
     name: 'Student',
-    components: {Chart},
+    components: {Pie, Pie2},
     data() {
       return {
         params: {
           timeType: '1',
           stageId: '',
           gradeId: '',
-          type: '1',
           // startDate: '',
           // endDate: '',
         },
         grades: [],
+        hasData: true
       }
     },
     methods: {
@@ -66,28 +77,52 @@
         this.getData();
       },
       getData() {
-        $get(url.subjectAnalysis, this.params).then(res => {
-          let barX = [];
-          let barY = [];
-          let pieData = [];
-          if (res.data) {
-            const {total, stat} = res.data;
-            stat.forEach(item => {
-              const {subjectName, cnt} = item;
-              barX.push(cnt);
-              barY.push(subjectName);
-              pieData.push({value: cnt, name: subjectName});
-            })
-            this.$refs.chart.reloadChart({total, barX, barY, pieData});
-          } else {
-            this.$refs.chart.reloadChart({barX, barY, pieData});
-          }
-        }).catch(err => console.log(err))
+        // $get(url.subjectAnalysis, this.params).then(res => {
+        //   let barX = [];
+        //   let barY = [];
+        //   let pieData = [];
+        //   if (res.data) {
+        //     const {total, stat} = res.data;
+        //     stat.forEach(item => {
+        //       const {subjectName, cnt} = item;
+        //       barX.push(cnt);
+        //       barY.push(subjectName);
+        //       pieData.push({value: cnt, name: subjectName});
+        //     })
+        //     this.$refs.chart.reloadChart({total, barX, barY, pieData});
+        //   } else {
+        //     this.$refs.chart.reloadChart({barX, barY, pieData});
+        //   }
+        // }).catch(err => console.log(err))
       },
     },
     computed: {},
     mounted() {
-      this.search()
+      this.$refs.Pie1.pieOption.title = {text: '作业提交率', x: 'center'}
+      this.$refs.Pie2.pieOption.title = {text: '作业得分率', x: 'center'}
+      let barY = ["0%~30.99%", "31%~60.99%", "61%~70.99%", "71%~80.99%", "81%~90.99%", "91%~100%"];
+      let barY1 = ["0%~30.99%", "31%~60.99%", "61%~70.99%", "71%~80.99%", "81%~90.99%", "91%~100%"];
+      let pieData = [
+        {name: '0%~30.99%', value: 12}, {name: '31%~60.99%', value: 22}, {name: '61%~70.99%', value: 30},
+        {name: '71%~80.99%', value: 40}, {name: '81%~90.99%', value: 20}, {name: '91%~100%', value: 10}
+      ];
+      let pieData1 = [
+        {name: '0%~30.99%', value: '10'}, {name: '31%~60.99%', value: '12'}, {name: '61%~70.99%', value: '24'},
+        {name: '71%~80.99%', value: '40'}, {name: '81%~90.99%', value: '35'}, {name: '91%~100%', value: '8'}
+      ];
+      this.$refs.Pie1.reloadPie({barY, pieData});
+      this.$refs.Pie2.reloadPie({barY1, pieData1});
+
+      /** 浏览器窗口大小改变时，图表宽高自适应  **/
+      setTimeout(() => {
+        window.onresize = () => {
+          this.$refs.Pie1.pie.resize();
+          this.$refs.Pie2.pie.resize();
+        }
+      }, 200)
+
+      // this.$refs.PieVue.reloadPie({barY, pieData});
+      // this.search()
     }
   }
 </script>
@@ -104,7 +139,7 @@
     justify-content: left;
     align-items: center;
     flex-wrap: wrap;
-    margin-bottom: 16px;
+    margin-bottom: 32px;
 
     &-item {
       margin-bottom: 16px;

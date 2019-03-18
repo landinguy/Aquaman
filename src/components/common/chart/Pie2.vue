@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-show="hasData" id="pie"></div>
+    <div v-show="hasData" id="pie2"></div>
     <div v-show="!hasData" class="nodata">暂无数据</div>
   </div>
 </template>
@@ -8,7 +8,7 @@
 <script>
   let echarts = require('echarts');
   export default {
-    name: 'Pie',
+    name: 'Pie2',
     props: {
       hasData: {type: Boolean, default: true}
     },
@@ -51,13 +51,13 @@
     },
     methods: {
       initPie() {
-        let pie = echarts.init(document.getElementById('pie'));
+        let pie = echarts.init(document.getElementById('pie2'));
         pie.setOption(this.pieOption);
         this.pie = pie;
       },
-      reloadPie({barY, pieData}) {
-        this.pieOption.legend.data = barY;
-        this.pieOption.series[0].data = pieData;
+      reloadPie({barY1, pieData1}) {
+        this.pieOption.legend.data = barY1;
+        this.pieOption.series[0].data = pieData1;
         this.initPie();
       }
     },
@@ -70,7 +70,7 @@
 </script>
 
 <style scoped>
-  #pie {
+  #pie2 {
     height: 300px;
   }
 
