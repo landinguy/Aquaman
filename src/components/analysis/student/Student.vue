@@ -48,6 +48,7 @@
   import {post, get, $get} from "@/api/ax";
   import Pie from '@/components/common/chart/Pie'
   import Pie2 from '@/components/common/chart/Pie2'
+  import {handleSpinCustom} from '@/libs/util'
 
   export default {
     name: 'Student',
@@ -74,6 +75,15 @@
         ).catch(err => console.log(err));
       },
       search() {
+        const {stageId, gradeId} = this.params;
+        if (stageId && gradeId) {
+          handleSpinCustom();
+          setInterval(() => this.$Spin.hide(), 200);
+          this.setData();
+          this.hasData = true;
+        } else {
+          this.hasData = false;
+        }
         this.getData();
       },
       getData() {
@@ -95,24 +105,26 @@
         //   }
         // }).catch(err => console.log(err))
       },
+      setData() {
+        this.$refs.Pie1.pieOption.title = {text: '作业提交率', x: 'center'}
+        this.$refs.Pie2.pieOption.title = {text: '作业得分率', x: 'center'}
+        let barY = ["0%~30.99%", "31%~60.99%", "61%~70.99%", "71%~80.99%", "81%~90.99%", "91%~100%"];
+        let barY1 = ["0%~30.99%", "31%~60.99%", "61%~70.99%", "71%~80.99%", "81%~90.99%", "91%~100%"];
+        let pieData = [
+          {name: '0%~30.99%', value: 12}, {name: '31%~60.99%', value: 22}, {name: '61%~70.99%', value: 30},
+          {name: '71%~80.99%', value: 40}, {name: '81%~90.99%', value: 20}, {name: '91%~100%', value: 10}
+        ];
+        let pieData1 = [
+          {name: '0%~30.99%', value: '10'}, {name: '31%~60.99%', value: '12'}, {name: '61%~70.99%', value: '24'},
+          {name: '71%~80.99%', value: '40'}, {name: '81%~90.99%', value: '35'}, {name: '91%~100%', value: '8'}
+        ];
+        this.$refs.Pie1.reloadPie({barY, pieData});
+        this.$refs.Pie2.reloadPie({barY1, pieData1});
+      }
     },
     computed: {},
     mounted() {
-      this.$refs.Pie1.pieOption.title = {text: '作业提交率', x: 'center'}
-      this.$refs.Pie2.pieOption.title = {text: '作业得分率', x: 'center'}
-      let barY = ["0%~30.99%", "31%~60.99%", "61%~70.99%", "71%~80.99%", "81%~90.99%", "91%~100%"];
-      let barY1 = ["0%~30.99%", "31%~60.99%", "61%~70.99%", "71%~80.99%", "81%~90.99%", "91%~100%"];
-      let pieData = [
-        {name: '0%~30.99%', value: 12}, {name: '31%~60.99%', value: 22}, {name: '61%~70.99%', value: 30},
-        {name: '71%~80.99%', value: 40}, {name: '81%~90.99%', value: 20}, {name: '91%~100%', value: 10}
-      ];
-      let pieData1 = [
-        {name: '0%~30.99%', value: '10'}, {name: '31%~60.99%', value: '12'}, {name: '61%~70.99%', value: '24'},
-        {name: '71%~80.99%', value: '40'}, {name: '81%~90.99%', value: '35'}, {name: '91%~100%', value: '8'}
-      ];
-      this.$refs.Pie1.reloadPie({barY, pieData});
-      this.$refs.Pie2.reloadPie({barY1, pieData1});
-
+      this.hasData = false;
       /** 浏览器窗口大小改变时，图表宽高自适应  **/
       setTimeout(() => {
         window.onresize = () => {
