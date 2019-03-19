@@ -65,7 +65,7 @@
       return {
         content: 1,
         params: {username: '', nickname: '', stageId: '', gradeId: '', clazzId: '', pageNum: 1, pageSize: 10},
-        tableData: [], grades: [], clazzData: [],
+        tableData: [], grades: [], clazzData: [], userId: [],
         total: 0
       }
     },

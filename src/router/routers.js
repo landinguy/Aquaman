@@ -44,17 +44,10 @@ export default [
     name: 'account',
     meta: {
       title: '用户管理',
+      access: ['ADMIN']
     },
     component: Main,
     children: [
-      // {
-      //   path: 'addAccount',
-      //   name: 'addAccount',
-      //   meta: {
-      //     title: '添加用户',
-      //   },
-      //   component: () => import('@/components/account/Add')
-      // },
       {
         path: 'students',
         name: 'students',
@@ -78,6 +71,7 @@ export default [
     name: 'schoolManage',
     meta: {
       title: '学校管理',
+      access: ['PRESIDENT','GRADE_LEADER','CLASS_TEACHER','TEACHER']
     },
     component: Main,
     children: [
@@ -104,6 +98,7 @@ export default [
     name: 'analysis',
     meta: {
       title: '数据分析',
+      access: ['PRESIDENT','GRADE_LEADER','CLASS_TEACHER','TEACHER']
     },
     component: Main,
     children: [

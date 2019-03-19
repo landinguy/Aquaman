@@ -33,13 +33,14 @@
           </Col>
         </Row>
       </Card>
-      <div class="btn">
+      <div v-if="roleId=='ADMIN'" class="btn">
         <Button type="ghost" shape="circle" @click="edit()" style="width: 80px">编辑</Button>
       </div>
     </div>
   </div>
 </template>
 <script>
+  import {mapMutations, mapGetters} from 'vuex'
   import {showTip, timestampToTime} from '@/libs/util'
   import url from '@/api/url'
   import {post, get, $del} from "@/api/ax"
@@ -66,7 +67,9 @@
     mounted() {
       this.getData()
     },
-    computed: {}
+    computed: {
+      ...mapGetters(['accountId', 'roleId'])
+    }
   }
 </script>
 <style scoped lang="less">
