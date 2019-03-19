@@ -75,7 +75,7 @@
                 },
                 on: {
                   click: () => {
-                    this.$Message.info('请联系管理员获得修改权限')
+                    this.$refs.AddVue.showModal(params.row);
                   }
                 }
               }, '修改');
@@ -135,7 +135,7 @@
         }
       },
       showModal() {
-        this.$refs.AddVue.addModal = true;
+        this.$refs.AddVue.showModal(null);
       },
       changePage(n) {
         this.params.pageNum = n;

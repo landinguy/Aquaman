@@ -18,6 +18,7 @@ export default {
 
   //班级管理
   addClazz: '/api/management/clazz',
+  updateClazz: '/api/management/clazz',
   getClazz: '/api/management/clazz',
 
   //上传图片
@@ -26,6 +27,7 @@ export default {
   //账号管理
   addAccount: '/api/management/user',
   getStudents: '/api/management/student',
+  updateStudent: '/api/management/student',
   getTeachers: '/api/management/teacher',
   resetPassword: '/api/management/user/password',
 

@@ -1,5 +1,5 @@
 import {login, logout} from '@/api/user'
-
+import {Message} from 'iview'
 
 export default {
   state: {
@@ -95,7 +95,10 @@ export default {
           // commit('setSuperMsg', res.data.superMsg);
           // commit('setSimpleMsg', res.data.simpleMsg);
           resolve(res)
-        }).catch(err => reject(err))
+        }).catch(err => {
+          Message.error('用户名或密码错误');
+          reject(err)
+        })
       })
     },
     // 退出登录

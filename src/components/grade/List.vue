@@ -29,7 +29,7 @@
 <script>
   import {showTip, timestampToTime} from '@/libs/util'
   import url from '@/api/url'
-  import {post, get, $del, $get} from "@/api/ax"
+  import {post, get, $del, $get, put} from "@/api/ax"
   import Add from './Add.vue'
 
   export default {
@@ -63,7 +63,7 @@
                 },
                 on: {
                   click: () => {
-                    this.$Message.info('请联系管理员获得修改权限')
+                    this.$refs.AddVue.showModal(params.row);
                   }
                 }
               }, '修改');
@@ -111,7 +111,7 @@
     components: {Add},
     methods: {
       showModal() {
-        this.$refs.AddVue.addModal = true;
+        this.$refs.AddVue.showModal(null);
       },
       getData() {
         $get(url.getGrade, this.params).then(res => this.tableData = res.data).catch(err => console.log(err))

@@ -17,22 +17,27 @@
         <DropdownItem name="logout">退出登录</DropdownItem>
       </DropdownMenu>
     </Dropdown>
-    <Modal
-      v-model="show"
-      title="修改密码"
-      @on-ok="ok"
-      @on-cancel="cancel">
-      <Form ref="pwd" :model="pwd" :label-width="120">
-        <FormItem label="当前登录密码：" prop="currentPwd">
-          <Input v-model="pwd.current" type="password" placeholder="请填写当前登录密码"></Input>
-        </FormItem>
-        <FormItem label="新的登录密码：" prop="newPwd">
-          <Input v-model="pwd.newPwd" type="password" placeholder="请填写新的登录密码"></Input>
-        </FormItem>
-        <FormItem label="确认登录密码：" prop="confirm">
-          <Input v-model="pwd.confirm" type="password" placeholder="请确认登录密码"></Input>
-        </FormItem>
-      </Form>
+    <Modal v-model="addModal" width="640">
+      <p slot="header" style="text-align:center">
+        <span>修改密码</span>
+      </p>
+      <div>
+        <Form ref="form" :model="formData" :rules="formValidate" :label-width="100" width="540px">
+          <FormItem label="旧密码" prop="oldPassword">
+            <Input v-model.trim="formData.oldPassword" type="password" placeholder="请输入旧密码"/>
+          </FormItem>
+          <FormItem label="新密码" prop="newPassword">
+            <Input v-model.trim="formData.newPassword" type="password" placeholder="请输入新密码"/>
+          </FormItem>
+          <FormItem label="确认密码" prop="confirmPwd">
+            <Input v-model.trim="formData.confirmPwd" type="password" placeholder="请确认新密码"/>
+          </FormItem>
+        </Form>
+      </div>
+      <div slot="footer" style="text-align: center">
+        <Button type="primary" shape="circle" class="radio_len" @click="confirm">提交</Button>
+        <Button type="ghost" shape="circle" class="radio_len" style="margin-left: 20px" @click="cancel">取消</Button>
+      </div>
     </Modal>
   </div>
 </template>
@@ -41,25 +46,25 @@
   import './user.less'
   import {mapActions, mapGetters} from 'vuex'
   import user_icon from '@/assets/images/user.png'
+  import {post, get, $get, put} from "@/api/ax"
+  import url from '@/api/url'
 
   export default {
     name: 'User',
     data() {
       return {
         user_icon,
-        show: false,
-        pwd: {
-          current: "",
-          newPwd: "",
-          confirm: "",
+        addModal: false,
+        formData: {oldPassword: "", newPassword: "", confirmPwd: ""},
+        formValidate: {
+          oldPassword: [{required: true, message: '请输入旧密码', trigger: 'blur'}],
+          newPassword: [{required: true, message: '请输入新密码', trigger: 'blur'}],
+          confirmPwd: [{required: true, message: '请确认新密码', trigger: 'blur'}]
         },
       }
     },
     methods: {
-      ...mapActions([
-        'handleLogOut',
-        'handleUpdatePassword'
-      ]),
+      ...mapActions(['handleLogOut']),
       handleClick(name) {
         switch (name) {
           case 'logout':
@@ -69,50 +74,46 @@
             }).catch(err => console.log(err));
             break;
           case 'password':
-            this.show = true;
+            this.addModal = true;
             break;
         }
       },
-      ok() {
-        console.log("-------", this.pwd.current, this.pwd.newPwd, this.pwd.confirm)
-        if (this.pwd.current == "") {
-          this.$Message.error("当前密码不能为空");
-          return;
-        }
-        if (this.pwd.confirm == "" || this.pwd.newPwd == "") {
-          this.$Message.error("新密码密码不能为空");
-          return;
-        }
-        if (this.pwd.newPwd != this.pwd.confirm) {
-          this.$Message.error("两次输入密码不一致");
-          return;
-        }
-        // if (this.pwd.newPwd.length < 8) {
-        //   this.$Message.error("密码长度不能低于8位");
-        //   return;
-        // }
-        this.handleUpdatePassword({accountId: this.accountId, oriPwd: this.pwd.current, pwd: this.pwd.confirm}).then(
-          res => {
-            if (res.code == 0) {
-              this.$Message.info("密码修改成功，请重新登录");
-              this.changePwd = true;
-              this.$router.push({
-                name: 'login'
-              })
-            }
-
-          },
-          err => {
-            this.$Message.info("修改失败");
-          }
-        );
-      },
       cancel() {
-
-      }
+        this.addModal = false;
+      },
+      confirm() {
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            const {oldPassword, newPassword, confirmPwd} = this.formData;
+            if (newPassword !== confirmPwd) {
+              this.$Message.warning('确认密码与新密码不一致');
+              return
+            }
+            put(url.resetPassword, {oldPassword, newPassword}).then(res => {
+              if (res.ret_code == 0) {
+                this.$Message.success('修改成功');
+                this.cancel();
+              } else {
+                this.$Message.error(`修改失败 [${res.error_msg}]`);
+              }
+            }).catch(err => console.log(err))
+          }
+        })
+      },
     },
     computed: {
       ...mapGetters(['accountNumber', 'accountId', 'accountNickname', 'accessToken'])
+    },
+    watch: {
+      addModal(curVal, oldVal) {
+        if (!curVal) this.$refs.form.resetFields()
+      }
     }
   }
 </script>
+<style lang="less">
+  .radio_len {
+    width: 80px;
+    text-align: center;
+  }
+</style>

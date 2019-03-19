@@ -2,14 +2,14 @@
   <div ref="AddVue">
     <Modal v-model="addModal" width="640">
       <p slot="header" style="text-align:center">
-        <span>添加用户</span>
+        <span>{{op==='add'?'添加':'编辑'}}用户</span>
       </p>
       <div>
         <Form ref="form" :model="formData" :rules="formValidate" :label-width="100">
           <FormItem label="账号" prop="username">
             <Input v-model.trim="formData.username" placeholder="请填写账号"/>
           </FormItem>
-          <FormItem label="密码" prop="password">
+          <FormItem label="密码" prop="password" v-if="op==='add'">
             <Input v-model.trim="formData.password" type="password" placeholder="请填写密码"/>
           </FormItem>
           <FormItem label="姓名" prop="nickname">
@@ -62,7 +62,7 @@
 </template>
 <script>
   import url from '@/api/url'
-  import {post, get} from "@/api/ax"
+  import {post, get, put} from "@/api/ax"
 
   export default {
     name: 'Add',
@@ -100,7 +100,8 @@
         isStudent: false,
         grades: [],
         clazzData: [],
-        subjectData: []
+        subjectData: [],
+        op: 'add'
       }
     },
     methods: {
@@ -111,10 +112,14 @@
           callback()
         }
       },
-      showModal(isStudent = false) {
+      showModal(isStudent = false, data) {
         this.isStudent = isStudent;
         if (isStudent) {
           this.formData.role = ['STUDENT'];
+        }
+        if (data) {
+          this.op = 'edit';
+          this.setData(data);
         }
         this.addModal = true;
       },
@@ -148,19 +153,38 @@
         this.$refs.form.validate((valid) => {
           if (valid) {
             const {username, password, nickname} = this.formData;
-            let param = {username, password, nickname};
-            param.roleData = this.setRoleData();
-            console.log('-----------', param)
-            post(url.addAccount, param).then(res => {
-              this.$Message.success({
-                content: '提交成功',
-                duration: 1,
-                onClose: () => {
-                  this.cancel();
-                  this.$parent.search();
+            if (this.id == '') {//添加
+              let param = {username, password, nickname};
+              param.roleData = this.setRoleData();
+              console.log('-----------', param)
+              post(url.addAccount, param).then(res => {
+                this.$Message.success({
+                  content: '提交成功',
+                  duration: 1,
+                  onClose: () => {
+                    this.cancel();
+                    this.$parent.search();
+                  }
+                })
+              }).catch(err => console.log(err));
+            } else {
+              let clazz = this.formData.clazzName[0];
+              let userId = this.id;
+              put(url.updateStudent, {userId, clazz, username, nickname}).then(res => {
+                if (res.ret_code == 0) {
+                  this.$Message.success({
+                    content: '提交成功',
+                    duration: 1,
+                    onClose: () => {
+                      this.cancel();
+                      this.$parent.search();
+                    }
+                  })
+                } else {
+                  this.$Message.error(`修改失败 [${res.error_msg}]`)
                 }
-              })
-            }).catch(err => console.log(err));
+              }).catch(err => console.log(err));
+            }
           }
         })
       },
@@ -185,12 +209,31 @@
       cancel() {
         this.addModal = false;
       },
-      setData(op, data) {
-        this.id = '';
-        this.op = op;
+      setData(data) {
         if (data) {
-          this.id = data.id;
-          this.formData.content = data.content;
+          const {username, nickname, stage, grade, clazz, userId} = data;
+          this.id = userId;
+          this.formData.username = username;
+          this.formData.nickname = nickname;
+          this.formData.stageId = stage === '小学' ? '1' : stage === '初中' ? '2' : '3';
+          this.getGrades();
+          setTimeout(() => {
+            for (let g of this.grades) {
+              if (g.label == grade) {
+                this.formData.gradeId = g.value;
+                this.getClazzData();
+                setTimeout(() => {
+                  for (let c of this.clazzData) {
+                    if (c.label == clazz) {
+                      this.formData.clazzName.push(c.value)
+                      break
+                    }
+                  }
+                }, 200)
+                break
+              }
+            }
+          }, 200);
         }
       },
       getGrades() {
@@ -214,7 +257,7 @@
       },
       getClazzData() {
         this.clazzData = [];
-        this.formData.clazzName = '';
+        this.formData.clazzName = [];
         let gradeId = this.formData.gradeId;
         if (gradeId && !this.isGradeLeader) {
           get(url.getClazzByGradeId + gradeId, {}).then(res => {
@@ -226,7 +269,11 @@
     },
     watch: {
       addModal(curVal, oldVal) {
-        if (!curVal) this.$refs.form.resetFields()
+        if (!curVal) {
+          this.$refs.form.resetFields()
+          this.op = 'add';
+          this.id = '';
+        }
       }
     }
   }

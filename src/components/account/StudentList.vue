@@ -113,7 +113,7 @@
         }).catch(err => console.log(err))
       },
       showModal() {
-        this.$refs.AddVue.showModal(true);
+        this.$refs.AddVue.showModal(true, null);
       },
     },
     mounted() {
@@ -163,7 +163,8 @@
                 },
                 on: {
                   click: () => {
-                    this.$Message.info('请联系管理员获得修改权限')
+                    this.$refs.AddVue.showModal(true, params.row);
+                    // this.$Message.info('请联系管理员获得修改权限')
                   }
                 }
               }, '修改');

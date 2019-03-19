@@ -111,7 +111,7 @@
         }).catch(err => console.log(err))
       },
       showModal() {
-        this.$refs.AddVue.showModal();
+        this.$refs.AddVue.showModal(false, null);
       }
     },
     mounted() {

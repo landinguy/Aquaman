@@ -2,7 +2,7 @@
   <div ref="AddVue">
     <Modal v-model="addModal" width="640">
       <p slot="header" style="text-align:center">
-        <span>添加班级</span>
+        <span>{{op==='add'?'添加':'编辑'}}班级</span>
       </p>
       <div>
         <Form ref="form" :model="formData" :rules="formValidate" :label-width="100">
@@ -34,7 +34,7 @@
 </template>
 <script>
   import url from '@/api/url'
-  import {post, get} from "@/api/ax"
+  import {post, get, put} from "@/api/ax"
 
   export default {
     name: 'Add',
@@ -48,10 +48,18 @@
           gradeId: [{required: true, message: '请选择年级', trigger: 'change'}],
           clazzName: [{required: true, message: '请填写班级名称', trigger: 'blur'}]
         },
-        grades: []
+        grades: [],
+        op: 'add'
       }
     },
     methods: {
+      showModal(data) {
+        if (data) {
+          this.op = 'edit';
+          this.setData(data);
+        }
+        this.addModal = true;
+      },
       getGrades() {
         this.grades = [];
         this.formData.gradeId = '';
@@ -70,36 +78,66 @@
         this.$refs.form.validate((valid) => {
           if (valid) {
             const {stageId, ...rest} = this.formData;
-            post(url.addClazz, rest).then(res => {
-              if (res.ret_code && res.ret_code == 400) {
-                this.$Message.error('该班级已存在');
-              } else if (res == 'success') {
-                this.$Message.success({
-                  content: '提交成功',
-                  duration: 1,
-                  onClose: () => {
-                    this.cancel();
-                    this.$parent.getData();
-                  }
-                })
-              }
-            }).catch(err => console.log(err))
+            if (this.id == '') {
+              post(url.addClazz, rest).then(res => {
+                if (res.ret_code && res.ret_code == 400) {
+                  this.$Message.error('该班级已存在');
+                } else if (res == 'success') {
+                  this.$Message.success({
+                    content: '提交成功',
+                    duration: 1,
+                    onClose: () => {
+                      this.cancel();
+                      this.$parent.getData();
+                    }
+                  })
+                }
+              }).catch(err => console.log(err))
+            } else {
+              let clazzId = this.id;
+              put(url.updateClazz, {...rest, clazzId}).then(res => {
+                if (res.ret_code == 0) {
+                  this.$Message.success({
+                    content: '提交成功',
+                    duration: 1,
+                    onClose: () => {
+                      this.cancel();
+                      this.$parent.search();
+                    }
+                  })
+                } else {
+                  this.$Message.error(`修改失败 [${res.error_msg}]`)
+                }
+              }).catch(err => console.log(err))
+            }
           }
         })
       },
-      setData(op, data) {
-        this.id = '';
-        this.op = op;
+      setData(data) {
         if (data) {
-          this.id = data.id;
-          this.formData.content = data.content;
+          const {stageName, gradeName, clazzName, clazzId} = data;
+          this.id = clazzId;
+          this.formData.stageId = stageName === '小学' ? '1' : stageName === '初中' ? '2' : '3';
+          this.formData.clazzName = clazzName;
+          this.getGrades();
+          setTimeout(() => {
+            for (let g of this.grades) {
+              if (g.label == gradeName) {
+                this.formData.gradeId = g.value;
+                break
+              }
+            }
+          }, 200);
         }
-        this.addModal = true;
       }
     },
     watch: {
       addModal(curVal, oldVal) {
-        if (!curVal) this.$refs.form.resetFields()
+        if (!curVal) {
+          this.$refs.form.resetFields()
+          this.op = 'add';
+          this.id = '';
+        }
       }
     }
   }
