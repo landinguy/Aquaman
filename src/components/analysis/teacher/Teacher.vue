@@ -57,8 +57,6 @@
           type: '1',
           // startDate: '',
           // endDate: '',
-          // pageNo: 1,
-          // pageSize: 10
         },
         grades: [], tableData: [],
         total: 0,
@@ -86,22 +84,18 @@
       getGrades() {
         this.grades = [];
         let stageId = this.params.stageId;
-        get(url.getGradesByStageId + stageId, {}).then(res =>
-          res.data.forEach(item => this.grades.push({label: item.gradeName, value: item.gradeId}))
-        ).catch(err => console.log(err));
+        get(url.getGradesByStageId + stageId, {}).then(res => {
+          if (res.data) res.data.forEach(item => this.grades.push({label: item.gradeName, value: item.gradeId}))
+        }).catch(err => console.log(err));
       },
       search() {
-        // this.params.pageNo = 1;
-        // this.getTotal();
         this.getData();
       },
       getData() {
-        $get(url.teacherAnalysis, this.params).then(res => this.tableData = res.data).catch(err => console.log(err))
-      },
-      // getTotal() {
-      //   const {find} = this.params;
-      //   post(url.getAccountCount, {find}).then(res => this.total = res.data).catch(err => console.log(err))
-      // }
+        $get(url.teacherAnalysis, this.params).then(res => {
+          if (res.data) this.tableData = res.data
+        }).catch(err => console.log(err))
+      }
     },
     computed: {},
     mounted() {

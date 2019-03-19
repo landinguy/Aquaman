@@ -37,7 +37,7 @@
       </div>
     </div>
 
-    <div>
+    <div v-if="roleId=='ADMIN'">
       <br>
       <Button type="primary" @click="showModal">
         <Icon type="plus"></Icon>
@@ -259,6 +259,9 @@
             }
           }
         ];
+        if (this.roleId != 'ADMIN') {
+          columns.splice(5, 1)
+        }
         return columns;
       }
     }

@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <div>
+    <div v-if="roleId=='ADMIN'">
       <Button type="primary" @click="showModal">
         <Icon type="plus"></Icon>
         添加
@@ -35,6 +35,7 @@
   </div>
 </template>
 <script>
+  import {mapMutations, mapGetters} from 'vuex'
   import {showTip, timestampToTime} from '@/libs/util'
   import url from '@/api/url'
   import {post, get, $get, $del} from "@/api/ax"
@@ -156,8 +157,13 @@
     },
     mounted() {
       this.search();
+      if (this.roleId != 'ADMIN') {
+        this.columns.splice(4, 1)
+      }
     },
-    computed: {}
+    computed: {
+      ...mapGetters(['accountId', 'roleId'])
+    }
   }
 </script>
 <style scoped lang="less">
