@@ -168,22 +168,40 @@
                 })
               }).catch(err => console.log(err));
             } else {
-              let clazz = this.formData.clazzName[0];
               let userId = this.id;
-              put(url.updateStudent, {userId, clazz, username, nickname}).then(res => {
-                if (res.ret_code == 0) {
-                  this.$Message.success({
-                    content: '提交成功',
-                    duration: 1,
-                    onClose: () => {
-                      this.cancel();
-                      this.$parent.search();
-                    }
-                  })
-                } else {
-                  this.$Message.error(`修改失败 [${res.error_msg}]`)
-                }
-              }).catch(err => console.log(err));
+              if (this.isStudent) {
+                let clazz = this.formData.clazzName[0];
+                put(url.updateStudent, {userId, clazz, username, nickname}).then(res => {
+                  if (res.ret_code == 0) {
+                    this.$Message.success({
+                      content: '提交成功',
+                      duration: 1,
+                      onClose: () => {
+                        this.cancel();
+                        this.$parent.search();
+                      }
+                    })
+                  } else {
+                    this.$Message.error(`修改失败 [${res.error_msg}]`)
+                  }
+                }).catch(err => console.log(err));
+              } else {
+                let roleData = this.setRoleData();
+                put(url.updateTeacher, {userId, username, nickname, roleData}).then(res => {
+                  if (res.ret_code == 0) {
+                    this.$Message.success({
+                      content: '提交成功',
+                      duration: 1,
+                      onClose: () => {
+                        this.cancel();
+                        this.$parent.search();
+                      }
+                    })
+                  } else {
+                    this.$Message.error(`修改失败 [${res.error_msg}]`)
+                  }
+                }).catch(err => console.log(err));
+              }
             }
           }
         })
@@ -215,25 +233,27 @@
           this.id = userId;
           this.formData.username = username;
           this.formData.nickname = nickname;
-          this.formData.stageId = stage === '小学' ? '1' : stage === '初中' ? '2' : '3';
-          this.getGrades();
-          setTimeout(() => {
-            for (let g of this.grades) {
-              if (g.label == grade) {
-                this.formData.gradeId = g.value;
-                this.getClazzData();
-                setTimeout(() => {
-                  for (let c of this.clazzData) {
-                    if (c.label == clazz) {
-                      this.formData.clazzName.push(c.value)
-                      break
+          if (this.isStudent) {
+            this.formData.stageId = stage === '小学' ? '1' : stage === '初中' ? '2' : '3';
+            this.getGrades();
+            setTimeout(() => {
+              for (let g of this.grades) {
+                if (g.label == grade) {
+                  this.formData.gradeId = g.value;
+                  this.getClazzData();
+                  setTimeout(() => {
+                    for (let c of this.clazzData) {
+                      if (c.label == clazz) {
+                        this.formData.clazzName.push(c.value)
+                        break
+                      }
                     }
-                  }
-                }, 500)
-                break
+                  }, 500)
+                  break
+                }
               }
-            }
-          }, 500);
+            }, 500);
+          }
         }
       },
       getGrades() {

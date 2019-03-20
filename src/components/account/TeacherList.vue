@@ -182,23 +182,10 @@
                 },
                 on: {
                   click: () => {
-                    this.$Message.info('请联系管理员获得修改权限')
+                    this.$refs.AddVue.showModal(false, params.row);
                   }
                 }
               }, '修改');
-              const update = h('Button', {
-                props: {
-                  type: 'info',
-                  size: 'small'
-                },
-                style: {
-                  "margin-left": '5px'
-                },
-                on: {
-                  click: () => {
-                  }
-                }
-              }, '升级');
               const reset = h('Button', {
                 props: {
                   type: 'ghost',

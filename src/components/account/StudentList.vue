@@ -46,10 +46,11 @@
       <Button type="primary" @click="updateAll" style="margin-left: 8px">批量升级</Button>
     </div>
     <div style="margin-top: 16px">
-      <Table stripe border :columns="columns" :data="tableData"></Table>
+      <Table stripe border :columns="columns" :data="tableData" @on-selection-change="onSelectChange"></Table>
       <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>
     </div>
     <Add ref="AddVue"></Add>
+    <Update ref="UpdateVue"></Update>
   </div>
 </template>
 <script>
@@ -58,6 +59,7 @@
   import url from '@/api/url'
   import {post, $del, get, $get, patch} from "@/api/ax"
   import Add from './Add'
+  import Update from './Update'
 
   export default {
     name: 'StudentList',
@@ -65,17 +67,24 @@
       return {
         content: 1,
         params: {username: '', nickname: '', stageId: '', gradeId: '', clazzId: '', pageNum: 1, pageSize: 10},
-        tableData: [], grades: [], clazzData: [], userId: [],
+        tableData: [], grades: [], clazzData: [], userIds: [],
         total: 0
       }
     },
-    components: {Add},
+    components: {Add, Update},
     methods: {
+      onSelectChange(data) {
+        this.userIds = data.map(item => item.userId);
+      },
       clear() {
         this.params = {username: '', nickname: '', stageId: '', gradeId: '', clazzId: '', pageNum: 1, pageSize: 10}
       },
       updateAll() {
-        this.$Message.warning(' 未到学年结束时间，禁止升级')
+        if (this.userIds.length == 0) {
+          this.$Message.warning('请至少选择一名学生');
+          return
+        }
+        this.$refs.UpdateVue.showModal('批量升级', this.userIds);
       },
       getClazzData() {
         this.clazzData = [];
@@ -164,7 +173,6 @@
                 on: {
                   click: () => {
                     this.$refs.AddVue.showModal(true, params.row);
-                    // this.$Message.info('请联系管理员获得修改权限')
                   }
                 }
               }, '修改');
@@ -178,7 +186,10 @@
                 },
                 on: {
                   click: () => {
-                    this.$Message.warning(' 未到学年结束时间，禁止升级')
+                    let arr = [];
+                    const {userId} = params.row;
+                    arr.push(userId);
+                    this.$refs.UpdateVue.showModal('学生升级', arr);
                   }
                 }
               }, '升级');

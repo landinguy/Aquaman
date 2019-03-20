@@ -29,6 +29,7 @@ export default {
   getStudents: '/api/management/student',
   updateStudent: '/api/management/student',
   getTeachers: '/api/management/teacher',
+  updateTeacher: '/api/management/teacher',
   resetPassword: '/api/management/user/password',
 
   getSubjectByStageId: '/api/basic/subjects/stage/',
