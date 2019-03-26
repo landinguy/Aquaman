@@ -71,7 +71,7 @@ export default [
     name: 'schoolManage',
     meta: {
       title: '学校管理',
-      access: ['PRESIDENT', 'GRADE_LEADER', 'CLASS_TEACHER', 'TEACHER']
+      // access: ['PRESIDENT', 'GRADE_LEADER', 'CLASS_TEACHER', 'TEACHER']
     },
     component: Main,
     children: [
@@ -98,7 +98,7 @@ export default [
     name: 'analysis',
     meta: {
       title: '数据分析',
-      access: ['PRESIDENT', 'GRADE_LEADER', 'CLASS_TEACHER', 'TEACHER']
+      // access: ['PRESIDENT', 'GRADE_LEADER', 'CLASS_TEACHER', 'TEACHER']
     },
     component: Main,
     children: [
