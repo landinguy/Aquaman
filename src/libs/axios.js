@@ -61,10 +61,6 @@ class httpRequest {
       baseURL: baseUrl.base,//baseUrl
       timeout: 10000,
       withCredentials: true,
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-        'Authorization': 'Bearer ' + sessionStorage.getItem('accessToken')
-      }
     }
     return Axios.create(conf)
   }

@@ -4,20 +4,12 @@
 
 
     <div style="height: 64px;background-color: #495060;">
-      <img style="margin-left: 24px; margin-top: 8px;height: 48px;" :src="logo" key="max-logo"/>
+      <span class="name">智能城市云服务平台</span>
       <div style="float: right;margin-top: 16px">
-        <!--</Button>-->
         <user style="float: right;"/>
       </div>
-      <!--<div class="top-bar">-->
-      <!--<a :class="{ active: tabFlag==0}" @click="changeTab(0)">首页</a>-->
-      <!--<a :class="{ active: tabFlag==1} " @click="changeTab(1)" v-if="superMsg==1">超信平台</a>-->
-      <!--<a :class="{ active: tabFlag==2}" @click="changeTab(2)" v-if="simpleMsg==1">短信平台</a>-->
-      <!--</div>-->
     </div>
     <Layout style="height: 100%" class="main">
-
-
       <Sider hide-trigger collapsible :width="210" :collapsed-width="64" v-model="collapsed" style="overflow: auto">
         <side-menu accordion :active-name="$route.name" :collapsed="collapsed" @on-select="turnToPage"
                    :menu-list="menuList">
@@ -60,8 +52,6 @@
   import User from './components/user'
   import {mapMutations, mapActions, mapGetters} from 'vuex'
   import {getNewTagList, getNextName} from '@/libs/util'
-  import logo from '@/assets/images/logo.png'
-  import wotec from '@/assets/images/wotec.png'
   import './main.less'
   import VueEvent from '@/libs/vueEvent.js'
 
@@ -76,8 +66,6 @@
     data() {
       return {
         collapsed: false,
-        wotec,
-        logo
       }
     },
     computed: {
@@ -159,11 +147,6 @@
     margin-top: 16px;
   }
 
-  .pic {
-    height: 16px;
-    width: 16px;
-  }
-
   label {
     font-size: 14px;
     font-weight: bold;
@@ -186,5 +169,16 @@
     a:hover, .active {
       color: #2D8CF0;
     }
+  }
+
+  .name {
+    color: white;
+    letter-spacing:8px;
+    width: 320px;
+    height: 64px;
+    line-height: 64px;
+    margin-left: 24px;
+    display: inline-block;
+    font-size: 16px;
   }
 </style>

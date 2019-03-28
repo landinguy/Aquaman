@@ -65,7 +65,7 @@
       },
     },
     mounted() {
-      this.getData()
+      // this.getData()
     },
     computed: {
       ...mapGetters(['accountId', 'roleId'])

@@ -13,12 +13,11 @@ const router = new Router({
 });
 router.beforeEach((to, from, next) => {
   iView.LoadingBar.start();
-  if (to.name != "login" && store.getters.accountId == null) {
-    next({replace: true, name: 'login'})
-  } else {
-    // console.log("-------access-----------", store.getters.roleId)
+  // if (to.name != "login" && store.getters.accountId == null) {
+  //   next({replace: true, name: 'login'})
+  // } else {
     next();
-  }
+  // }
   // store.dispatch('handleMainAccountInfo',"").then(user => {
   //   console.log("to:" + to.name, user.access)
   //   if (canTurnTo(to.name, user.access, routes)) next() // 有权限，可访问

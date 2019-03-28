@@ -4,34 +4,17 @@ import ax from 'axios'
 import baseUrl from "../libs/url"
 
 export const login = ({username, password}) => {
-  const rest = {
-    grant_type: 'password',
-    scope: 'all',
-    client: 'bytecodes-web-client',
-    type: 'teacher',
-  };
-  const data = {
-    username,
-    password,
-    ...rest
-  };
+  const data = {username, password};
   return ax({
     method: "post",
     url: baseUrl.base + url.login,
-    params: data,
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Basic Ynl0ZWNvZGVzLXdlYi1jbGllbnQ6ZDNlYjM1ZjktNmJiMC00NTBmLThmMDEtZjMwYWZiN2VlMjhk'
-    }
+    params: data
   })
 }
 
-export const logout = ({token}) => {
+export const logout = () => {
   return ax({
     method: "post",
-    url: baseUrl.base + url.logout,
-    headers: {
-      'Authorization': token
-    }
+    url: baseUrl.base + url.logout
   })
 }
