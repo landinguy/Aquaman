@@ -2,7 +2,7 @@
   <div ref="AddVue">
     <Modal v-model="addModal" width="640">
       <p slot="header" style="text-align:center">
-        <span>{{op==='add'?'添加':'编辑'}}用户</span>
+        <span>{{op==='add'?'添加':'编辑'}}设备</span>
       </p>
       <div>
         <Form ref="form" :model="formData" :rules="formValidate" :label-width="100">
@@ -48,7 +48,7 @@
       }
     },
     methods: {
-      showModal(data) {
+      showModal(isStudent = false, data) {
         if (data) {
           this.op = 'edit';
           this.setData(data);
@@ -58,18 +58,55 @@
       confirm() {
         this.$refs.form.validate((valid) => {
           if (valid) {
-            let param = this.formData;
-            param.id = this.id;
-            post(url.addAccount, param).then(res => {
-              this.$Message.success({
-                content: '提交成功',
-                duration: 1,
-                onClose: () => {
-                  this.cancel();
-                  this.$parent.search();
-                }
-              })
-            }).catch(err => console.log(err));
+            const {username, password, nickname} = this.formData;
+            if (this.id == '') {//添加
+              let param = {username, password, nickname};
+              post(url.addAccount, param).then(res => {
+                this.$Message.success({
+                  content: '提交成功',
+                  duration: 1,
+                  onClose: () => {
+                    this.cancel();
+                    // this.$parent.search();
+                  }
+                })
+              }).catch(err => console.log(err));
+            } else {
+              let userId = this.id;
+              if (this.isStudent) {
+                let clazz = this.formData.clazzName[0];
+                put(url.updateStudent, {userId, clazz, username, nickname}).then(res => {
+                  if (res.ret_code == 0) {
+                    this.$Message.success({
+                      content: '提交成功',
+                      duration: 1,
+                      onClose: () => {
+                        this.cancel();
+                        this.$parent.search();
+                      }
+                    })
+                  } else {
+                    this.$Message.error(`修改失败 [${res.error_msg}]`)
+                  }
+                }).catch(err => console.log(err));
+              } else {
+                let roleData = this.setRoleData();
+                put(url.updateTeacher, {userId, username, nickname, roleData}).then(res => {
+                  if (res.ret_code == 0) {
+                    this.$Message.success({
+                      content: '提交成功',
+                      duration: 1,
+                      onClose: () => {
+                        this.cancel();
+                        this.$parent.search();
+                      }
+                    })
+                  } else {
+                    this.$Message.error(`修改失败 [${res.error_msg}]`)
+                  }
+                }).catch(err => console.log(err));
+              }
+            }
           }
         })
       },
@@ -78,10 +115,8 @@
       },
       setData(data) {
         if (data) {
-          const {username, nickname, id} = data;
-          this.id = id;
-          this.formData.username = username;
-          this.formData.nickname = nickname;
+          const {username, nickname, userId} = data;
+
         }
       }
     },

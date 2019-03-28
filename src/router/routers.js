@@ -22,20 +22,20 @@ export default [
     },
   },
   {
-    path: '/school',
-    name: 'school',
+    path: '/device',
+    name: 'device',
     meta: {
       hide: true,
     },
     component: Main,
     children: [
       {
-        path: '/info',
-        name: 'info',
+        path: '/device',
+        name: 'device',
         meta: {
-          title: '首页'
+          title: '设备管理'
         },
-        component: () => import('@/components/school/Info')
+        component: () => import('@/components/device/Info')
       }
     ]
   },
@@ -43,26 +43,44 @@ export default [
     path: '/account',
     name: 'account',
     meta: {
-      title: '用户管理'
+      hide: true,
     },
     component: Main,
     children: [
       {
-        path: 'students',
-        name: 'students',
+        path: '/account',
+        name: 'account',
         meta: {
-          title: '学生管理',
+          title: '用户管理'
         },
-        component: () => import('@/components/account/StudentList')
-      },
-      {
-        path: 'teachers',
-        name: 'teachers',
-        meta: {
-          title: '教师管理',
-        },
-        component: () => import('@/components/account/TeacherList')
-      },
+        component: () => import('@/components/account/Info')
+      }
     ]
   },
+  // {
+  //   path: '/account',
+  //   name: 'account',
+  //   meta: {
+  //     title: '用户管理'
+  //   },
+  //   component: Main,
+  //   children: [
+  //     {
+  //       path: 'students',
+  //       name: 'students',
+  //       meta: {
+  //         title: '学生管理',
+  //       },
+  //       component: () => import('@/components/account/StudentList')
+  //     },
+  //     {
+  //       path: 'teachers',
+  //       name: 'teachers',
+  //       meta: {
+  //         title: '教师管理',
+  //       },
+  //       component: () => import('@/components/account/TeacherList')
+  //     },
+  //   ]
+  // },
 ]

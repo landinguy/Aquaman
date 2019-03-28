@@ -83,8 +83,8 @@ export default {
           password
         }).then(res => {
           let data = res.data;
-          const {uid, username, nickname} = data.data;
-          if (data.code == 0) {
+          if (data && data.code == 0) {
+            const {uid, username, nickname} = data.data;
             commit('setAccountId', uid);
             commit('setAccountNickname', nickname);
             commit('setRoleId', data.role);

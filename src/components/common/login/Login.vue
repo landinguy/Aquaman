@@ -45,7 +45,7 @@
         }).then(res => {
           if (res) {
             this.$Spin.hide();
-            this.$router.push({name: 'info'})
+            this.$router.push({name: 'device'})
           }
         }).catch(err => {
           this.$Spin.hide();

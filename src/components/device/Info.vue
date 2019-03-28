@@ -2,28 +2,6 @@
   <div class="bg">
     <div class="search-div">
       <div class="search-div-item">
-        <label>学段</label>
-        <Select v-model="params.stageId" @on-change="getGrades" class="width">
-          <Option value="1">小学</Option>
-          <Option value="2">初中</Option>
-          <Option value="3">高中</Option>
-        </Select>
-      </div>
-      <div class="search-div-item">
-        <label>年级</label>
-        <Select v-model="params.gradeId" @on-change="getClazzData" class="width">
-          <Option v-for="item in grades" :value="item.value" :key="item.value">{{ item.label }}</Option>
-        </Select>
-      </div>
-      <div class="search-div-item">
-        <label>班级</label>
-        <Select v-model="params.clazzId" class="width">
-          <Option v-for="item in clazzData" :value="item.value" :key="item.value">{{ item.label }}</Option>
-        </Select>
-      </div>
-    </div>
-    <div class="search-div">
-      <div class="search-div-item">
         <label>姓名</label>
         <Input v-model="params.nickname" placeholder="请输入姓名" class="width"/>
       </div>
@@ -37,7 +15,7 @@
       </div>
     </div>
 
-    <div v-if="roleId=='ADMIN'">
+    <div>
       <br>
       <Button type="primary" @click="showModal">
         <Icon type="plus"></Icon>
@@ -57,43 +35,21 @@
   import url from '@/api/url'
   import {post, $del, get, $get, patch} from "@/api/ax"
   import Add from './Add'
-  import ExpandRow from './ExpandRow'
 
   export default {
-    name: 'TeacherList',
+    name: 'Info',
     data() {
       return {
         content: 1,
-        params: {username: '', nickname: '', stageId: '', gradeId: '', clazzId: '', pageNum: 1, pageSize: 10},
+        params: {username: '', nickname: '', pageNum: 1, pageSize: 10},
         tableData: [],
-        grades: [], clazzData: [],
         total: 0
       }
     },
-    components: {Add, ExpandRow},
+    components: {Add},
     methods: {
       clear() {
-        this.params = {username: '', nickname: '', stageId: '', gradeId: '', clazzId: '', pageNum: 1, pageSize: 10}
-      },
-      getClazzData() {
-        this.clazzData = [];
-        this.params.clazzId = '';
-        let gradeId = this.params.gradeId;
-        if (gradeId) {
-          get(url.getClazzByGradeId + gradeId, {}).then(res => {
-            const {clazzList} = res.data;
-            clazzList.forEach(item => this.clazzData.push({label: item.clazzName, value: item.clazzId}))
-          }).catch(err => console.log(err))
-        }
-      },
-      getGrades() {
-        this.grades = [];
-        const {stageId} = this.params;
-        if (stageId) {
-          get(url.getGradesByStageId + stageId, {}).then(res =>
-            res.data.forEach(item => this.grades.push({label: item.gradeName, value: item.gradeId}))
-          ).catch(err => console.log(err));
-        }
+        this.params = {username: '', nickname: '', pageNum: 1, pageSize: 10}
       },
       changePage(n) {
         this.params.pageNum = n;
@@ -104,37 +60,23 @@
         this.getData();
       },
       getData() {
-        $get(url.getTeachers, this.params).then(res => {
+        $get(url.getStudents, this.params).then(res => {
           const {total, list} = res.data;
           this.tableData = list;
           this.total = total;
         }).catch(err => console.log(err))
       },
       showModal() {
-        this.$refs.AddVue.showModal(false, null);
-      }
+        this.$refs.AddVue.showModal(true, null);
+      },
     },
     mounted() {
-      this.search();
+      // this.search()
     },
     computed: {
       ...mapGetters(['accountId', 'roleId']),
       columns() {
         const columns = [
-          // {
-          //   type: 'expand',
-          //   width: 50,
-          //   render: (h, params) => {
-          //     return h(ExpandRow, {
-          //       props: {
-          //         row: params.row
-          //       }
-          //     })
-          //   }
-          // },
-          {
-            type: 'selection', width: 60, align: 'center'
-          },
           {
             title: '序号', type: 'index', width: 80, align: 'center'
           },
@@ -145,28 +87,6 @@
           {
             title: '账号', key: 'username', align: 'center', ellipsis: true, minWidth: 100,
             render: (h, params) => showTip(h, params.row.username)
-          },
-          {
-            title: '角色', align: 'left', ellipsis: true, minWidth: 100,
-            render: (h, params) => {
-              let arr = [];
-              const {roleInfoList} = params.row;
-              roleInfoList.forEach(item => {
-                const {type, tip} = item;
-                let title = type == 'PRESIDENT' ? '学校' : type == 'GRADE_LEADER' ? '年级' : type == 'CLASS_TEACHER' ? '班级' : '任教信息';
-                let t = type == 'PRESIDENT' ? 'error' : type == 'GRADE_LEADER' ? 'primary' : type == 'CLASS_TEACHER' ? 'info' : 'ghost';
-                let roleName = type == 'PRESIDENT' ? '校领导' : type == 'GRADE_LEADER' ? '年级主任' : type == 'CLASS_TEACHER' ? '班主任' : '任课教师';
-                const icon = h('Poptip', {
-                    props: {trigger: 'hover', title: title, content: tip},
-                  },
-                  [h('Button', {
-                    props: {type: t, size: 'small'},
-                    style: {marginRight: '5px'}
-                  }, roleName)]);
-                arr.push(icon);
-              })
-              return h('div', arr)
-            }
           },
           {
             title: '操作', align: 'center', width: 200,
@@ -182,30 +102,10 @@
                 },
                 on: {
                   click: () => {
-                    this.$refs.AddVue.showModal(false, params.row);
+                    this.$refs.AddVue.showModal(true, params.row);
                   }
                 }
               }, '修改');
-              const reset = h('Button', {
-                props: {
-                  type: 'ghost',
-                  size: 'small'
-                },
-                style: {
-                  "margin-left": '5px'
-                },
-                on: {
-                  click: () => {
-                    patch(url.resetPassword, {username: params.row.username}).then(res => {
-                      if (res.ret_code == 0) {
-                        this.$Message.success('重置成功')
-                      } else {
-                        this.$Message.error('重置失败')
-                      }
-                    }).catch(err => console.log(err))
-                  }
-                }
-              }, '重置密码');
               // const del = h('Button', {
               //   props: {
               //     type: 'error',
@@ -240,15 +140,13 @@
               // }, '删除');
               const op = [];
               op.push(edit);
-              // op.push(update);
-              op.push(reset);
               return h('div', op);
             }
           }
         ];
-        if (this.roleId != 'ADMIN') {
-          columns.splice(5, 1)
-        }
+        // if (this.roleId != 'ADMIN') {
+        //   columns.splice(7, 1)
+        // }
         return columns;
       }
     }
