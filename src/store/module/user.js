@@ -8,7 +8,6 @@ export default {
     accountNickname: '',
     roleId: '',
     access: "",
-    accessToken: '',
     superMsg: 0,
     simpleMsg: 0,
   },
@@ -29,10 +28,6 @@ export default {
       state.roleId = roleId;
       sessionStorage.setItem("roleId", roleId);
       state.access = roleId;
-    },
-    setAccessToken(state, accessToken) {
-      state.accessToken = accessToken;
-      sessionStorage.setItem("accessToken", accessToken);
     },
     setSuperMsg(state, superMsg) {
       state.superMsg = superMsg;
@@ -87,28 +82,27 @@ export default {
           username,
           password
         }).then(res => {
-          commit('setAccountId', res.data.user_id);
-          // commit('setAccountNumber', res.data.accountNumber);
-          commit('setAccountNickname', res.data.nickname);
-          commit('setRoleId', res.data.role);
-          commit('setAccessToken', res.data.access_token);
-          // commit('setSuperMsg', res.data.superMsg);
-          // commit('setSimpleMsg', res.data.simpleMsg);
-          resolve(res)
-        }).catch(err => {
-          Message.error('用户名或密码错误');
-          reject(err)
-        })
+          let data = res.data;
+          const {uid, username, nickname} = data.data;
+          if (data.code == 0) {
+            commit('setAccountId', uid);
+            commit('setAccountNickname', nickname);
+            commit('setRoleId', data.role);
+            resolve(res)
+          } else {
+            Message.error(data.msg)
+            reject(res)
+          }
+        }).catch(err => reject(err))
       })
     },
     // 退出登录
-    handleLogOut({state, commit}, {token}) {
+    handleLogOut({state, commit}) {
       return new Promise((resolve, reject) => {
-        logout({token}).then(res => {
+        logout().then(res => {
           sessionStorage.removeItem('accountId');
           sessionStorage.removeItem('accountNickname');
           sessionStorage.removeItem('roleId');
-          sessionStorage.removeItem('accessToken');
           resolve(res)
         }).catch(err => reject(err))
       })

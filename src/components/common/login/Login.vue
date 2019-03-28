@@ -39,18 +39,18 @@
       },
       handleSubmit({username, password}) {
         handleSpinCustom();
-        // this.handleLogin({
-        //   username,
-        //   password
-        // }).then(res => {
-        //   if (res) {
-        this.$Spin.hide();
-        this.$router.push({name: 'info'})
-        //   }
-        // }).catch(err => {
-        //   this.$Spin.hide();
-        //   console.log(err)
-        // });
+        this.handleLogin({
+          username,
+          password
+        }).then(res => {
+          if (res) {
+            this.$Spin.hide();
+            this.$router.push({name: 'info'})
+          }
+        }).catch(err => {
+          this.$Spin.hide();
+          console.log(err)
+        });
       }
     }
   }

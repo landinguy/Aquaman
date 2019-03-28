@@ -43,8 +43,7 @@ export default [
     path: '/account',
     name: 'account',
     meta: {
-      title: '用户管理',
-      access: ['ADMIN']
+      title: '用户管理'
     },
     component: Main,
     children: [

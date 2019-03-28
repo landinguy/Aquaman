@@ -68,8 +68,7 @@
       handleClick(name) {
         switch (name) {
           case 'logout':
-            let token = 'Bearer ' + this.accessToken;
-            this.handleLogOut({token}).then(res => {
+            this.handleLogOut().then(res => {
               if (res.status == 200) this.$router.push({name: 'login'});
             }).catch(err => console.log(err));
             break;
