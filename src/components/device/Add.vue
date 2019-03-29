@@ -6,14 +6,22 @@
       </p>
       <div>
         <Form ref="form" :model="formData" :rules="formValidate" :label-width="100">
-          <FormItem label="账号" prop="username">
-            <Input v-model.trim="formData.username" placeholder="请填写账号"/>
+          <FormItem label="设备名" prop="name">
+            <Input v-model.trim="formData.name" placeholder="请填写设备名"/>
           </FormItem>
-          <FormItem label="密码" prop="password" v-if="op==='add'">
-            <Input v-model.trim="formData.password" type="password" placeholder="请填写密码"/>
+          <FormItem label="设备类型" prop="type">
+            <Select v-model="formData.type">
+              <Option value="1">温度</Option>
+              <Option value="2">湿度</Option>
+            </Select>
           </FormItem>
-          <FormItem label="姓名" prop="nickname">
-            <Input v-model.trim="formData.nickname" placeholder="请填写姓名"/>
+          <FormItem label="所属用户" prop="uid">
+            <Select v-model="formData.uid">
+              <Option v-for="item in users" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="设备描述" prop="description">
+            <Input v-model.trim="formData.description" type="textarea" :rows="4" placeholder="请填写设备描述"/>
           </FormItem>
         </Form>
       </div>
@@ -34,21 +42,30 @@
       return {
         addModal: false,
         formData: {
-          username: '',
-          password: '',
-          nickname: '',
+          name: '',
+          type: '',
+          uid: '',
+          description: ''
         },
         id: '',
         formValidate: {
-          username: [{required: true, message: '请填写账号', trigger: 'blur'}],
-          password: [{required: true, message: '请填写密码', trigger: 'blur'}],
-          nickname: [{required: true, message: '请填写姓名', trigger: 'blur'}],
+          name: [{required: true, message: '请填写账号', trigger: 'blur'}],
+          description: [{required: true, message: '请填写设备描述', trigger: 'blur'}],
+          type: [{required: true, message: '请选择设备类型', trigger: 'change'}],
+          uid: [{required: true, message: '请选择所属用户', trigger: 'change'}],
         },
-        op: 'add'
+        op: 'add',
+        users: []
       }
     },
     methods: {
-      showModal(isStudent = false, data) {
+      getAccount() {
+        post(url.getAccount, {}).then(res => {
+          const {list} = res.data;
+          list.forEach(i => this.users.push({label: i.nickname, value: i.id.toString()}))
+        }).catch(err => console.log(err))
+      },
+      showModal(data) {
         if (data) {
           this.op = 'edit';
           this.setData(data);
@@ -58,55 +75,18 @@
       confirm() {
         this.$refs.form.validate((valid) => {
           if (valid) {
-            const {username, password, nickname} = this.formData;
-            if (this.id == '') {//添加
-              let param = {username, password, nickname};
-              post(url.addAccount, param).then(res => {
-                this.$Message.success({
-                  content: '提交成功',
-                  duration: 1,
-                  onClose: () => {
-                    this.cancel();
-                    // this.$parent.search();
-                  }
-                })
-              }).catch(err => console.log(err));
-            } else {
-              let userId = this.id;
-              if (this.isStudent) {
-                let clazz = this.formData.clazzName[0];
-                put(url.updateStudent, {userId, clazz, username, nickname}).then(res => {
-                  if (res.ret_code == 0) {
-                    this.$Message.success({
-                      content: '提交成功',
-                      duration: 1,
-                      onClose: () => {
-                        this.cancel();
-                        this.$parent.search();
-                      }
-                    })
-                  } else {
-                    this.$Message.error(`修改失败 [${res.error_msg}]`)
-                  }
-                }).catch(err => console.log(err));
-              } else {
-                let roleData = this.setRoleData();
-                put(url.updateTeacher, {userId, username, nickname, roleData}).then(res => {
-                  if (res.ret_code == 0) {
-                    this.$Message.success({
-                      content: '提交成功',
-                      duration: 1,
-                      onClose: () => {
-                        this.cancel();
-                        this.$parent.search();
-                      }
-                    })
-                  } else {
-                    this.$Message.error(`修改失败 [${res.error_msg}]`)
-                  }
-                }).catch(err => console.log(err));
-              }
-            }
+            let param = this.formData;
+            param.id = this.id;
+            post(url.addDevice, param).then(res => {
+              this.$Message.success({
+                content: '提交成功',
+                duration: 1,
+                onClose: () => {
+                  this.cancel();
+                  this.$parent.search();
+                }
+              })
+            }).catch(err => console.log(err));
           }
         })
       },
@@ -115,8 +95,12 @@
       },
       setData(data) {
         if (data) {
-          const {username, nickname, userId} = data;
-
+          const {name, type, description, id, uid} = data;
+          this.id = id;
+          this.formData.name = name;
+          this.formData.type = type.toString();
+          this.formData.description = description;
+          this.formData.uid = uid.toString();
         }
       }
     },

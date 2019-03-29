@@ -15,6 +15,12 @@
           <FormItem label="姓名" prop="nickname">
             <Input v-model.trim="formData.nickname" placeholder="请填写姓名"/>
           </FormItem>
+          <FormItem label="角色" prop="role">
+            <Select v-model="formData.role">
+              <Option value="ADMIN">管理员</Option>
+              <Option value="USER">普通用户</Option>
+            </Select>
+          </FormItem>
         </Form>
       </div>
       <div slot="footer" style="text-align: center">
@@ -37,12 +43,14 @@
           username: '',
           password: '',
           nickname: '',
+          role: ''
         },
         id: '',
         formValidate: {
           username: [{required: true, message: '请填写账号', trigger: 'blur'}],
           password: [{required: true, message: '请填写密码', trigger: 'blur'}],
           nickname: [{required: true, message: '请填写姓名', trigger: 'blur'}],
+          role: [{required: true, message: '请选择用户角色', trigger: 'change'}],
         },
         op: 'add'
       }
@@ -78,10 +86,11 @@
       },
       setData(data) {
         if (data) {
-          const {username, nickname, id} = data;
+          const {username, nickname, id, role} = data;
           this.id = id;
           this.formData.username = username;
           this.formData.nickname = nickname;
+          this.formData.role = role;
         }
       }
     },

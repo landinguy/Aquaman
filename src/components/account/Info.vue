@@ -89,6 +89,10 @@
             render: (h, params) => showTip(h, params.row.username)
           },
           {
+            title: '角色', key: 'role', align: 'center', ellipsis: true, minWidth: 100,
+            render: (h, params) => showTip(h, params.row.role == 'ADMIN' ? '管理员' : '普通用户')
+          },
+          {
             title: '操作', align: 'center', width: 200,
             render: (h, params) => {
               // const id = params.row.id;

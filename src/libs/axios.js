@@ -33,10 +33,10 @@ class httpRequest {
     // 添加拦截器
     instance.interceptors.response.use(res => {
       console.log("response:", res);
-      if (res.status == 200 || res.status == 201) {
-        if (res.data.code == -1) {
-          Message.error(res.data.msg)
-        }
+      if (res.status == 200) {
+        // if (res.data.code == -1) {
+        //   Message.error(res.data.msg)
+        // }
         Spin.hide();
         return res.data;
       }

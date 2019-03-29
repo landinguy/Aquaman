@@ -84,10 +84,10 @@ export default {
         }).then(res => {
           let data = res.data;
           if (data && data.code == 0) {
-            const {uid, username, nickname} = data.data;
+            const {uid, username, nickname, role} = data.data;
             commit('setAccountId', uid);
             commit('setAccountNickname', nickname);
-            commit('setRoleId', data.role);
+            commit('setRoleId', role);
             resolve(res)
           } else {
             Message.error(data.msg)

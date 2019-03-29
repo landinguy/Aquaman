@@ -88,12 +88,12 @@
               this.$Message.warning('确认密码与新密码不一致');
               return
             }
-            put(url.resetPassword, {oldPassword, newPassword}).then(res => {
-              if (res.ret_code == 0) {
+            $get(url.updatePwd, {oldPassword, newPassword}).then(res => {
+              if (res.code == 0) {
                 this.$Message.success('修改成功');
                 this.cancel();
               } else {
-                this.$Message.error(`修改失败 [${res.error_msg}]`);
+                this.$Message.error(`修改失败 [${res.msg}]`);
               }
             }).catch(err => console.log(err))
           }

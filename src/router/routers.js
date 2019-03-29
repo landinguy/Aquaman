@@ -44,6 +44,7 @@ export default [
     name: 'account',
     meta: {
       hide: true,
+      access:['ADMIN']
     },
     component: Main,
     children: [
