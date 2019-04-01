@@ -48,7 +48,7 @@
       <Table stripe border :columns="columns" :data="tableData"></Table>
       <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>
     </div>
-    <Add ref="AddVue"></Add>
+    <AddTeacher ref="AddVue"></AddTeacher>
   </div>
 </template>
 <script>
@@ -56,7 +56,7 @@
   import {showTip, timestampToTime} from '@/libs/util'
   import url from '@/api/url'
   import {post, $del, get, $get, patch} from "@/api/ax"
-  import Add from './Add'
+  import AddTeacher from './AddTeacher'
   import ExpandRow from './ExpandRow'
 
   export default {
@@ -70,7 +70,7 @@
         total: 0
       }
     },
-    components: {Add, ExpandRow},
+    components: {AddTeacher, ExpandRow},
     methods: {
       clear() {
         this.params = {username: '', nickname: '', stageId: '', gradeId: '', clazzId: '', pageNum: 1, pageSize: 10}
