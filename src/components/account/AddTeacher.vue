@@ -28,7 +28,7 @@
           <template v-if="step===2">
             <!-- 选了年级主任 -->
             <template v-if="isGradeLeader">
-              <h3>配置年级主任信息</h3>
+              <h3 class="title">年级主任</h3>
               <FormItem label="学段" prop="g_stageId">
                 <Select v-model="formData.g_stageId" @on-change="getGrades('g')">
                   <Option value="1">小学</Option>
@@ -44,7 +44,7 @@
             </template>
             <!-- 选了班主任 -->
             <template v-if="isClassTeacher">
-              <h3>配置班主任信息</h3>
+              <h3 class="title">班主任</h3>
               <FormItem label="学段" prop="c_stageId">
                 <Select v-model="formData.c_stageId" @on-change="getGrades('c')">
                   <Option value="1">小学</Option>
@@ -64,7 +64,7 @@
               </FormItem>
             </template>
             <template v-if="isTeacher">
-              <h3>配置老师信息</h3>
+              <h3 class="title">老师</h3>
               <FormItem label="学段" prop="t_stageId">
                 <Select v-model="formData.t_stageId" @on-change="getGrades('t')">
                   <Option value="1">小学</Option>
@@ -348,9 +348,13 @@
     }
   }
 </script>
-<style lang="less">
+<style lang="less" scoped>
   .radio_len {
     width: 80px;
     text-align: center;
+  }
+
+  .title {
+    color: gray;
   }
 </style>
