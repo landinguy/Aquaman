@@ -160,6 +160,7 @@
           this.op = 'edit';
           this.setData(data);
         } else {
+          this.btnText = '提交'
           this.$refs.form.resetFields();
         }
         this.addModal = true;
