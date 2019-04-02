@@ -18,10 +18,10 @@
             </FormItem>
             <FormItem label="角色" prop="role">
               <Select v-model="formData.role" multiple @on-change="changeRole">
-                <Option value="PRESIDENT" :disabled="flag1">校长</Option>
-                <Option value="GRADE_LEADER" :disabled="flag1">年级主任</Option>
-                <Option value="CLASS_TEACHER" :disabled="flag1">班主任</Option>
-                <Option value="TEACHER" :disabled="flag1">任课教师</Option>
+                <Option value="PRESIDENT">校领导</Option>
+                <Option value="GRADE_LEADER">年级主任</Option>
+                <Option value="CLASS_TEACHER">班主任</Option>
+                <Option value="TEACHER">任课教师</Option>
               </Select>
             </FormItem>
           </template>
@@ -53,7 +53,7 @@
                 </Select>
               </FormItem>
               <FormItem label="年级" prop="c_gradeId">
-                <Select v-model="formData.c_gradeId" placement="bottom" @on-change="getClazzData">
+                <Select v-model="formData.c_gradeId" placement="bottom" @on-change="getClazzData('c')">
                   <Option v-for="item in c_grades" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
               </FormItem>
@@ -73,7 +73,7 @@
                 </Select>
               </FormItem>
               <FormItem label="年级" prop="t_gradeId">
-                <Select v-model="formData.t_gradeId" placement="bottom" @on-change="getClazzData">
+                <Select v-model="formData.t_gradeId" placement="bottom" @on-change="getClazzData('t')">
                   <Option v-for="item in t_grades" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
               </FormItem>
@@ -83,7 +83,7 @@
                 </Select>
               </FormItem>
               <FormItem label="科目" prop="subject">
-                <Select v-model="formData.subject" placement="bottom">
+                <Select v-model="formData.subject" placement="bottom" multiple>
                   <Option v-for="item in subjectData" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
               </FormItem>
@@ -94,7 +94,7 @@
       <div slot="footer" style="text-align: center">
         <Button v-if="step===1" type="primary" shape="circle" class="radio_len" @click="next">{{btnText}}</Button>
         <template v-if="step===2">
-          <Button v-if="isGradeLeader || isClassTeacher ||isTeacher" type="ghost" shape="circle" class="radio_len"
+          <Button v-if="isGradeLeader || isClassTeacher || isTeacher" type="ghost" shape="circle" class="radio_len"
                   style="margin-right: 20px" @click="previous">上一步
           </Button>
           <Button type="primary" shape="circle" class="radio_len" @click="confirm">提交</Button>
@@ -113,10 +113,8 @@
       return {
         addModal: false,
         formData: {
-          username: '', password: '', nickname: '', role: [],
-          g_stageId: '', c_stageId: '', t_stageId: '',
-          g_gradeId: '', c_gradeId: '', t_gradeId: '',
-          c_clazzName: '', t_clazzName: [], subject: ''
+          username: '', password: '', nickname: '', role: [], g_stageId: '', c_stageId: '', t_stageId: '',
+          g_gradeId: '', c_gradeId: '', t_gradeId: '', c_clazzName: '', t_clazzName: [], subject: []
         },
         id: '',
         formValidate: {
@@ -131,7 +129,8 @@
           c_gradeId: [{required: true, message: '请选择年级', trigger: 'change'}],
           t_gradeId: [{required: true, message: '请选择年级', trigger: 'change'}],
           c_clazzName: [{required: true, message: '请选择班级', trigger: 'change'}],
-          t_clazzName: [{required: true, type: 'array', min: 1, message: '请选择班级', trigger: 'change'}]
+          t_clazzName: [{required: true, type: 'array', min: 1, message: '请选择班级', trigger: 'change'}],
+          subject: [{required: true, type: 'array', min: 1, message: '请选择科目', trigger: 'change'}],
         },
         isPresident: false,
         isGradeLeader: false,
@@ -150,32 +149,40 @@
         this.step = 1
       },
       next() {
-        this.step = 2
+        if (this.btnText === '下一步') {
+          this.step = 2
+        } else if (this.btnText === '提交') {
+          this.confirm()
+        }
       },
-      showModal(isStudent = false, data) {
+      showModal(data) {
         if (data) {
           this.op = 'edit';
           this.setData(data);
+        } else {
+          this.$refs.form.resetFields();
         }
         this.addModal = true;
       },
       changeRole(val) {
-        this.isPresident = this.isGradeLeader = this.isTeacher = false
-        if (val.length === 1 && val.indexOf('PRESIDENT') != -1) {
-          this.isPresident = true
-          this.btnText = '提交'
-          return
-        } else {
-          this.btnText = '下一步'
+        if (val) {
+          this.isPresident = this.isGradeLeader = this.isClassTeacher = this.isTeacher = false
+          if (val.length === 1 && val.indexOf('PRESIDENT') != -1) {
+            this.isPresident = true
+            this.btnText = '提交'
+            return
+          } else {
+            this.btnText = '下一步'
+          }
+          //选了校长
+          if (val.length > 0 && val.indexOf('PRESIDENT') != -1) this.isPresident = true
+          //选了年级主任
+          if (val.length > 0 && val.indexOf('GRADE_LEADER') != -1) this.isGradeLeader = true
+          //选了年级主任
+          if (val.length > 0 && val.indexOf('CLASS_TEACHER') != -1) this.isClassTeacher = true
+          //选了老师
+          if (val.length > 0 && val.indexOf('TEACHER') != -1) this.isTeacher = true
         }
-        //选了校长
-        if (val.length > 0 && val.indexOf('PRESIDENT') != -1) this.isPresident = true
-        //选了年级主任
-        if (val.length > 0 && val.indexOf('GRADE_LEADER') != -1) this.isGradeLeader = true
-        //选了年级主任
-        if (val.length > 0 && val.indexOf('CLASS_TEACHER') != -1) this.isClassTeacher = true
-        //选了老师
-        if (val.length > 0 && val.indexOf('TEACHER') != -1) this.isTeacher = true
       },
       confirm() {
         this.$refs.form.validate((valid) => {
@@ -186,50 +193,37 @@
               param.roleData = this.setRoleData();
               console.log('-----------', param)
               post(url.addAccount, param).then(res => {
-                this.$Message.success({
-                  content: '提交成功',
-                  duration: 1,
-                  onClose: () => {
-                    this.cancel();
-                    this.$parent.search();
-                  }
-                })
+                if (res.ret_code == 0) {
+                  this.$Message.success({
+                    content: '提交成功',
+                    duration: 1,
+                    onClose: () => {
+                      this.cancel();
+                      this.$parent.search();
+                    }
+                  })
+                } else {
+                  this.$Message.error(`添加失败 [${res.error_msg}]`)
+                }
               }).catch(err => console.log(err));
             } else {
               let userId = this.id;
-              if (this.isStudent) {
-                let clazz = this.formData.clazzName[0];
-                put(url.updateStudent, {userId, clazz, username, nickname}).then(res => {
-                  if (res.ret_code == 0) {
-                    this.$Message.success({
-                      content: '提交成功',
-                      duration: 1,
-                      onClose: () => {
-                        this.cancel();
-                        this.$parent.search();
-                      }
-                    })
-                  } else {
-                    this.$Message.error(`修改失败 [${res.error_msg}]`)
-                  }
-                }).catch(err => console.log(err));
-              } else {
-                let roleData = this.setRoleData();
-                put(url.updateTeacher, {userId, username, nickname, roleData}).then(res => {
-                  if (res.ret_code == 0) {
-                    this.$Message.success({
-                      content: '提交成功',
-                      duration: 1,
-                      onClose: () => {
-                        this.cancel();
-                        this.$parent.search();
-                      }
-                    })
-                  } else {
-                    this.$Message.error(`修改失败 [${res.error_msg}]`)
-                  }
-                }).catch(err => console.log(err));
-              }
+              let roleData = this.setRoleData();
+              put(url.updateTeacher, {userId, username, nickname, roleData}).then(res => {
+                if (res.ret_code == 0) {
+                  this.$Message.success({
+                    content: '提交成功',
+                    duration: 1,
+                    onClose: () => {
+                      this.cancel();
+                      this.$parent.search();
+                    }
+                  })
+                } else {
+                  this.$Message.error(`修改失败 [${res.error_msg}]`)
+                }
+              }).catch(err => console.log(err));
+
             }
           }
         })
@@ -238,90 +232,101 @@
         let roleData = [];
         this.formData.role.forEach(item => {
           let type = item;
-          if (item == 'PRESIDENT') {
+          if (item === 'PRESIDENT') {
             roleData.push({type})
-          } else if (item == 'GRADE_LEADER') {
-            roleData.push({type, grade: this.formData.gradeId})
-          } else if (item == 'CLASS_TEACHER' || item == 'STUDENT') {
-            roleData.push({type, clazz: this.formData.clazzName[0]})
-          } else if (item == 'TEACHER') {
+          } else if (item === 'GRADE_LEADER') {
+            roleData.push({type, grade: this.formData.g_gradeId})
+          } else if (item === 'CLASS_TEACHER') {
+            roleData.push({type, clazz: this.formData.c_clazzName})
+          } else if (item === 'TEACHER') {
             let arr = [];
-            this.formData.clazzName.forEach(item => arr.push({clazzId: item, subjectId: this.formData.subject}))
+            const {t_clazzName, subject} = this.formData
+            for (let i in t_clazzName) {
+              if (subject.length === 1) {
+                arr.push({clazzId: t_clazzName[i], subjectId: subject[0]})
+              } else if (subject.length > 1) {
+                arr.push({clazzId: t_clazzName[i], subjectId: subject[i]})
+              }
+            }
             roleData.push({type, teach: arr})
           }
         })
         return roleData;
       },
       cancel() {
-        this.addModal = false;
+        this.addModal = false
       },
       setData(data) {
         if (data) {
-          const {username, nickname, stage, grade, clazz, userId} = data;
+          this.formData.role = []
+          const {username, nickname, roleInfoList, userId} = data;
           this.id = userId;
           this.formData.username = username;
           this.formData.nickname = nickname;
-          if (this.isStudent) {
-            this.formData.stageId = stage === '小学' ? '1' : stage === '初中' ? '2' : '3';
-            this.getGrades();
-            setTimeout(() => {
-              for (let g of this.grades) {
-                if (g.label == grade) {
-                  this.formData.gradeId = g.value;
-                  this.getClazzData();
-                  setTimeout(() => {
-                    for (let c of this.clazzData) {
-                      if (c.label == clazz) {
-                        this.formData.clazzName.push(c.value)
-                        break
-                      }
-                    }
-                  }, 500)
-                  break
-                }
-              }
-            }, 500);
-          }
+          console.log("roleInfoList----", roleInfoList)
+          roleInfoList.forEach(r => this.formData.role.push(r.type))
         }
       },
       getGrades(type) {
+        let stageId = ''
         if (type === 'g') {
-          this.g_grades = [];
-          this.formData.g_gradeId = '';
+          this.g_grades = []
+          this.formData.g_gradeId = ''
+          stageId = this.formData.g_stageId
         } else if (type === 'c') {
-          this.c_grades = [];
-          this.c_clazzData=[];
-          this.formData.c_gradeId = '';
+          this.c_grades = []
+          this.formData.c_gradeId = ''
+          this.c_clazzData = []
+          this.formData.c_clazzName = ''
+          stageId = this.formData.c_stageId
         } else if (type === 't') {
-
+          this.t_grades = []
+          this.formData.t_gradeId = ''
+          this.t_clazzData = []
+          this.formData.t_clazzName = []
+          this.subjectData = []
+          this.formData.subject = []
+          stageId = this.formData.t_stageId
         }
 
-        this.grades = [];
-        this.subjectData = [];
-        this.formData.gradeId = '';
-        this.formData.clazzName = [];
-        this.formData.subject = '';
-        let stageId = this.formData.stageId;
         if (stageId) {
           get(url.getGradesByStageId + stageId, {}).then(res =>
-            res.data.forEach(item => this.grades.push({label: item.gradeName, value: item.gradeId}))
+            res.data.forEach(item => {
+              if (type === 'g') this.g_grades.push({label: item.gradeName, value: item.gradeId})
+              else if (type === 'c') this.c_grades.push({label: item.gradeName, value: item.gradeId})
+              else if (type === 't') this.t_grades.push({label: item.gradeName, value: item.gradeId})
+            })
           ).catch(err => console.log(err));
-          get(url.getSubjectByStageId + stageId, {}).then(res => {
-            if (res) {
-              let subjectList = res.data.subjectList;
-              subjectList.forEach(item => this.subjectData.push({label: item.name, value: item.id}))
-            }
-          }).catch(err => console.log(err))
+          //教师角色才需选取科目
+          if (type === 't') {
+            get(url.getSubjectByStageId + stageId, {}).then(res => {
+              if (res) {
+                let subjectList = res.data.subjectList;
+                subjectList.forEach(item => this.subjectData.push({label: item.name, value: item.id}))
+              }
+            }).catch(err => console.log(err))
+          }
         }
       },
-      getClazzData() {
-        this.clazzData = [];
-        this.formData.clazzName = [];
-        let gradeId = this.formData.gradeId;
-        if (gradeId && !this.isGradeLeader) {
+      getClazzData(type) {
+        let gradeId = ''
+        if (type === 'c') {
+          this.c_clazzData = []
+          this.formData.c_clazzName = ''
+          gradeId = this.formData.c_gradeId
+        } else if (type === 't') {
+          this.t_clazzData = []
+          this.formData.t_clazzName = []
+          gradeId = this.formData.t_gradeId
+        }
+
+        if (gradeId) {
           get(url.getClazzByGradeId + gradeId, {}).then(res => {
             const {clazzList} = res.data;
-            clazzList.forEach(item => this.clazzData.push({label: item.clazzName, value: item.clazzId}))
+            clazzList.forEach(item => {
+              if (type === 'c') this.c_clazzData.push({label: item.clazzName, value: item.clazzId})
+              else if (type === 't') this.t_clazzData.push({label: item.clazzName, value: item.clazzId})
+            })
           }).catch(err => console.log(err))
         }
       }
@@ -329,11 +334,14 @@
     watch: {
       addModal(curVal, oldVal) {
         if (!curVal) {
-          this.$refs.form.resetFields()
           this.op = 'add'
           this.id = ''
           this.step = 1
           this.btnText = '提交'
+          this.formData = {
+            username: '', password: '', nickname: '', role: [], g_stageId: '', c_stageId: '', t_stageId: '',
+            g_gradeId: '', c_gradeId: '', t_gradeId: '', c_clazzName: '', t_clazzName: [], subject: []
+          }
         }
       }
     }

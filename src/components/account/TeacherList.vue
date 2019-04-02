@@ -111,7 +111,7 @@
         }).catch(err => console.log(err))
       },
       showModal() {
-        this.$refs.AddVue.showModal(false, null);
+        this.$refs.AddVue.showModal(null);
       }
     },
     mounted() {
@@ -182,7 +182,7 @@
                 },
                 on: {
                   click: () => {
-                    this.$refs.AddVue.showModal(false, params.row);
+                    this.$refs.AddVue.showModal(params.row);
                   }
                 }
               }, '修改');

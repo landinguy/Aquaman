@@ -17,7 +17,7 @@
           </FormItem>
           <FormItem label="角色" prop="role">
             <Select v-model="formData.role" multiple @on-change="changeRole" :disabled="isStudent">
-              <Option value="PRESIDENT" :disabled="flag1">校长</Option>
+              <Option value="PRESIDENT" :disabled="flag1">校领导</Option>
               <Option value="GRADE_LEADER" :disabled="flag1">年级主任</Option>
               <Option value="CLASS_TEACHER" :disabled="flag1">班主任</Option>
               <Option value="TEACHER" :disabled="flag1">任课教师</Option>
@@ -158,14 +158,18 @@
               param.roleData = this.setRoleData();
               console.log('-----------', param)
               post(url.addAccount, param).then(res => {
-                this.$Message.success({
-                  content: '提交成功',
-                  duration: 1,
-                  onClose: () => {
-                    this.cancel();
-                    this.$parent.search();
-                  }
-                })
+                if (res.ret_code == 0) {
+                  this.$Message.success({
+                    content: '提交成功',
+                    duration: 1,
+                    onClose: () => {
+                      this.cancel();
+                      this.$parent.search();
+                    }
+                  })
+                } else {
+                  this.$Message.error(`添加失败 [${res.error_msg}]`)
+                }
               }).catch(err => console.log(err));
             } else {
               let userId = this.id;
