@@ -2,26 +2,25 @@
   <div ref="AddVue">
     <Modal v-model="addModal" width="640">
       <p slot="header" style="text-align:center">
-        <span>{{op==='add'?'添加':'编辑'}}设备</span>
+        <span>{{op==='add'?'添加':'编辑'}}违章记录</span>
       </p>
       <div>
         <Form ref="form" :model="formData" :rules="formValidate" :label-width="100">
-          <FormItem label="设备名" prop="name">
-            <Input v-model.trim="formData.name" placeholder="请填写设备名"/>
-          </FormItem>
-          <FormItem label="设备类型" prop="type">
-            <Select v-model="formData.type">
-              <Option value="1">温度</Option>
-              <Option value="2">湿度</Option>
-            </Select>
-          </FormItem>
-          <FormItem label="所属用户" prop="uid">
-            <Select v-model="formData.uid">
+          <FormItem label="车主" prop="uid">
+            <Select v-model="formData.uid" @on-change="onUIdChange">
               <Option v-for="item in users" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
           </FormItem>
-          <FormItem label="设备描述" prop="description">
-            <Input v-model.trim="formData.description" type="textarea" :rows="4" placeholder="请填写设备描述"/>
+          <FormItem label="车牌号" prop="plateNumber">
+            <Select v-model="formData.plateNumber">
+              <Option v-for="item in plateData" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="违章原因" prop="reason">
+            <Input v-model.trim="formData.reason" type="textarea" :rows="4" placeholder="请填写违章原因"/>
+          </FormItem>
+          <FormItem label="罚款金额" prop="fine">
+            <Input v-model.trim="formData.fine" placeholder="请填写罚款金额"/>
           </FormItem>
         </Form>
       </div>
@@ -43,26 +42,39 @@
         addModal: false,
         formData: {
           name: '',
-          type: '',
+          plateNumber: '',
           uid: '',
-          description: ''
+          reason: '',
+          fine: '',
         },
         id: '',
         formValidate: {
-          name: [{required: true, message: '请填写账号', trigger: 'blur'}],
-          description: [{required: true, message: '请填写设备描述', trigger: 'blur'}],
-          type: [{required: true, message: '请选择设备类型', trigger: 'change'}],
-          uid: [{required: true, message: '请选择所属用户', trigger: 'change'}],
+          name: [{required: true, message: '请填写车辆名称', trigger: 'blur'}],
+          plateNumber: [{required: true, message: '请选择车牌号', trigger: 'change'}],
+          reason: [{required: true, message: '请填写违章原因', trigger: 'blur'}],
+          fine: [{required: true, message: '请填写罚款金额', trigger: 'blur'}],
+          uid: [{required: true, message: '请选择所属车主', trigger: 'change'}],
         },
         op: 'add',
-        users: []
+        users: [],
+        plateData: []
       }
     },
     methods: {
+      onUIdChange(uid) {
+        if (uid) {
+          this.plateData = []
+          this.formData.plateNumber = ''
+          post(url.getVehicle, {uid}).then(res => {
+            const {list} = res.data;
+            list.forEach(i => this.plateData.push({label: i.plateNumber, value: i.plateNumber}))
+          }).catch(err => console.log(err))
+        }
+      },
       getAccount() {
         post(url.getAccount, {}).then(res => {
           const {list} = res.data;
-          list.forEach(i => this.users.push({label: i.nickname, value: i.id.toString()}))
+          list.filter(i => i.role === 'USER').forEach(i => this.users.push({label: i.nickname, value: i.id.toString()}))
         }).catch(err => console.log(err))
       },
       showModal(data) {
@@ -77,7 +89,7 @@
           if (valid) {
             let param = this.formData;
             param.id = this.id;
-            post(url.addDevice, param).then(res => {
+            post(url.addRecord, param).then(res => {
               this.$Message.success({
                 content: '提交成功',
                 duration: 1,
@@ -95,10 +107,10 @@
       },
       setData(data) {
         if (data) {
-          const {name, type, description, id, uid} = data;
+          const {name, plateNumber, description, id, uid} = data;
           this.id = id;
           this.formData.name = name;
-          this.formData.type = type.toString();
+          this.formData.plateNumber = plateNumber;
           this.formData.description = description;
           this.formData.uid = uid.toString();
         }

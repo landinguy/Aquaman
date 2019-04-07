@@ -22,20 +22,20 @@ export default [
     },
   },
   {
-    path: '/device',
-    name: 'device',
+    path: '/home',
+    name: 'home',
     meta: {
       hide: true,
     },
     component: Main,
     children: [
       {
-        path: '/device',
-        name: 'device',
+        path: '/home',
+        name: 'home',
         meta: {
-          title: '设备管理'
+          title: '首页'
         },
-        component: () => import('@/components/device/Info')
+        component: () => import('@/components/home/Home')
       }
     ]
   },
@@ -44,7 +44,7 @@ export default [
     name: 'account',
     meta: {
       hide: true,
-      access:['ADMIN']
+      access: ['ADMIN']
     },
     component: Main,
     children: [
@@ -58,30 +58,60 @@ export default [
       }
     ]
   },
-  // {
-  //   path: '/account',
-  //   name: 'account',
-  //   meta: {
-  //     title: '用户管理'
-  //   },
-  //   component: Main,
-  //   children: [
-  //     {
-  //       path: 'students',
-  //       name: 'students',
-  //       meta: {
-  //         title: '学生管理',
-  //       },
-  //       component: () => import('@/components/account/StudentList')
-  //     },
-  //     {
-  //       path: 'teachers',
-  //       name: 'teachers',
-  //       meta: {
-  //         title: '教师管理',
-  //       },
-  //       component: () => import('@/components/account/TeacherList')
-  //     },
-  //   ]
-  // },
+  {
+    path: '/vehicle',
+    name: 'vehicle',
+    meta: {
+      hide: true,
+      access: ['ADMIN', 'JGS', 'USER']
+    },
+    component: Main,
+    children: [
+      {
+        path: '/vehicle',
+        name: 'vehicle',
+        meta: {
+          title: '车辆管理'
+        },
+        component: () => import('@/components/vehicle/Info')
+      }
+    ]
+  },
+  {
+    path: '/record',
+    name: 'record',
+    meta: {
+      hide: true,
+    },
+    component: Main,
+    children: [
+      {
+        path: '/record',
+        name: 'record',
+        meta: {
+          title: '违章管理'
+        },
+        component: () => import('@/components/record/Info')
+      }
+    ]
+  },
+  {
+    path: '/log',
+    name: 'log',
+    meta: {
+      hide: true,
+      access: ['ADMIN']
+    },
+    component: Main,
+    children: [
+      {
+        path: '/log',
+        name: 'log',
+        meta: {
+          title: '登录日志'
+        },
+        component: () => import('@/components/log/Info')
+      }
+    ]
+  }
 ]

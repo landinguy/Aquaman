@@ -256,9 +256,9 @@ export const getTableDataFromArray = (array) => {
  * @param t
  * @returns {*}
  */
-export const showTip = (h, t) => {
+export const showTip = (h, t, c = 'balck') => {
   if (!t) t = "----";
-  return h("div", {attrs: {title: t}}, t)
+  return h("div", {attrs: {title: t}, style: {color: c}}, t)
 };
 
 /**
@@ -266,7 +266,7 @@ export const showTip = (h, t) => {
  * @param timestamp
  * @returns {*}
  */
-export const timestampToTime = (timestamp) => {
+export const timestampToTime = (timestamp, type = null) => {
   if (!timestamp) return "----";
   var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
   var y = date.getFullYear();
@@ -280,7 +280,9 @@ export const timestampToTime = (timestamp) => {
   i = i < 10 ? ('0' + i) : i;
   var s = date.getSeconds();
   s = s < 10 ? ('0' + s) : s;
-  return y + '-' + m + '-' + d + ' ' + h + ':' + i + ':' + s;
+  let str = y + '-' + m + '-' + d;
+  if (!type) str += ' ' + h + ':' + i + ':' + s
+  return str;
 };
 export const validateNumber = (rule, value, callback) => {
   if (isNaN(value)) {

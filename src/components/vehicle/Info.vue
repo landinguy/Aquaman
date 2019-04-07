@@ -1,39 +1,46 @@
 <template>
   <div class="bg">
-    <!--<div class="search-div">-->
-    <!--<div class="search-div-item">-->
-    <!--<label>姓名</label>-->
-    <!--<Input v-model="params.nickname" placeholder="请输入姓名" class="width"/>-->
-    <!--</div>-->
-    <!--<div class="search-div-item">-->
-    <!--<label>账号</label>-->
-    <!--<Input v-model="params.username" placeholder="请输入账号" class="width"/>-->
-    <!--</div>-->
-    <!--<div class="search-div-item">-->
-    <!--<Button type="primary" @click="search">查询</Button>-->
-    <!--<Button type="ghost" @click="clear" style="margin-left: 16px">清空</Button>-->
-    <!--</div>-->
-    <!--</div>-->
+    <div class="search-div">
+      <div class="search-div-item">
+        <label>车主姓名</label>
+        <Input v-model="params.nickname" placeholder="请输入车主姓名" class="width"/>
+      </div>
+      <div class="search-div-item">
+        <label>车牌号</label>
+        <Input v-model="params.plateNumber" placeholder="请输入车牌号" class="width"/>
+      </div>
+      <div class="search-div-item">
+        <label>车辆类型</label>
+        <Select v-model="params.type" class="width">
+          <Option value="1">电动车</Option>
+          <Option value="2">小汽车</Option>
+          <Option value="3">小型客车</Option>
+          <Option value="4">大型客车</Option>
+        </Select>
+      </div>
+      <div class="search-div-item">
+        <Button type="primary" @click="search">查询</Button>
+        <Button type="ghost" @click="clear" style="margin-left: 16px">清空</Button>
+      </div>
+    </div>
 
-    <div>
+    <div v-if="roleId==='ADMIN' || roleId==='JGS'">
       <!--<br>-->
-      <Button v-if="roleId=='ADMIN'" type="primary" @click="showModal">
+      <Button type="primary" @click="showModal">
         <Icon type="plus"></Icon>
-        添加设备
+        添加车辆
       </Button>
-      <Button type="primary" @click="showAddRecordModal">
+      <Button type="primary" @click="showBatchModal">
         <Icon type="plus"></Icon>
-        添加模拟数据
+        批量操作
       </Button>
-
     </div>
     <div style="margin-top: 16px">
       <Table stripe border :columns="columns" :data="tableData"></Table>
       <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>
     </div>
     <Add ref="AddVue"></Add>
-    <Data ref="DataVue"></Data>
-    <AddRecord ref="AddRecordVue"></AddRecord>
+    <Batch ref="BatchVue"></Batch>
   </div>
 </template>
 <script>
@@ -42,23 +49,22 @@
   import url from '@/api/url'
   import {post, $del, get, $get, patch} from "@/api/ax"
   import Add from './Add'
-  import Data from './Data'
-  import AddRecord from './AddRecord'
+  import Batch from './Batch'
 
   export default {
     name: 'Info',
     data() {
       return {
         content: 1,
-        params: {name: '', type: '', pageNo: 1, pageSize: 10},
+        params: {nickname: '', plateNumber: '', type: '', pageNo: 1, pageSize: 10},
         tableData: [],
         total: 0
       }
     },
-    components: {Add, Data, AddRecord},
+    components: {Add, Batch},
     methods: {
       clear() {
-        this.params = {name: '', type: '', pageNo: 1, pageSize: 10}
+        this.params = {nickname: '', plateNumber: '', type: '', pageNo: 1, pageSize: 10}
       },
       changePage(n) {
         this.params.pageNo = n;
@@ -70,9 +76,9 @@
       },
       getData() {
         let params = this.params;
-        if (this.roleId !== 'ADMIN') params.uid = this.accountId;
+        if (this.roleId === 'USER') params.uid = this.accountId;
 
-        post(url.getDevice, this.params).then(res => {
+        post(url.getVehicle, this.params).then(res => {
           const {total, list} = res.data;
           this.tableData = list;
           this.total = total;
@@ -81,8 +87,8 @@
       showModal() {
         this.$refs.AddVue.showModal(null);
       },
-      showAddRecordModal() {
-        this.$refs.AddRecordVue.showModal();
+      showBatchModal() {
+        this.$refs.BatchVue.showModal('vehicle');
       }
     },
     mounted() {
@@ -97,19 +103,35 @@
             title: '序号', type: 'index', width: 80, align: 'center'
           },
           {
-            title: '设备名', key: 'name', align: 'center', ellipsis: true, minWidth: 100,
+            title: '车辆名', key: 'name', align: 'center', ellipsis: true, minWidth: 80,
             render: (h, params) => showTip(h, params.row.name)
           },
           {
-            title: '所属用户', key: 'username', align: 'center', ellipsis: true, minWidth: 100,
+            title: '车牌号', key: 'plateNumber', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.plateNumber)
+          },
+          {
+            title: '车辆类型', key: 'type', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => {
+              const {type} = params.row;
+              let text = type == 1 ? '电动车' : type == 2 ? '小汽车' : type == 3 ? '小客车' : '大客车'
+              return showTip(h, text)
+            }
+          },
+          {
+            title: '购买时间', key: 'buyTs', align: 'center', ellipsis: true, minWidth: 120,
+            render: (h, params) => showTip(h, timestampToTime(parseInt(params.row.buyTs), 'date'))
+          },
+          {
+            title: '所属车主', key: 'username', align: 'center', ellipsis: true, minWidth: 80,
             render: (h, params) => showTip(h, params.row.username)
           },
           {
-            title: '设备描述', key: 'description', align: 'center', ellipsis: true, minWidth: 100,
+            title: '备注', key: 'description', align: 'center', ellipsis: true, minWidth: 100,
             render: (h, params) => showTip(h, params.row.description)
           },
           {
-            title: '操作', align: 'center', width: 200,
+            title: '操作', align: 'center', width: 150,
             render: (h, params) => {
               const {id, type} = params.row;
               const view = h('Button', {
@@ -122,7 +144,7 @@
                 },
                 on: {
                   click: () => {
-                    this.$refs.DataVue.showModal(id, type);
+                    // this.$refs.DataVue.showModal(id, type);
                   }
                 }
               }, '查看数据');
@@ -152,9 +174,9 @@
                   click: () => {
                     this.$Modal.confirm({
                       title: '删除',
-                      content: '确认删除该设备？',
+                      content: '确认删除该车辆？',
                       onOk: () => {
-                        $get(url.deleteDevice, {id}).then(res => {
+                        $get(url.deleteVehicle, {id}).then(res => {
                           if (res.code == 0) {
                             this.$Message.success({
                               content: '已删除',
@@ -171,8 +193,8 @@
                 }
               }, '删除');
               const op = [];
-              op.push(view);
-              if (this.roleId == 'ADMIN') {
+              // op.push(view);
+              if (this.roleId == 'ADMIN' || this.roleId == 'JGS') {
                 op.push(edit);
                 op.push(del);
               }
@@ -180,6 +202,10 @@
             }
           }
         ];
+        if (this.roleId == 'USER') {
+          columns.splice(5, 1)
+          columns.splice(6, 1)
+        }
         return columns;
       }
     }

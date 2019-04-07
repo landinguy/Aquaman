@@ -81,21 +81,32 @@
             title: '序号', type: 'index', width: 80, align: 'center'
           },
           {
-            title: '姓名', key: 'nickname', align: 'center', ellipsis: true, minWidth: 100,
+            title: '姓名', key: 'nickname', align: 'center', ellipsis: true, minWidth: 80,
             render: (h, params) => showTip(h, params.row.nickname)
           },
           {
-            title: '账号', key: 'username', align: 'center', ellipsis: true, minWidth: 100,
+            title: '账号', key: 'username', align: 'center', ellipsis: true, minWidth: 80,
             render: (h, params) => showTip(h, params.row.username)
           },
           {
-            title: '角色', key: 'role', align: 'center', ellipsis: true, minWidth: 100,
-            render: (h, params) => showTip(h, params.row.role == 'ADMIN' ? '管理员' : '普通用户')
+            title: '角色', key: 'role', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => {
+              const {role} = params.row;
+              return showTip(h, role == 'ADMIN' ? '管理员' : role == 'JGS' ? '交管所人员' : role == 'POLICEMAN' ? '交警' : '车主')
+            }
           },
           {
-            title: '操作', align: 'center', width: 200,
+            title: '手机号', key: 'phoneNumber', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.phoneNumber)
+          },
+          {
+            title: '邮箱', key: 'email', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.email)
+          },
+          {
+            title: '操作', align: 'center', width: 150,
             render: (h, params) => {
-              // const id = params.row.id;
+              const id = params.row.id;
               const edit = h('Button', {
                 props: {
                   type: 'primary',
@@ -110,40 +121,41 @@
                   }
                 }
               }, '修改');
-              // const del = h('Button', {
-              //   props: {
-              //     type: 'error',
-              //     size: 'small'
-              //   },
-              //   style: {
-              //     "margin-left": '5px'
-              //   },
-              //   on: {
-              //     click: function () {
-              //       $vue.$Modal.confirm({
-              //         title: '删除',
-              //         content: '确认删除该模板？',
-              //         onOk() {
-              //           $del(url.delTmpl + id, {accountId: this.accountId}).then(res => {
-              //             if (res.code == 0) {
-              //               $vue.$Message.success({
-              //                 content: '已删除',
-              //                 duration: 1,
-              //                 onClose() {
-              //                   $vue.search();
-              //                 }
-              //               });
-              //             } else {
-              //               $vue.$Message.error('删除失败');
-              //             }
-              //           });
-              //         }
-              //       });
-              //     }
-              //   }
-              // }, '删除');
+              const del = h('Button', {
+                props: {
+                  type: 'error',
+                  size: 'small'
+                },
+                style: {
+                  "margin-left": '5px'
+                },
+                on: {
+                  click: () => {
+                    this.$Modal.confirm({
+                      title: '删除',
+                      content: '确认删除该用户？',
+                      onOk: () => {
+                        $get(url.deleteAccount, {id}).then(res => {
+                          if (res.code == 0) {
+                            this.$Message.success({
+                              content: '已删除',
+                              duration: 1,
+                              onClose: () => {
+                                this.search();
+                              }
+                            });
+                          } else {
+                            this.$Message.error('删除失败');
+                          }
+                        });
+                      }
+                    });
+                  }
+                }
+              }, '删除');
               const op = [];
               op.push(edit);
+              op.push(del);
               return h('div', op);
             }
           }

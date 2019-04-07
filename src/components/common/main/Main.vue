@@ -4,7 +4,7 @@
 
 
     <div style="height: 64px;background-color: #495060;">
-      <span class="name">智能城市云服务平台</span>
+      <span class="name">车辆查询系统</span>
       <div style="float: right;margin-top: 16px">
         <user style="float: right;"/>
       </div>
@@ -39,7 +39,7 @@
           </Layout>
         </Content>
         <Footer style="text-align: center">
-          <p>&copy; 2018 <a href="http://store.wo.com.cn/" target="_blank">小沃科技有限公司</a></p>
+          <p>&copy; 2018 <a href="http://store.wo.com.cn/" target="_blank">xxxx有限公司</a></p>
         </Footer>
       </Layout>
     </Layout>

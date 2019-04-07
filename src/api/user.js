@@ -18,3 +18,12 @@ export const logout = () => {
     url: baseUrl.base + url.logout
   })
 }
+
+export const uploadFile = ({data}) => {
+  return ax({
+    method: "post",
+    url: baseUrl.base + url.upload,
+    data,
+    headers: {'Content-Type': 'multipart/form-data'}
+  })
+}
