@@ -51,7 +51,7 @@
     </Form>
     <div class="btn_div">
       <template v-if="op!='view'">
-        <Button type="primary" shape="circle" class="radio_len" @click="confirm" :disabled="disableFlag">提交</Button>
+        <Button type="primary" shape="circle" class="radio_len" @click="confirm">提交</Button>
         <Button type="ghost" shape="circle" class="radio_len" style="margin-left: 20px" @click="cancel">取消</Button>
       </template>
     </div>
@@ -68,7 +68,6 @@
     data() {
       return {
         uploadUrl: baseUrl.base + url.uploadImg,
-        disableFlag: false,
         op: '',
         formData: {
           name: '',
@@ -105,7 +104,7 @@
       handleSuccess(res, file) {
         if (res.data) {
           console.log("res ->" + JSON.stringify(res.data));
-          this.formData.badge = res.data;
+          this.formData.badge = baseUrl.base + '/' + res.data;
           this.$Message.success('上传成功');
         } else {
           this.$Message.error('上传失败');
@@ -120,25 +119,16 @@
             // this.disableFlag = true;
             post(url.addSchool, this.formData).then(res => {
               console.log("-----------", res);
-
-              this.$Message.success('提交成功');
-              // if (res.code == 0) {
-              //   this.$Message.success({
-              //     content: '提交成功',
-              //     duration: 1,
-              //     onClose: () => {
-              //       if (this.op == 'modify' || this.op == 'copy') {
-              //         this.$parent.content = 1;
-              //         this.$parent.search();
-              //       } else {
-              //         this.$router.push({name: 'template_list'});
-              //       }
-              //     }
-              //   })
-              // } else {
-              //   this.$Message.error(res.msg ? res.msg : '提交失败');
-              //   this.disableFlag = false;
-              // }
+              if (res.code == 0) {
+                this.$Message.success({
+                  content: '提交成功',
+                  duration: 1,
+                  onClose: () => this.$parent.content = 1
+                })
+              } else {
+                this.$Message.error(res.msg ? res.msg : '提交失败');
+                // this.disableFlag = false;
+              }
             }).catch(err => console.log(err))
           }
         })
