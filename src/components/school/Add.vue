@@ -17,11 +17,11 @@
         <Input v-model.trim="formData.competentDepartment" placeholder="请填写管理单位"/>
       </FormItem>
       <FormItem label="学校类型" prop="schoolTypeCode">
-        <RadioGroup v-model="formData.schoolTypeCode">
-          <Radio label="0" :disabled="op=='view'">
+        <RadioGroup v-model="formData.schoolType">
+          <Radio label="PRIVATE" :disabled="op=='view'">
             <span>私立学校</span>
           </Radio>
-          <Radio label="1" :disabled="op=='view'">
+          <Radio label="PUBLIC" :disabled="op=='view'">
             <span>公立学校</span>
           </Radio>
         </RadioGroup>
@@ -75,7 +75,7 @@
           motto: '',
           area: '',
           competentDepartment: '',
-          schoolTypeCode: '0',
+          schoolType: 'PUBLIC',
           address: '',
           website: '',
           badge: '',
@@ -123,7 +123,7 @@
                 this.$Message.success({
                   content: '提交成功',
                   duration: 1,
-                  onClose: () => this.$parent.content = 1
+                  onClose: () => this.$parent.getData(true)
                 })
               } else {
                 this.$Message.error(res.msg ? res.msg : '提交失败');
@@ -135,13 +135,15 @@
       },
       cancel() {
         this.$refs.form.resetFields();
-        this.$parent.content = 1;
+        this.$parent.getData(true);
       },
-      setData(data) {
-        this.formData = data;
+      setData() {
+        this.formData = this.$parent.school;
       }
     },
     mounted() {
+      this.setData();
+
       // VueEvent.$on('on-open-page', name => this.back());
       // this.getSignList();
       // this.id = this.$store.state.template.id;

@@ -22,7 +22,7 @@
             <div class="line"><label>校名</label><span>{{school.name}}</span></div>
             <div class="line"><label>英文名</label><span>{{school.englishName}}</span></div>
             <div class="line"><label>校训</label><span>{{school.motto}}</span></div>
-            <div class="line"><label>学校类型</label><span>{{school.schoolTypeCode==1?'公立学校':'私立学校'}}</span></div>
+            <div class="line"><label>学校类型</label><span>{{school.schoolType=='PUBLIC'?'公立学校':'私立学校'}}</span></div>
           </Col>
           <Col span="12">
             <div class="line"><label>所属区域</label><span>{{school.area}}</span></div>
@@ -57,15 +57,15 @@
     components: {Add},
     methods: {
       edit() {
-        // this.content = 2;
-        this.$Message.info('请联系管理员获得修改权限')
+        this.content = 2;
       },
-      getData() {
+      getData(flag) {
         get(url.getSchool, {}).then(res => this.school = res).catch(err => console.log(err))
+        if (flag) this.content = 1
       },
     },
     mounted() {
-      this.getData()
+      this.getData(false)
     },
     computed: {
       ...mapGetters(['accountId', 'roleId'])
