@@ -1,5 +1,5 @@
 import {login, logout} from '@/api/user'
-import {Message} from 'iview'
+import {Message, Spin} from 'iview'
 
 export default {
   state: {
@@ -87,11 +87,17 @@ export default {
           username,
           password
         }).then(res => {
-          commit('setAccountId', res.data.user_id);
+          const {user_id, nickname, role, access_token} = res.data;
+          if (role.indexOf('STUDENT') != -1) {
+            Message.error('学生账号不能登录');
+            Spin.hide();
+            return
+          }
+          commit('setAccountId', user_id);
           // commit('setAccountNumber', res.data.accountNumber);
-          commit('setAccountNickname', res.data.nickname);
-          commit('setRoleId', res.data.role);
-          commit('setAccessToken', res.data.access_token);
+          commit('setAccountNickname', nickname);
+          commit('setRoleId', role);
+          commit('setAccessToken', access_token);
           // commit('setSuperMsg', res.data.superMsg);
           // commit('setSimpleMsg', res.data.simpleMsg);
           resolve(res)
