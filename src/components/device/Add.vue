@@ -15,8 +15,11 @@
               <Option value="2">湿度</Option>
             </Select>
           </FormItem>
+          <FormItem label="设备key" prop="deviceKey">
+            <Input v-model.trim="formData.deviceKey" placeholder="请填写设备key"/>
+          </FormItem>
           <FormItem label="所属用户" prop="uid">
-            <Select v-model="formData.uid">
+            <Select v-model="formData.uid" @on-change="onChangeUid">
               <Option v-for="item in users" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
           </FormItem>
@@ -45,12 +48,15 @@
           name: '',
           type: '',
           uid: '',
-          description: ''
+          username: '',
+          description: '',
+          deviceKey: ''
         },
         id: '',
         formValidate: {
           name: [{required: true, message: '请填写账号', trigger: 'blur'}],
           description: [{required: true, message: '请填写设备描述', trigger: 'blur'}],
+          deviceKey: [{required: true, message: '请填写设备key', trigger: 'blur'}],
           type: [{required: true, message: '请选择设备类型', trigger: 'change'}],
           uid: [{required: true, message: '请选择所属用户', trigger: 'change'}],
         },
@@ -59,6 +65,16 @@
       }
     },
     methods: {
+      onChangeUid(uid) {
+        if (uid) {
+          for (let u of this.users) {
+            if (uid == u.value) {
+              this.formData.username = u.label
+              break
+            }
+          }
+        }
+      },
       getAccount() {
         post(url.getAccount, {}).then(res => {
           const {list} = res.data;
@@ -95,12 +111,14 @@
       },
       setData(data) {
         if (data) {
-          const {name, type, description, id, uid} = data;
+          const {name, type, description, id, uid, deviceKey, username} = data;
           this.id = id;
           this.formData.name = name;
           this.formData.type = type.toString();
           this.formData.description = description;
+          this.formData.deviceKey = deviceKey;
           this.formData.uid = uid.toString();
+          this.formData.username = username;
         }
       }
     },
