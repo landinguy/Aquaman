@@ -5,7 +5,7 @@
         <span>添加设备数据</span>
       </p>
       <div>
-        <Form ref="form" :model="formData" :rules="formValidate" :label-width="100">
+        <Form ref="form" :model="formData" :rules="formValidate" :label-width="80">
           <FormItem label="设备" prop="deviceId">
             <Select v-model="formData.deviceId">
               <Option v-for="item in devices" :value="item.value" :key="item.value">{{ item.label }}</Option>

@@ -20,6 +20,9 @@
     <FormItem>
       <Button @click="handleSubmit" type="primary" long>登录</Button>
     </FormItem>
+    <FormItem>
+      <Button @click="handleRegister" type="primary" long>注册</Button>
+    </FormItem>
   </Form>
 </template>
 <script>
@@ -81,6 +84,9 @@ export default {
     ...mapActions([
       'handleLogin'
     ]),
+    handleRegister() {
+      this.$emit('on-register', {})
+    },
     handleSubmit () {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {

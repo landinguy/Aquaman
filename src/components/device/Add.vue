@@ -5,7 +5,7 @@
         <span>{{op==='add'?'添加':'编辑'}}设备</span>
       </p>
       <div>
-        <Form ref="form" :model="formData" :rules="formValidate" :label-width="100">
+        <Form ref="form" :model="formData" :rules="formValidate" :label-width="80">
           <FormItem label="设备名" prop="name">
             <Input v-model.trim="formData.name" placeholder="请填写设备名"/>
           </FormItem>

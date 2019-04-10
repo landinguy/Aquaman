@@ -3,11 +3,12 @@
     <div class="login-con">
       <Card icon="log-in" title="智能城市云服务平台" :bordered="false">
         <div class="form-con">
-          <LoginForm ref="loginForm" @on-success-valid="handleSubmit"></LoginForm>
-          <p class="login-tip">输入用户名和密码登录</p>
+          <LoginForm ref="loginForm" @on-register="showModal" @on-success-valid="handleSubmit"></LoginForm>
+          <!--<p class="login-tip">输入用户名和密码登录</p>-->
         </div>
       </Card>
     </div>
+    <Register ref="register"></Register>
   </div>
 </template>
 
@@ -16,6 +17,7 @@
   import {mapActions, mapMutations} from 'vuex'
   import bg from '@/assets/images/login_bg.jpg'
   import {handleSpinCustom} from '@/libs/util'
+  import Register from './Register'
 
   export default {
     data() {
@@ -23,9 +25,7 @@
         bg
       }
     },
-    components: {
-      LoginForm
-    },
+    components: {LoginForm, Register},
     methods: {
       ...mapActions([
         'handleLogin'
@@ -33,6 +33,9 @@
       ...mapMutations([
         'setTabFlag'
       ]),
+      showModal() {
+        this.$refs.register.showModal();
+      },
       handleEnter() {
         console.log("enter login")
         this.$refs.loginForm.handleSubmit()
