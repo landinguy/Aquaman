@@ -1,40 +1,45 @@
 <template>
   <div class="bg">
     <div v-if="content==2">
-      <Add></Add>
+      <Add ref="addVue"></Add>
     </div>
     <div v-if="content==1">
-      <Card>
-        <p slot="title">学校简介</p>
-        <Row type="flex" justify="space-between" align="middle">
-          <Col span="4">
-            <img :src="school.badge" style="height: 160px;width: 160px">
-          </Col>
-          <Col span="18">
-            <P class="desc">{{school.description}}</P>
-          </Col>
-        </Row>
-      </Card>
-      <Card style="margin: 16px 0">
-        <p slot="title">其他信息</p>
-        <Row>
-          <Col span="12">
-            <div class="line"><label>校名</label><span>{{school.name}}</span></div>
-            <div class="line"><label>英文名</label><span>{{school.englishName}}</span></div>
-            <div class="line"><label>校训</label><span>{{school.motto}}</span></div>
-            <div class="line"><label>学校类型</label><span>{{school.schoolType=='PUBLIC'?'公立学校':'私立学校'}}</span></div>
-          </Col>
-          <Col span="12">
-            <div class="line"><label>所属区域</label><span>{{school.area}}</span></div>
-            <div class="line"><label>管理单位</label><span>{{school.competentDepartment}}</span></div>
-            <div class="line"><label>学校地址</label><span>{{school.address}}</span></div>
-            <div class="line"><label>学校官网</label><span><a :href="school.website">{{school.website}}</a></span>
-            </div>
-          </Col>
-        </Row>
-      </Card>
+      <div v-if="school!=null">
+        <Card>
+          <p slot="title">学校简介</p>
+          <Row type="flex" justify="space-between" align="middle">
+            <Col span="4">
+              <img :src="school.badge" style="height: 160px;width: 160px">
+            </Col>
+            <Col span="18">
+              <P class="desc">{{school.description}}</P>
+            </Col>
+          </Row>
+        </Card>
+        <Card style="margin: 16px 0">
+          <p slot="title">其他信息</p>
+          <Row>
+            <Col span="12">
+              <div class="line"><label>校名</label><span>{{school.name}}</span></div>
+              <div class="line"><label>英文名</label><span>{{school.englishName}}</span></div>
+              <div class="line"><label>校训</label><span>{{school.motto}}</span></div>
+              <div class="line"><label>学校类型</label><span>{{school.schoolType=='PUBLIC'?'公立学校':'私立学校'}}</span></div>
+            </Col>
+            <Col span="12">
+              <div class="line"><label>所属区域</label><span>{{school.area}}</span></div>
+              <div class="line"><label>管理单位</label><span>{{school.competentDepartment}}</span></div>
+              <div class="line"><label>学校地址</label><span>{{school.address}}</span></div>
+              <div class="line"><label>学校官网</label><span><a :href="school.website">{{school.website}}</a></span>
+              </div>
+            </Col>
+          </Row>
+        </Card>
+      </div>
+      <div v-if="school==null">
+        <p class="no-info">暂无学校信息</p>
+      </div>
       <div v-if="roleId=='ADMIN'" class="btn">
-        <Button type="ghost" shape="circle" @click="edit()" style="width: 80px">编辑</Button>
+        <Button type="ghost" shape="circle" @click="edit()" style="width: 80px">{{school!=null?'编辑':'添加'}}</Button>
       </div>
     </div>
   </div>
@@ -51,18 +56,22 @@
     data() {
       return {
         content: 1,
-        school: {}
+        school: null
       }
     },
     components: {Add},
     methods: {
       edit() {
-        this.content = 2;
+        this.content = 2
+        setTimeout(() => this.$refs.addVue.setData(this.school), 200)
       },
       getData(flag) {
-        get(url.getSchool, {}).then(res => this.school = res).catch(err => console.log(err))
+        get(url.getSchool, {}).then(res => {
+          const {data} = res
+          if (data) this.school = data
+        }).catch(err => console.log(err))
         if (flag) this.content = 1
-      },
+      }
     },
     mounted() {
       this.getData(false)
@@ -102,5 +111,10 @@
 
   .btn {
     text-align: center;
+  }
+
+  .no-info {
+    color: gray;
+    font-size: 16px;
   }
 </style>

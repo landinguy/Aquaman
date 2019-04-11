@@ -95,10 +95,9 @@
       search() {
       },
       getData() {
-        for (let i = 1; i <= 6; i++) {
+        for (let i = 1; i <= 8; i++) {
           $get(url.overview, {type: i}).then(res => {
-            let subjectStat = res.data.subjectStat;
-            let homeworkStat = res.data.homeworkStat;
+            const {subjectStat, homeworkStat} = res.data
             if (i == 1) {
               this.data1 = subjectStat;
             } else if (i == 2) {
@@ -109,6 +108,8 @@
               homeworkStat.name = i == 4 ? '作业布置次数' : i == 5 ? '批改作业次数' : i == 6 ? '评价作业次数' : '';
               if (i == 4) this.total = homeworkStat.total;
               this.data4.push(homeworkStat);
+            } else if (i == 7 || i == 8) {
+
             }
           }).catch(err => console.log(err))
         }

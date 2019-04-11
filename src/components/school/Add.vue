@@ -16,7 +16,7 @@
       <FormItem label="管理单位" prop="competentDepartment">
         <Input v-model.trim="formData.competentDepartment" placeholder="请填写管理单位"/>
       </FormItem>
-      <FormItem label="学校类型" prop="schoolTypeCode">
+      <FormItem label="学校类型" prop="schoolType">
         <RadioGroup v-model="formData.schoolType">
           <Radio label="PRIVATE" :disabled="op=='view'">
             <span>私立学校</span>
@@ -61,7 +61,7 @@
   import axios from 'axios';
   import url from '@/api/url'
   import baseUrl from "@/libs/url"
-  import {post} from "@/api/ax";
+  import {post, put} from "@/api/ax";
 
   export default {
     name: 'Add',
@@ -116,20 +116,35 @@
       confirm() {
         this.$refs.form.validate((valid) => {
           if (valid) {
+            const {id} = this.formData
             // this.disableFlag = true;
-            post(url.addSchool, this.formData).then(res => {
-              console.log("-----------", res);
-              if (res.code == 0) {
-                this.$Message.success({
-                  content: '提交成功',
-                  duration: 1,
-                  onClose: () => this.$parent.getData(true)
-                })
-              } else {
-                this.$Message.error(res.msg ? res.msg : '提交失败');
-                // this.disableFlag = false;
-              }
-            }).catch(err => console.log(err))
+            if (id) {
+              put(url.addSchool, this.formData).then(res => {
+                if (res.ret_code == 0) {
+                  this.$Message.success({
+                    content: '提交成功',
+                    duration: 1,
+                    onClose: () => this.$parent.getData(true)
+                  })
+                } else {
+                  this.$Message.error(res.error_msg ? res.error_msg : '提交失败');
+                  // this.disableFlag = false;
+                }
+              }).catch(err => console.log(err))
+            } else {
+              post(url.addSchool, this.formData).then(res => {
+                if (res.ret_code == 0) {
+                  this.$Message.success({
+                    content: '提交成功',
+                    duration: 1,
+                    onClose: () => this.$parent.getData(true)
+                  })
+                } else {
+                  this.$Message.error(res.error_msg ? res.error_msg : '提交失败');
+                  // this.disableFlag = false;
+                }
+              }).catch(err => console.log(err))
+            }
           }
         })
       },
@@ -137,12 +152,12 @@
         this.$refs.form.resetFields();
         this.$parent.getData(true);
       },
-      setData() {
-        this.formData = this.$parent.school;
+      setData(data) {
+        if (data) this.formData = this.$parent.school;
       }
     },
     mounted() {
-      this.setData();
+      // this.setData();
 
       // VueEvent.$on('on-open-page', name => this.back());
       // this.getSignList();
