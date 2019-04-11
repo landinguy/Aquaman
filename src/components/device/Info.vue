@@ -25,7 +25,16 @@
         <Icon type="plus"></Icon>
         添加模拟数据
       </Button>
-
+      <Upload ref="upload"
+              :action="uploadUrl"
+              :format="['txt']"
+              :show-upload-list="false"
+              :before-upload="handleBeforeUpload"
+              :on-success="handleSuccess"
+              :with-credentials="true"
+              style="display: inline-block">
+        <Button type="primary" icon="ios-cloud-upload-outline">导入设备数据</Button>
+      </Upload>
     </div>
     <div style="margin-top: 16px">
       <Table stripe border :columns="columns" :data="tableData"></Table>
@@ -39,7 +48,8 @@
 </template>
 <script>
   import {mapMutations, mapGetters} from 'vuex'
-  import {showTip, timestampToTime} from '@/libs/util'
+  import {showTip, timestampToTime, handleSpinCustom} from '@/libs/util'
+  import baseUrl from "@/libs/url"
   import url from '@/api/url'
   import {post, $del, get, $get, patch} from "@/api/ax"
   import Add from './Add'
@@ -54,11 +64,33 @@
         content: 1,
         params: {name: '', type: '', pageNo: 1, pageSize: 10},
         tableData: [],
-        total: 0
+        total: 0,
+        file: null,
+        uploadUrl: baseUrl.base + url.upload,
       }
     },
     components: {Add, Data, AddRecord, Delete},
     methods: {
+      handleBeforeUpload(file) {
+        let index = file.name.lastIndexOf(".");
+        let type = file.name.substring(index + 1);
+        if (type.toUpperCase() !== 'TXT') {
+          this.$Message.error('请上传txt文件')
+          return false;
+        }
+        if (this.$refs.upload.fileList.length > 0) {
+          this.$refs.upload.clearFiles();
+        }
+        handleSpinCustom()
+      },
+      handleSuccess(res, file) {
+        if (res.code == 0) {
+          this.$Message.success('上传成功');
+        } else {
+          this.$Message.error('上传失败');
+        }
+        this.$Spin.hide();
+      },
       clear() {
         this.params = {name: '', type: '', pageNo: 1, pageSize: 10}
       },
