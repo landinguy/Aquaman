@@ -34,6 +34,7 @@
     <Add ref="AddVue"></Add>
     <Data ref="DataVue"></Data>
     <AddRecord ref="AddRecordVue"></AddRecord>
+    <Delete ref="DeleteVue"></Delete>
   </div>
 </template>
 <script>
@@ -44,6 +45,7 @@
   import Add from './Add'
   import Data from './Data'
   import AddRecord from './AddRecord'
+  import Delete from './Delete'
 
   export default {
     name: 'Info',
@@ -55,7 +57,7 @@
         total: 0
       }
     },
-    components: {Add, Data, AddRecord},
+    components: {Add, Data, AddRecord, Delete},
     methods: {
       clear() {
         this.params = {name: '', type: '', pageNo: 1, pageSize: 10}
@@ -111,7 +113,7 @@
           {
             title: '操作', align: 'center', width: 200,
             render: (h, params) => {
-              const {id, type} = params.row;
+              const {id, type, deviceKey} = params.row;
               const view = h('Button', {
                 props: {
                   type: 'ghost',
@@ -122,7 +124,7 @@
                 },
                 on: {
                   click: () => {
-                    this.$refs.DataVue.showModal(id, type);
+                    this.$refs.DataVue.showModal(id, type, deviceKey);
                   }
                 }
               }, '查看数据');
@@ -150,23 +152,24 @@
                 },
                 on: {
                   click: () => {
-                    this.$Modal.confirm({
-                      title: '删除',
-                      content: '确认删除该设备？',
-                      onOk: () => {
-                        $get(url.deleteDevice, {id}).then(res => {
-                          if (res.code == 0) {
-                            this.$Message.success({
-                              content: '已删除',
-                              duration: 1,
-                              onClose: () => this.search()
-                            });
-                          } else {
-                            this.$Message.error('删除失败');
-                          }
-                        });
-                      }
-                    });
+                    this.$refs.DeleteVue.showModal(id, deviceKey);
+                    // this.$Modal.confirm({
+                    //   title: '删除',
+                    //   content: '确认删除该设备？',
+                    //   onOk: () => {
+                    //     $get(url.deleteDevice, {id}).then(res => {
+                    //       if (res.code == 0) {
+                    //         this.$Message.success({
+                    //           content: '已删除',
+                    //           duration: 1,
+                    //           onClose: () => this.search()
+                    //         });
+                    //       } else {
+                    //         this.$Message.error('删除失败');
+                    //       }
+                    //     });
+                    //   }
+                    // });
                   }
                 }
               }, '删除');

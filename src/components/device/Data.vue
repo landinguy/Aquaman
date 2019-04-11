@@ -13,12 +13,14 @@
         <Button type="ghost" shape="circle" class="radio_len" @click="cancel">关闭</Button>
       </div>
     </Modal>
+    <DeviceKey ref="DeviceKeyVue"></DeviceKey>
   </div>
 </template>
 <script>
   import {showTip, timestampToTime} from '@/libs/util'
   import url from '@/api/url'
   import {post, get, put} from "@/api/ax"
+  import DeviceKey from './DeviceKey'
 
   export default {
     name: 'Add',
@@ -32,6 +34,7 @@
         params: {pageNo: 1, pageSize: 5},
       }
     },
+    components: {DeviceKey},
     methods: {
       changePage(n) {
         this.params.pageNo = n;
@@ -46,10 +49,10 @@
           this.total = total;
         }).catch(err => console.log(err))
       },
-      showModal(id, type) {
+      showModal(id, type, deviceKey) {
         this.id = id;
         this.type = type;
-        this.addModal = true;
+        this.$refs.DeviceKeyVue.showModal(deviceKey);
       },
       cancel() {
         this.addModal = false;
