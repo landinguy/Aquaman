@@ -80,6 +80,7 @@ export default [
         name: 'gradeManage',
         meta: {
           title: '年级管理',
+          access: ['ADMIN', 'PRESIDENT', 'GRADE_LEADER']
         },
         component: () => import('@/components/grade/List')
       },
@@ -87,7 +88,8 @@ export default [
         path: 'classManage',
         name: 'classManage',
         meta: {
-          title: '班级管理'
+          title: '班级管理',
+          access: ['ADMIN', 'PRESIDENT', 'GRADE_LEADER', 'CLASS_TEACHER']
         },
         component: () => import('@/components/class/List')
       },
@@ -122,7 +124,8 @@ export default [
         path: 'grade',
         name: 'grade',
         meta: {
-          title: '年级分析'
+          title: '年级分析',
+          access: ['ADMIN', 'PRESIDENT', 'GRADE_LEADER']
         },
         component: () => import('@/components/analysis/grade/Grade')
       },
@@ -130,7 +133,8 @@ export default [
         path: 'clazz',
         name: 'clazz',
         meta: {
-          title: '班级分析'
+          title: '班级分析',
+          access: ['ADMIN', 'PRESIDENT', 'GRADE_LEADER', 'CLASS_TEACHER']
         },
         component: () => import('@/components/analysis/clazz/Clazz')
       },
@@ -138,7 +142,8 @@ export default [
         path: 'teacher',
         name: 'teacher',
         meta: {
-          title: '教师分析'
+          title: '教师分析',
+          access: ['ADMIN', 'PRESIDENT', 'GRADE_LEADER']
         },
         component: () => import('@/components/analysis/teacher/Teacher')
       },

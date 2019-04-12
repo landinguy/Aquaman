@@ -16,12 +16,12 @@
       <FormItem label="管理单位" prop="competentDepartment">
         <Input v-model.trim="formData.competentDepartment" placeholder="请填写管理单位"/>
       </FormItem>
-      <FormItem label="学校类型" prop="schoolType">
-        <RadioGroup v-model="formData.schoolType">
-          <Radio label="PRIVATE" :disabled="op=='view'">
+      <FormItem label="学校类型" prop="schoolTypeCode">
+        <RadioGroup v-model="formData.schoolTypeCode">
+          <Radio label="0" :disabled="op=='view'">
             <span>私立学校</span>
           </Radio>
-          <Radio label="PUBLIC" :disabled="op=='view'">
+          <Radio label="1" :disabled="op=='view'">
             <span>公立学校</span>
           </Radio>
         </RadioGroup>
@@ -75,7 +75,7 @@
           motto: '',
           area: '',
           competentDepartment: '',
-          schoolType: 'PUBLIC',
+          schoolTypeCode: '1',
           address: '',
           website: '',
           badge: '',
@@ -153,7 +153,11 @@
         this.$parent.getData(true);
       },
       setData(data) {
-        if (data) this.formData = this.$parent.school;
+        if (data) {
+          const {schoolType} = this.$parent.school
+          this.formData = this.$parent.school
+          this.formData.schoolTypeCode = schoolType == 'PRIVATE' ? '0' : schoolType == 'PUBLIC' ? '1' : ''
+        }
       }
     },
     mounted() {

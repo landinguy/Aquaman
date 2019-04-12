@@ -68,36 +68,20 @@
           }
         ],
         total: 0,
-        data1: [], data2: [], data3: [], data4: [],
-        data5: [
-          {
-            name: '完成率',
-            yesterday: '92%',
-            week: '90%',
-            month: '86%',
-            semester: '85%',
-            year: '82%',
-            total: '82%'
-          },
-          {
-            name: '得分率',
-            yesterday: '90%',
-            week: '90%',
-            month: '85%',
-            semester: '84%',
-            year: '80%',
-            total: '80%'
-          }
-        ]
+        data1: [], data2: [], data3: [], data4: [], data5: []
       }
     },
     methods: {
       search() {
       },
-      getData() {
+      sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms))
+      },
+      async getData() {
         for (let i = 1; i <= 8; i++) {
+          await this.sleep(50)
           $get(url.overview, {type: i}).then(res => {
-            const {subjectStat, homeworkStat} = res.data
+            const {subjectStat, homeworkStat, submitStat} = res.data
             if (i == 1) {
               this.data1 = subjectStat;
             } else if (i == 2) {
@@ -109,11 +93,12 @@
               if (i == 4) this.total = homeworkStat.total;
               this.data4.push(homeworkStat);
             } else if (i == 7 || i == 8) {
-
+              submitStat.name = i == 7 ? '提交率' : i == 8 ? '按时提交率' : ''
+              this.data5.push(submitStat)
             }
           }).catch(err => console.log(err))
         }
-      },
+      }
     },
     mounted() {
       this.getData()
