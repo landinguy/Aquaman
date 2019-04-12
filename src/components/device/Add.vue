@@ -18,6 +18,9 @@
           <FormItem label="设备key" prop="deviceKey">
             <Input v-model.trim="formData.deviceKey" placeholder="请填写设备key"/>
           </FormItem>
+          <FormItem label="设备地址" prop="address">
+            <Input v-model.trim="formData.address" placeholder="请填写设备地址"/>
+          </FormItem>
           <FormItem label="所属用户" prop="uid">
             <Select v-model="formData.uid" @on-change="onChangeUid">
               <Option v-for="item in users" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -50,13 +53,15 @@
           uid: '',
           username: '',
           description: '',
-          deviceKey: ''
+          deviceKey: '',
+          address: '',
         },
         id: '',
         formValidate: {
           name: [{required: true, message: '请填写账号', trigger: 'blur'}],
           description: [{required: true, message: '请填写设备描述', trigger: 'blur'}],
           deviceKey: [{required: true, message: '请填写设备key', trigger: 'blur'}],
+          address: [{required: true, message: '请填写设备地址', trigger: 'blur'}],
           type: [{required: true, message: '请选择设备类型', trigger: 'change'}],
           uid: [{required: true, message: '请选择所属用户', trigger: 'change'}],
         },
@@ -111,7 +116,7 @@
       },
       setData(data) {
         if (data) {
-          const {name, type, description, id, uid, deviceKey, username} = data;
+          const {name, type, description, id, uid, deviceKey, username, address} = data;
           this.id = id;
           this.formData.name = name;
           this.formData.type = type.toString();
@@ -119,6 +124,7 @@
           this.formData.deviceKey = deviceKey;
           this.formData.uid = uid.toString();
           this.formData.username = username;
+          this.formData.address = address;
         }
       }
     },
