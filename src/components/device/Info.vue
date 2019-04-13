@@ -17,7 +17,7 @@
 
     <div>
       <!--<br>-->
-      <Button v-if="roleId=='ADMIN'" type="primary" @click="showModal">
+      <Button type="primary" @click="showModal">
         <Icon type="plus"></Icon>
         添加设备
       </Button>
@@ -121,7 +121,7 @@
     },
     mounted() {
       this.search();
-      this.$refs.AddVue.getAccount();
+      if (this.roleId === 'ADMIN') this.$refs.AddVue.getAccount();
     },
     computed: {
       ...mapGetters(['accountId', 'roleId']),

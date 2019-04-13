@@ -17,6 +17,8 @@ export default {
   //设备数据
   getRecord: 'getRecord',
   addRecord: 'addRecord',
-  upload: 'upload'
+  upload: 'upload',
+  checkCredentials: 'checkCredentials',
+
 
 };

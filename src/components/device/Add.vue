@@ -15,13 +15,13 @@
               <Option value="2">湿度</Option>
             </Select>
           </FormItem>
-          <FormItem label="设备key" prop="deviceKey">
+          <FormItem label="设备key" prop="deviceKey" v-if="op==='add'">
             <Input v-model.trim="formData.deviceKey" placeholder="请填写设备key"/>
           </FormItem>
           <FormItem label="设备地址" prop="address">
             <Input v-model.trim="formData.address" placeholder="请填写设备地址"/>
           </FormItem>
-          <FormItem label="所属用户" prop="uid">
+          <FormItem label="所属用户" prop="uid" v-if="roleId=='ADMIN'">
             <Select v-model="formData.uid" @on-change="onChangeUid">
               <Option v-for="item in users" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
@@ -40,7 +40,8 @@
 </template>
 <script>
   import url from '@/api/url'
-  import {post, get, put} from "@/api/ax"
+  import {post, get, put, $get} from "@/api/ax"
+  import {mapMutations, mapGetters} from 'vuex'
 
   export default {
     name: 'Add',
@@ -53,14 +54,17 @@
           uid: '',
           username: '',
           description: '',
-          deviceKey: '',
+          deviceKey: null,
           address: '',
         },
         id: '',
         formValidate: {
           name: [{required: true, message: '请填写账号', trigger: 'blur'}],
           description: [{required: true, message: '请填写设备描述', trigger: 'blur'}],
-          deviceKey: [{required: true, message: '请填写设备key', trigger: 'blur'}],
+          deviceKey: [
+            {required: true, message: '请填写设备key', trigger: 'blur'},
+            {validator: this.validateKey, trigger: 'blur'},
+          ],
           address: [{required: true, message: '请填写设备地址', trigger: 'blur'}],
           type: [{required: true, message: '请选择设备类型', trigger: 'change'}],
           uid: [{required: true, message: '请选择所属用户', trigger: 'change'}],
@@ -70,6 +74,16 @@
       }
     },
     methods: {
+      validateKey(rule, value, callback) {
+        $get(url.checkCredentials, {deviceKey: value}).then(res => {
+          const {data} = res;
+          if (data) {
+            callback();
+          } else {
+            callback(new Error("设备key不存在"));
+          }
+        }).catch(err => console.log(err))
+      },
       onChangeUid(uid) {
         if (uid) {
           for (let u of this.users) {
@@ -98,6 +112,10 @@
           if (valid) {
             let param = this.formData;
             param.id = this.id;
+            if (this.roleId === 'USER') {
+              param.uid = this.accountId;
+              param.username = this.accountNickname;
+            }
             post(url.addDevice, param).then(res => {
               this.$Message.success({
                 content: '提交成功',
@@ -121,12 +139,15 @@
           this.formData.name = name;
           this.formData.type = type.toString();
           this.formData.description = description;
-          this.formData.deviceKey = deviceKey;
+          // this.formData.deviceKey = deviceKey;
           this.formData.uid = uid.toString();
           this.formData.username = username;
           this.formData.address = address;
         }
       }
+    },
+    computed: {
+      ...mapGetters(['accountId', 'roleId', 'accountNickname'])
     },
     watch: {
       addModal(curVal, oldVal) {
