@@ -94,10 +94,19 @@
               this.data4.push(homeworkStat);
             } else if (i == 7 || i == 8) {
               submitStat.name = i == 7 ? '提交率' : i == 8 ? '按时提交率' : ''
+              submitStat.yesterday = this.parse(submitStat.yesterday)
+              submitStat.week = this.parse(submitStat.week)
+              submitStat.month = this.parse(submitStat.month)
+              submitStat.semester = this.parse(submitStat.semester)
+              submitStat.year = this.parse(submitStat.year)
+              submitStat.total = this.parse(submitStat.total)
               this.data5.push(submitStat)
             }
           }).catch(err => console.log(err))
         }
+      },
+      parse(t) {
+        return parseFloat(t) * 100 + '%'
       }
     },
     mounted() {

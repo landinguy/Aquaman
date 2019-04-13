@@ -1,6 +1,6 @@
 <template>
   <div ref="BarVue">
-    <div v-show="hasData" id="bar"></div>
+    <div v-show="hasData" id="bar2"></div>
     <div v-show="!hasData" class="nodata">暂无数据</div>
   </div>
 </template>
@@ -8,7 +8,7 @@
 <script>
   let echarts = require('echarts');
   export default {
-    name: 'Bar',
+    name: 'Bar2',
     props: {
       hasData: {type: Boolean, default: true}
     },
@@ -54,7 +54,7 @@
     },
     methods: {
       initBar() {
-        let bar = echarts.init(document.getElementById('bar'));
+        let bar = echarts.init(document.getElementById('bar2'));
         bar.setOption(this.barOption);
         this.bar = bar;
       },
@@ -74,7 +74,7 @@
 </script>
 
 <style scoped>
-  #bar {
+  #bar2 {
     height: 300px;
   }
 

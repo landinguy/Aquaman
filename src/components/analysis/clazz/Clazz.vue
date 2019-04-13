@@ -8,8 +8,8 @@
           <Option value="2">昨天</Option>
           <Option value="3">近7日</Option>
           <Option value="4">近30日</Option>
-          <Option value="5">当前学期</Option>
-          <Option value="6">当前学年</Option>
+          <!--<Option value="5">当前学期</Option>-->
+          <!--<Option value="6">当前学年</Option>-->
         </Select>
       </div>
       <div class="search-div-item">

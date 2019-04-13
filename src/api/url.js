@@ -39,6 +39,7 @@ export default {
   gradeAnalysis: '/api/management/stat/grade',
   clazzAnalysis: '/api/management/stat/clazz',
   subjectAnalysis: '/api/management/stat/subject',
+  studentAnalysis: '/api/management/stat/student',
 
   //总览页面
   overview: '/api/management/stat/overview',

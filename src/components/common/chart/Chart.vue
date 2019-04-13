@@ -77,6 +77,7 @@
       reloadChart({total, barX, barY, pieData}) {
         console.log("#####{}", barY.length);
         if (barY.length > 0) {
+          total = `合计：${total}`
           this.showBarOrPie = true;
           this.$refs.BarVue.reloadBar({barX, barY, total});
           this.$refs.PieVue.reloadPie({barY, pieData});

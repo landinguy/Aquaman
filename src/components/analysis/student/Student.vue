@@ -8,8 +8,6 @@
           <Option value="2">昨天</Option>
           <Option value="3">近7日</Option>
           <Option value="4">近30日</Option>
-          <Option value="5">当前学期</Option>
-          <Option value="6">当前学年</Option>
         </Select>
       </div>
       <div class="search-div-item">
@@ -30,29 +28,38 @@
         <Button type="primary" @click="search">查询</Button>
       </div>
     </div>
-
-    <Row type="flex" justify="center" style="min-width: 800px">
-      <Col span="12">
-        <Pie ref="Pie1" :has-data="hasData"></Pie>
+    <Row type="flex" justify="space-between" style="min-width: 800px">
+      <Col span="10">
+        <Bar ref="BarVue" :has-data="hasData"></Bar>
+      </Col>
+      <Col span="10">
+        <Bar2 ref="BarVue2" :has-data="hasData"></Bar2>
       </Col>
     </Row>
-    <Row type="flex" justify="center" style="min-width: 800px;margin-top: 32px">
-      <Col span="12">
-        <Pie2 ref="Pie2" :has-data="hasData"></Pie2>
-      </Col>
-    </Row>
+    <!--<Row type="flex" justify="center" style="min-width: 800px">-->
+    <!--<Col span="12">-->
+    <!--<Pie ref="Pie1" :has-data="hasData"></Pie>-->
+    <!--</Col>-->
+    <!--</Row>-->
+    <!--<Row type="flex" justify="center" style="min-width: 800px;margin-top: 32px">-->
+    <!--<Col span="12">-->
+    <!--<Pie2 ref="Pie2" :has-data="hasData"></Pie2>-->
+    <!--</Col>-->
+    <!--</Row>-->
   </div>
 </template>
 <script>
   import url from '@/api/url';
   import {post, get, $get} from "@/api/ax";
-  import Pie from '@/components/common/chart/Pie'
-  import Pie2 from '@/components/common/chart/Pie2'
+  // import Pie from '@/components/common/chart/Pie'
+  import Bar from '@/components/common/chart/Bar'
+  import Bar2 from '@/components/common/chart/Bar2'
+  // import Pie2 from '@/components/common/chart/Pie2'
   import {handleSpinCustom} from '@/libs/util'
 
   export default {
     name: 'Student',
-    components: {Pie, Pie2},
+    components: {Bar, Bar2},
     data() {
       return {
         params: {
@@ -75,51 +82,34 @@
         ).catch(err => console.log(err));
       },
       search() {
-        const {stageId, gradeId} = this.params;
-        if (stageId && gradeId) {
-          handleSpinCustom();
-          setInterval(() => this.$Spin.hide(), 200);
-          this.setData();
-          this.hasData = true;
-        } else {
-          this.hasData = false;
-        }
-        this.getData();
+        this.getData(1);
+        this.getData(2);
       },
-      getData() {
-        // $get(url.subjectAnalysis, this.params).then(res => {
-        //   let barX = [];
-        //   let barY = [];
-        //   let pieData = [];
-        //   if (res.data) {
-        //     const {total, stat} = res.data;
-        //     stat.forEach(item => {
-        //       const {subjectName, cnt} = item;
-        //       barX.push(cnt);
-        //       barY.push(subjectName);
-        //       pieData.push({value: cnt, name: subjectName});
-        //     })
-        //     this.$refs.chart.reloadChart({total, barX, barY, pieData});
-        //   } else {
-        //     this.$refs.chart.reloadChart({barX, barY, pieData});
-        //   }
-        // }).catch(err => console.log(err))
+      getData(type) {
+        const {stageId, ...rest} = this.params
+        $get(url.studentAnalysis, {type, ...rest}).then(res => {
+          const {totalCnt, statList} = res.data
+          if (statList.length > 0) {
+            this.hasData = true
+            let title = type === 1 ? '提交率' : '按时提交率'
+            let total = `共布置 ${totalCnt} 份作业（${title}）`
+            let barY = []
+            let barX = []
+            statList.forEach(item => {
+              const {clazzName, submitRate, cnt} = item
+              let rate = this.parse(submitRate)
+              barY.push(`${clazzName}(${rate})`)
+              barX.push(cnt)
+            })
+            if (type === 1) this.$refs.BarVue.reloadBar({barX, barY, total});
+            if (type === 2) this.$refs.BarVue2.reloadBar({barX, barY, total});
+          } else {
+            this.hasData = false
+          }
+        }).catch(err => console.log(err))
       },
-      setData() {
-        this.$refs.Pie1.pieOption.title = {text: '作业提交率', x: 'center'}
-        this.$refs.Pie2.pieOption.title = {text: '作业得分率', x: 'center'}
-        let barY = ["0%~30.99%", "31%~60.99%", "61%~70.99%", "71%~80.99%", "81%~90.99%", "91%~100%"];
-        let barY1 = ["0%~30.99%", "31%~60.99%", "61%~70.99%", "71%~80.99%", "81%~90.99%", "91%~100%"];
-        let pieData = [
-          {name: '0%~30.99%', value: 12}, {name: '31%~60.99%', value: 22}, {name: '61%~70.99%', value: 30},
-          {name: '71%~80.99%', value: 40}, {name: '81%~90.99%', value: 20}, {name: '91%~100%', value: 10}
-        ];
-        let pieData1 = [
-          {name: '0%~30.99%', value: '10'}, {name: '31%~60.99%', value: '12'}, {name: '61%~70.99%', value: '24'},
-          {name: '71%~80.99%', value: '40'}, {name: '81%~90.99%', value: '35'}, {name: '91%~100%', value: '8'}
-        ];
-        this.$refs.Pie1.reloadPie({barY, pieData});
-        this.$refs.Pie2.reloadPie({barY1, pieData1});
+      parse(t) {
+        return parseFloat(t) * 100 + '%'
       }
     },
     computed: {},
@@ -128,13 +118,11 @@
       /** 浏览器窗口大小改变时，图表宽高自适应  **/
       setTimeout(() => {
         window.onresize = () => {
-          this.$refs.Pie1.pie.resize();
-          this.$refs.Pie2.pie.resize();
+          this.$refs.BarVue.bar.resize();
+          this.$refs.BarVue2.bar.resize();
         }
       }, 200)
-
-      // this.$refs.PieVue.reloadPie({barY, pieData});
-      // this.search()
+      this.search()
     }
   }
 </script>
