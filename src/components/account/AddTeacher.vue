@@ -147,6 +147,7 @@
     methods: {
       previous() {
         this.step = 1
+        setTimeout(() => this.$refs.form.validate(), 200)
       },
       next() {
         if (this.btnText === '下一步') {
