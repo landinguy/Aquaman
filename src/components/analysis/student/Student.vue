@@ -91,8 +91,8 @@
           const {totalCnt, statList} = res.data
           if (statList.length > 0) {
             this.hasData = true
-            let title = type === 1 ? '提交率' : '按时提交率'
-            let total = `共布置 ${totalCnt} 份作业（${title}）`
+            // let title = type === 1 ? '提交率' : '按时提交率'
+            let total = `合计： ${totalCnt}`
             let barY = []
             let barX = []
             statList.forEach(item => {
