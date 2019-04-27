@@ -67,8 +67,8 @@
       },
       getData(flag) {
         get(url.getSchool, {}).then(res => {
-          const {data} = res
-          if (data) this.school = data
+          const {list} = res.data
+          if (list.length > 0) this.school = list[0]
         }).catch(err => console.log(err))
         if (flag) this.content = 1
       }

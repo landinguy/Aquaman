@@ -44,8 +44,10 @@
           password
         }).then(res => {
           if (res) {
-            this.$Spin.hide();
-            this.$router.push({name: 'info'})
+            this.$Spin.hide()
+            let role = sessionStorage.getItem('roleId')
+            let name = role === 'SUPER' ? 'list' : 'info'
+            this.$router.push({name})
           }
         }).catch(err => {
           this.$Spin.hide();

@@ -26,6 +26,7 @@ export default [
     name: 'school',
     meta: {
       hide: true,
+      access: ['ADMIN', 'PRESIDENT', 'GRADE_LEADER', 'CLASS_TEACHER', 'TEACHER']
     },
     component: Main,
     children: [
@@ -36,6 +37,44 @@ export default [
           title: '首页'
         },
         component: () => import('@/components/school/Info')
+      }
+    ]
+  },
+  {
+    path: '/school',
+    name: 'school',
+    meta: {
+      hide: true,
+      access: ['SUPER']
+    },
+    component: Main,
+    children: [
+      {
+        path: '/list',
+        name: 'list',
+        meta: {
+          title: '学校管理'
+        },
+        component: () => import('@/components/school/List')
+      }
+    ]
+  },
+  {
+    path: '/AdminAccount',
+    name: 'AdminAccount',
+    meta: {
+      hide: true,
+      access: ['SUPER']
+    },
+    component: Main,
+    children: [
+      {
+        path: '/accounts',
+        name: 'accounts',
+        meta: {
+          title: '账号管理'
+        },
+        component: () => import('@/components/account/AdminList')
       }
     ]
   },
@@ -71,7 +110,7 @@ export default [
     name: 'schoolManage',
     meta: {
       title: '学校管理',
-      access: ['ADMIN','PRESIDENT', 'GRADE_LEADER']
+      access: ['ADMIN', 'PRESIDENT', 'GRADE_LEADER']
     },
     component: Main,
     children: [
