@@ -80,15 +80,15 @@
             const {stageId, ...rest} = this.formData;
             if (this.id == '') {
               post(url.addClazz, rest).then(res => {
-                if (res.ret_code && res.ret_code == 400) {
+                if (res.ret_code == 400) {
                   this.$Message.error('该班级已存在');
-                } else if (res == 'success') {
+                } else if (res.ret_code == 0) {
                   this.$Message.success({
                     content: '提交成功',
                     duration: 1,
                     onClose: () => {
-                      this.cancel();
-                      this.$parent.getData();
+                      this.cancel()
+                      this.$parent.getData()
                     }
                   })
                 }
@@ -101,8 +101,8 @@
                     content: '提交成功',
                     duration: 1,
                     onClose: () => {
-                      this.cancel();
-                      this.$parent.search();
+                      this.cancel()
+                      this.$parent.search()
                     }
                   })
                 } else {
