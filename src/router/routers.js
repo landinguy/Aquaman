@@ -152,6 +152,24 @@ export default [
         component: () => import('@/components/analysis/overview/Overview')
       },
       {
+        path: 'statistics',
+        name: 'statistics',
+        meta: {
+          title: '数据统计',
+          access: ['PRESIDENT']
+        },
+        component: () => import('@/components/analysis/statistics/Statistics')
+      },
+      {
+        path: 'statistic',
+        name: 'statistic',
+        meta: {
+          title: '数据统计',
+          access: ['TEACHER']
+        },
+        component: () => import('@/components/analysis/statistics/TeacherStatistics')
+      },
+      {
         path: 'subject',
         name: 'subject',
         meta: {

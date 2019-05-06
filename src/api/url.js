@@ -43,6 +43,8 @@ export default {
 
   //总览页面
   overview: '/api/management/stat/overview',
+  overviewDetail: '/api/management/stat/overview/details',
+  overviewTeacher: '/api/management/stat/class_teacher',
 
 
 };

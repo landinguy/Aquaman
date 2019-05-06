@@ -39,10 +39,11 @@
 
     <div v-if="roleId=='ADMIN'">
       <br>
-      <Button type="primary" @click="showModal">
+      <Button type="primary" @click="showModal" class="btn-width">
         <Icon type="plus"></Icon>
         添加
       </Button>
+      <Button type="primary" @click="" style="margin-left: 8px" class="btn-width">导入</Button>
     </div>
     <div style="margin-top: 16px">
       <Table stripe border :columns="columns" :data="tableData"></Table>
@@ -283,5 +284,9 @@
   .width {
     width: 160px;
     margin-right: 32px;
+  }
+
+  .btn-width {
+    width: 80px;
   }
 </style>

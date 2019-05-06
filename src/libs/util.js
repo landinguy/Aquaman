@@ -266,21 +266,25 @@ export const showTip = (h, t) => {
  * @param timestamp
  * @returns {*}
  */
-export const timestampToTime = (timestamp) => {
+export const timestampToTime = (timestamp, flag = true) => {
   if (!timestamp) return "----";
-  var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
-  var y = date.getFullYear();
-  var m = date.getMonth() + 1;
+  let date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+  let y = date.getFullYear();
+  let m = date.getMonth() + 1;
   m = m < 10 ? '0' + m : m;
-  var d = date.getDate();
+  let d = date.getDate();
   d = d < 10 ? ('0' + d) : d;
-  var h = date.getHours();
-  h = h < 10 ? ('0' + h) : h;
-  var i = date.getMinutes();
-  i = i < 10 ? ('0' + i) : i;
-  var s = date.getSeconds();
-  s = s < 10 ? ('0' + s) : s;
-  return y + '-' + m + '-' + d + ' ' + h + ':' + i + ':' + s;
+  let datetimeString = y + '-' + m + '-' + d
+  if (flag) {
+    let h = date.getHours();
+    h = h < 10 ? ('0' + h) : h;
+    let i = date.getMinutes();
+    i = i < 10 ? ('0' + i) : i;
+    let s = date.getSeconds();
+    s = s < 10 ? ('0' + s) : s;
+    datetimeString += ' ' + h + ':' + i + ':' + s;
+  }
+  return datetimeString
 };
 export const validateNumber = (rule, value, callback) => {
   if (isNaN(value)) {

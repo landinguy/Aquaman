@@ -139,7 +139,6 @@
     justify-content: left;
     align-items: center;
     flex-wrap: wrap;
-    margin-bottom: 32px;
 
     &-item {
       margin-bottom: 16px;
