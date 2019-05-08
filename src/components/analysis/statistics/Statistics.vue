@@ -130,15 +130,7 @@
             },
             {
               title: '班级', key: 'clazzName', align: 'center', ellipsis: true, width: 80,
-              render: (h, params) =>
-                h('a', {
-                  on: {
-                    click: () => {
-                      let clazzId = params.row.clazzId
-                      this.$refs.ClazzDetail.showModal({clazzId, ...this.params})
-                    }
-                  }
-                }, params.row.clazzName)
+              render: (h, params) => showTip(h, params.row.clazzName)
             },
             {
               title: '语文', align: 'center', ellipsis: true, width: 240,

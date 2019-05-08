@@ -14,6 +14,8 @@
         <DatePicker v-model="params.time" type="daterange" placement="bottom-start" placeholder="请选择时间段"
                     class="width"></DatePicker>
       </div>
+    </div>
+    <div class="search-div">
       <div class="search-div-item">
         <label>学段</label>
         <Select v-model="params.stageId" @on-change="getGrades" class="width">
@@ -22,14 +24,14 @@
           <Option value="3">高中</Option>
         </Select>
       </div>
-    </div>
-    <div class="search-div">
       <div class="search-div-item">
         <label>年级</label>
         <Select v-model="params.gradeId" @on-change="getClazzData" class="width">
           <Option v-for="item in grades" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </div>
+    </div>
+    <div class="search-div">
       <div class="search-div-item">
         <label>班级</label>
         <Select v-model="params.clazzId" class="width">

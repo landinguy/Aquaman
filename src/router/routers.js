@@ -164,7 +164,7 @@ export default [
         path: 'statistic',
         name: 'statistic',
         meta: {
-          title: '数据统计',
+          title: '数据总览',
           access: ['TEACHER']
         },
         component: () => import('@/components/analysis/statistics/TeacherStatistics')

@@ -44,7 +44,17 @@
         添加
       </Button>
       <Button type="primary" @click="updateAll" style="margin-left: 8px" class="btn-width">批量升级</Button>
-      <Button type="primary" @click="" style="margin-left: 8px" class="btn-width">导入</Button>
+      <Upload ref="upload"
+              :action="uploadUrl"
+              :format="['xlsx']"
+              :show-upload-list="false"
+              :before-upload="handleBeforeUpload"
+              :on-success="handleSuccess"
+              :with-credentials="true"
+              :headers="headers"
+              style="display: inline-block;margin-left: 8px">
+        <Button type="primary" icon="ios-cloud-upload-outline" class="btn-width">导入</Button>
+      </Upload>
     </div>
     <div style="margin-top: 16px">
       <Table stripe border :columns="columns" :data="tableData" @on-selection-change="onSelectChange"></Table>
@@ -57,6 +67,7 @@
 <script>
   import {mapMutations, mapGetters} from 'vuex'
   import {showTip, timestampToTime} from '@/libs/util'
+  import baseUrl from "@/libs/url"
   import url from '@/api/url'
   import {post, $del, get, $get, patch} from "@/api/ax"
   import Add from './Add'
@@ -66,6 +77,7 @@
     name: 'StudentList',
     data() {
       return {
+        uploadUrl: baseUrl.base + url.importStudent,
         content: 1,
         params: {username: '', nickname: '', stageId: '', gradeId: '', clazzId: '', pageNum: 1, pageSize: 10},
         tableData: [], grades: [], clazzData: [], userIds: [],
@@ -74,6 +86,31 @@
     },
     components: {Add, Update},
     methods: {
+      handleBeforeUpload(file) {
+        let index = file.name.lastIndexOf(".");
+        let type = file.name.substring(index + 1);
+
+        let arr = ['xlsx'];
+        if (arr.indexOf(type.toLowerCase()) == -1) {
+          this.$Message.error('请上传xlsx文件');
+          return false;
+        }
+        if (this.$refs.upload.fileList.length > 0) {
+          this.$refs.upload.clearFiles();
+        }
+      },
+      handleSuccess(res, file) {
+        const {ret_code, error_msg} = res
+        if (ret_code == 0) {
+          this.$Message.success({
+            content: '上传成功',
+            duration: 1,
+            onClose: () => this.search()
+          })
+        } else {
+          this.$Message.error(error_msg ? error_msg : '上传失败')
+        }
+      },
       onSelectChange(data) {
         this.userIds = data.map(item => item.userId);
       },
@@ -258,6 +295,9 @@
           columns.splice(7, 1)
         }
         return columns;
+      },
+      headers() {
+        return {'Authorization': 'Bearer ' + sessionStorage.getItem('accessToken')}
       }
     }
   }
