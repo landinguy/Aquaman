@@ -7,6 +7,15 @@
                     class="width"></DatePicker>
       </div>
       <div class="search-div-item">
+        <label>角色</label>
+        <Select v-model="params.roleType" class="width" @on-change="search">
+          <Option value="TEACHER">教师</Option>
+          <Option value="STUDENT">学生</Option>
+        </Select>
+      </div>
+    </div>
+    <div class="search-div">
+      <div class="search-div-item">
         <label>学段</label>
         <Select v-model="params.stageId" @on-change="getGrades" class="width">
           <Option value="1">小学</Option>
@@ -14,20 +23,10 @@
           <Option value="3">高中</Option>
         </Select>
       </div>
-
-    </div>
-    <div class="search-div">
       <div class="search-div-item">
         <label>年级</label>
         <Select v-model="params.gradeId" class="width">
           <Option v-for="item in grades" :value="item.value" :key="item.value">{{ item.label }}</Option>
-        </Select>
-      </div>
-      <div class="search-div-item">
-        <label>角色</label>
-        <Select v-model="params.roleType" class="width" @on-change="search">
-          <Option value="TEACHER">教师</Option>
-          <Option value="STUDENT">学生</Option>
         </Select>
       </div>
       <div class="search-div-item">
@@ -36,7 +35,7 @@
     </div>
     <div>
       <div style="margin-bottom: 8px;text-align: right">
-        <Button type="ghost" size="small" @click="">excel下载</Button>
+        <Button type="ghost" size="small" @click="download">excel下载</Button>
       </div>
       <Table stripe border :columns="columns" :data="tableData"></Table>
       <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>
@@ -45,6 +44,7 @@
   </div>
 </template>
 <script>
+  import baseUrl from "@/libs/url"
   import url from '@/api/url';
   import {post, get, $get} from "@/api/ax";
   import {showTip, timestampToTime} from '@/libs/util'
@@ -55,7 +55,7 @@
     data() {
       return {
         params: {
-          stageId: '',
+          stageId: '1',
           gradeId: '',
           roleType: 'TEACHER',
           time: [
@@ -63,14 +63,23 @@
             new Date()
           ],
           pageSize: 10,
-          pageNum: 1
+          pageNum: 1,
+
         },
         grades: [], tableData: [],
-        total: 0
+        total: 0,
+        paramsStr: null
       }
     },
     components: {ClazzDetail},
     methods: {
+      download() {
+        let access_token = sessionStorage.getItem('accessToken')
+        $get(url.downloadDetails + this.paramsStr + `&access_token=${access_token}`, {}).then(res => {
+          if (res.data) window.open('http://220.248.55.84:8888/' + res.data)
+          // if (res.data) window.open(baseUrl.base + '/' + +res.data)
+        }).catch(err => console.log(err))
+      },
       parse(t) {
         return parseFloat(t) * 100 + '%'
       },
@@ -89,18 +98,22 @@
         this.params.pageNum = 1
         this.getData();
       },
-      getData() {
+      setParamsStr() {
         let t = this.params.time
         if (t[0]) this.params.startDate = timestampToTime(t[0], false) + ' 00:00:00'
         if (t[1]) this.params.endDate = timestampToTime(t[1], false) + ' 23:59:59'
-        const {gradeId, roleType, pageSize, pageNum, startDate, endDate} = this.params
+        const {stageId, gradeId, roleType, pageSize, pageNum, startDate, endDate} = this.params
         let p = `?pageSize=${pageSize}&pageNum=${pageNum}`
+        if (stageId) p += `&stageId=${stageId}`
         if (gradeId) p += `&gradeId=${gradeId}`
         if (roleType) p += `&roleType=${roleType}`
         if (startDate) p += `&startDate=${startDate}`
         if (endDate) p += `&endDate=${endDate}`
-        console.log('---', p)
-        $get(url.overviewDetail + p, {}).then(res => {
+        this.paramsStr = p
+      },
+      getData() {
+        this.setParamsStr()
+        $get(url.overviewDetail + this.paramsStr, {}).then(res => {
           if (res.data) {
             const {total, list} = res.data
             this.total = total
@@ -256,6 +269,23 @@
               children: [
                 {
                   title: '发布', align: 'center', width: 80,
+                  render: (h, params) => showTip(h, params.row.subjectStatList[7] ? params.row.subjectStatList[7].assignCnt : '')
+                },
+                {
+                  title: '批改', align: 'center', width: 80,
+                  render: (h, params) => showTip(h, params.row.subjectStatList[7] ? params.row.subjectStatList[7].correctRatio : '')
+                },
+                {
+                  title: '评价', align: 'center', width: 80,
+                  render: (h, params) => showTip(h, params.row.subjectStatList[7] ? params.row.subjectStatList[7].commentRatio : '')
+                }
+              ]
+            },
+            {
+              title: '地理', align: 'center', ellipsis: true, width: 240,
+              children: [
+                {
+                  title: '发布', align: 'center', width: 80,
                   render: (h, params) => showTip(h, params.row.subjectStatList[8] ? params.row.subjectStatList[8].assignCnt : '')
                 },
                 {
@@ -265,23 +295,6 @@
                 {
                   title: '评价', align: 'center', width: 80,
                   render: (h, params) => showTip(h, params.row.subjectStatList[8] ? params.row.subjectStatList[8].commentRatio : '')
-                }
-              ]
-            },
-            {
-              title: '地理', align: 'center', ellipsis: true, width: 240,
-              children: [
-                {
-                  title: '发布', align: 'center', width: 80,
-                  render: (h, params) => showTip(h, params.row.subjectStatList[9] ? params.row.subjectStatList[9].assignCnt : '')
-                },
-                {
-                  title: '批改', align: 'center', width: 80,
-                  render: (h, params) => showTip(h, params.row.subjectStatList[9] ? params.row.subjectStatList[9].correctRatio : '')
-                },
-                {
-                  title: '评价', align: 'center', width: 80,
-                  render: (h, params) => showTip(h, params.row.subjectStatList[9] ? params.row.subjectStatList[9].commentRatio : '')
                 }
               ]
             },
@@ -417,11 +430,11 @@
               children: [
                 {
                   title: '提交量', align: 'center', width: 80,
-                  render: (h, params) => showTip(h, params.row.subjectStatList[8] ? params.row.subjectStatList[8].submitCnt : '')
+                  render: (h, params) => showTip(h, params.row.subjectStatList[7] ? params.row.subjectStatList[7].submitCnt : '')
                 },
                 {
                   title: '提交', align: 'center', width: 80,
-                  render: (h, params) => showTip(h, params.row.subjectStatList[8] ? params.row.subjectStatList[8].submitRatio : '')
+                  render: (h, params) => showTip(h, params.row.subjectStatList[7] ? params.row.subjectStatList[7].submitRatio : '')
                 }
               ]
             },
@@ -430,11 +443,11 @@
               children: [
                 {
                   title: '提交量', align: 'center', width: 80,
-                  render: (h, params) => showTip(h, params.row.subjectStatList[9] ? params.row.subjectStatList[9].submitCnt : '')
+                  render: (h, params) => showTip(h, params.row.subjectStatList[8] ? params.row.subjectStatList[8].submitCnt : '')
                 },
                 {
                   title: '提交', align: 'center', width: 80,
-                  render: (h, params) => showTip(h, params.row.subjectStatList[9] ? params.row.subjectStatList[9].submitRatio : '')
+                  render: (h, params) => showTip(h, params.row.subjectStatList[8] ? params.row.subjectStatList[8].submitRatio : '')
                 }
               ]
             },
@@ -456,7 +469,8 @@
       }
     },
     mounted() {
-      this.search();
+      this.search()
+      this.getGrades()
     }
   }
 </script>

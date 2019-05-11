@@ -28,7 +28,7 @@ export default {
     setRoleId(state, roleId) {
       state.roleId = roleId;
       sessionStorage.setItem("roleId", roleId);
-      state.access = roleId;
+      state.access = roleId.split(',');
     },
     setAccessToken(state, accessToken) {
       state.accessToken = accessToken;
@@ -55,7 +55,7 @@ export default {
     },
     roleId: state => {
       state.roleId = state.roleId;
-      state.access = sessionStorage.getItem("roleId");
+      state.access = sessionStorage.getItem("roleId").split(',');
       return sessionStorage.getItem("roleId")
     },
     accountNickname: state => {

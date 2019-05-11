@@ -6,7 +6,7 @@
       </p>
       <div>
         <div style="margin-bottom: 8px;text-align: right">
-          <Button type="ghost" size="small" @click="">excel下载</Button>
+          <Button type="ghost" size="small" @click="download">excel下载</Button>
         </div>
         <Table stripe border :columns="columns" :data="tableData"></Table>
         <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>
@@ -18,6 +18,7 @@
   </div>
 </template>
 <script>
+  import baseUrl from "@/libs/url"
   import url from '@/api/url';
   import {post, get, $get} from "@/api/ax";
   import {showTip, timestampToTime} from '@/libs/util'
@@ -110,7 +111,7 @@
             children: [
               {
                 title: '提交', align: 'center', width: 80,
-                render: (h, params) => showTip(h, params.row.subjectStatList[8] ? params.row.subjectStatList[8].submitRatio : '')
+                render: (h, params) => showTip(h, params.row.subjectStatList[7] ? params.row.subjectStatList[7].submitRatio : '')
               }
             ]
           },
@@ -119,7 +120,7 @@
             children: [
               {
                 title: '提交', align: 'center', width: 80,
-                render: (h, params) => showTip(h, params.row.subjectStatList[9] ? params.row.subjectStatList[9].submitRatio : '')
+                render: (h, params) => showTip(h, params.row.subjectStatList[8] ? params.row.subjectStatList[8].submitRatio : '')
               }
             ]
           },
@@ -136,10 +137,18 @@
         params: {
           pageSize: 10,
           pageNum: 1
-        }
+        },
+        paramsStr: null
       }
     },
     methods: {
+      download() {
+        let access_token = sessionStorage.getItem('accessToken')
+        $get(url.downloadClassDetails + this.paramsStr + `&access_token=${access_token}`, {}).then(res => {
+          if (res.data) window.open('http://220.248.55.84:8888/' + res.data)
+          // if (res.data) window.open(baseUrl.base + '/' + +res.data)
+        }).catch(err => console.log(err))
+      },
       parse(t) {
         return parseFloat(t) * 100 + '%'
       },
@@ -147,15 +156,18 @@
         this.params.pageNum = n
         this.getData()
       },
-      getData() {
+      setParamsStr() {
         const {gradeId, pageSize, pageNum, startDate, endDate, clazzId} = this.params
         let p = `?pageSize=${pageSize}&pageNum=${pageNum}`
         if (gradeId) p += `&gradeId=${gradeId}`
         if (clazzId) p += `&clazzId=${clazzId}`
         if (startDate) p += `&startDate=${startDate}`
         if (endDate) p += `&endDate=${endDate}`
-        console.log('---', p)
-        $get(url.overviewDetail + p, {}).then(res => {
+        this.paramsStr = p
+      },
+      getData() {
+        this.setParamsStr()
+        $get(url.overviewClassDetail + this.paramsStr, {}).then(res => {
           if (res.data) {
             const {total, list} = res.data
             this.total = total

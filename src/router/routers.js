@@ -26,7 +26,7 @@ export default [
     name: 'school',
     meta: {
       hide: true,
-      access: ['ADMIN', 'PRESIDENT', 'GRADE_LEADER', 'CLASS_TEACHER', 'TEACHER']
+      access: ['PRESIDENT', 'GRADE_LEADER', 'CLASS_TEACHER', 'TEACHER']
     },
     component: Main,
     children: [
@@ -147,7 +147,8 @@ export default [
         path: 'overview',
         name: 'overview',
         meta: {
-          title: '作业总览'
+          title: '作业总览',
+          access: ['PRESIDENT']
         },
         component: () => import('@/components/analysis/overview/Overview')
       },
@@ -173,7 +174,8 @@ export default [
         path: 'subject',
         name: 'subject',
         meta: {
-          title: '科目分析'
+          title: '科目分析',
+          access: ['GRADE_LEADER']
         },
         component: () => import('@/components/analysis/subject/Subject')
       },
@@ -182,7 +184,7 @@ export default [
         name: 'grade',
         meta: {
           title: '年级分析',
-          access: ['ADMIN', 'PRESIDENT', 'GRADE_LEADER']
+          access: ['GRADE_LEADER']
         },
         component: () => import('@/components/analysis/grade/Grade')
       },
@@ -191,7 +193,7 @@ export default [
         name: 'clazz',
         meta: {
           title: '班级分析',
-          access: ['ADMIN', 'PRESIDENT', 'GRADE_LEADER', 'CLASS_TEACHER']
+          access: ['CLASS_TEACHER']
         },
         component: () => import('@/components/analysis/clazz/Clazz')
       },
@@ -200,7 +202,7 @@ export default [
         name: 'teacher',
         meta: {
           title: '教师分析',
-          access: ['ADMIN', 'PRESIDENT', 'GRADE_LEADER']
+          access: ['CLASS_TEACHER']
         },
         component: () => import('@/components/analysis/teacher/Teacher')
       },
@@ -208,7 +210,8 @@ export default [
         path: 'student',
         name: 'student',
         meta: {
-          title: '学生分析'
+          title: '学生分析',
+          access: ['CLASS_TEACHER']
         },
         component: () => import('@/components/analysis/student/Student')
       }

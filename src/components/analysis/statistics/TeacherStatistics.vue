@@ -50,7 +50,7 @@
     </div>
     <div>
       <div style="margin-bottom: 8px;text-align: right">
-        <Button type="ghost" size="small" @click="">excel下载</Button>
+        <Button type="ghost" size="small" @click="download">excel下载</Button>
       </div>
       <Table stripe border :columns="columns" :data="tableData"></Table>
       <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>
@@ -58,6 +58,7 @@
   </div>
 </template>
 <script>
+  import baseUrl from "@/libs/url"
   import url from '@/api/url';
   import {post, get, $get} from "@/api/ax";
   import {showTip, timestampToTime} from '@/libs/util'
@@ -77,10 +78,18 @@
           pageNum: 1
         },
         grades: [], tableData: [], subjectData: [], clazzData: [],
-        total: 0
+        total: 0,
+        paramsStr: null
       }
     },
     methods: {
+      download() {
+        let access_token = sessionStorage.getItem('accessToken')
+        $get(url.downloadTeacher + this.paramsStr + `&access_token=${access_token}`, {}).then(res => {
+          if (res.data) window.open('http://220.248.55.84:8888/' + res.data)
+          // if (res.data) window.open(baseUrl.base + '/' + +res.data)
+        }).catch(err => console.log(err))
+      },
       getClazzData(gradeId) {
         this.clazzData = []
         this.params.clazzId = ''
@@ -120,7 +129,7 @@
         this.params.pageNum = 1
         this.getData();
       },
-      getData() {
+      setParamsStr() {
         let tt = this.params.timeType
         if (tt == 7) {
           let t = this.params.time
@@ -134,8 +143,11 @@
         if (timeType) p += `&timeType=${timeType}`
         if (startDate) p += `&startDate=${startDate}`
         if (endDate) p += `&endDate=${endDate}`
-        console.log('---', p)
-        $get(url.overviewTeacher + p, {}).then(res => {
+        this.paramsStr = p
+      },
+      getData() {
+        this.setParamsStr()
+        $get(url.overviewTeacher + this.paramsStr, {}).then(res => {
           if (res.data) {
             const {total, list} = res.data
             this.total = total

@@ -45,8 +45,14 @@ export default {
 
   //总览页面
   overview: '/api/management/stat/overview',
-  overviewDetail: '/api/management/stat/overview/details',
+  overviewDetail: '/api/management/stat/details',
+  overviewClassDetail: '/api/management/stat/details/class',
   overviewTeacher: '/api/management/stat/class_teacher',
+
+  //导出excel
+  downloadDetails: '/api/management/stat/file/details',
+  downloadClassDetails: '/api/management/stat/file/details/class',
+  downloadTeacher: '/api/management/stat/file/class_teacher',
 
 
 };
