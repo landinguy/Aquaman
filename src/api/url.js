@@ -54,5 +54,15 @@ export default {
   downloadClassDetails: '/api/management/stat/file/details/class',
   downloadTeacher: '/api/management/stat/file/class_teacher',
 
+  //年份信息
+  year: '/api/basic/exam_papers/year',
+  //年级信息
+  grade: '/api/basic/exam_papers/grade',
+  //省份信息
+  province: '/api/basic/exam_papers/province',
+  //类型信息
+  type: '/api/basic/exam_papers/type',
+  //试卷信息
+  examPapers: '/api/basic/exam_papers',
 
 };

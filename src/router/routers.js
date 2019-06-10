@@ -135,6 +135,26 @@ export default [
     ]
   },
   {
+    path: '/homeworkManage',
+    name: 'homeworkManage',
+    meta: {
+      title: '作业管理',
+      access: ['ADMIN']
+    },
+    component: Main,
+    children: [
+      {
+        path: 'homework',
+        name: 'homework',
+        meta: {
+          title: '布置作业',
+          access: ['ADMIN']
+        },
+        component: () => import('@/components/homework/List')
+      }
+    ]
+  },
+  {
     path: '/analysis',
     name: 'analysis',
     meta: {
