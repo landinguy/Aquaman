@@ -94,7 +94,7 @@
       <div slot="footer" style="text-align: center">
         <Button v-if="step===1" type="primary" shape="circle" class="radio_len" @click="next">{{btnText}}</Button>
         <template v-if="step===2">
-          <Button v-if="isGradeLeader || isClassTeacher || isTeacher" type="ghost" shape="circle" class="radio_len"
+          <Button v-if="isGradeLeader || isClassTeacher || isTeacher" type="default" shape="circle" class="radio_len"
                   style="margin-right: 20px" @click="previous">上一步
           </Button>
           <Button type="primary" shape="circle" class="radio_len" @click="confirm">提交</Button>

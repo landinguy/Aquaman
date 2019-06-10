@@ -304,7 +304,7 @@ export const handleSpinCustom = () => {
         h('Icon', {
           style: 'animation: ani-demo-spin 1s linear infinite',
           props: {
-            type: 'load-c',
+            type: 'ios-loading',
             size: 72
           }
         }),

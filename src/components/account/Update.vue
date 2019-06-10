@@ -30,7 +30,7 @@
       </div>
       <div slot="footer" style="text-align: center">
         <Button type="primary" shape="circle" class="radio_len" @click="confirm">提交</Button>
-        <Button type="ghost" shape="circle" class="radio_len" style="margin-left: 20px" @click="cancel">取消</Button>
+        <Button type="default" shape="circle" class="radio_len" style="margin-left: 20px" @click="cancel">取消</Button>
       </div>
     </Modal>
   </div>

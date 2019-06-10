@@ -5,7 +5,14 @@
         <span>查看试卷</span>
       </p>
       <div class="content">
-        <Item :choiceQuestions="choiceQuestions" :answerQuestions="answerQuestions"></Item>
+        <PaperContent :choiceQuestions="choiceQuestions" :answerQuestions="answerQuestions"
+                      :readingComprehension="readingComprehension" :spelling="spelling" :writing="writing"
+                      :calculationQuestions="calculationQuestions" :fillQuestions="fillQuestions"
+                      :exploreQuestions="exploreQuestions" :inferenceQuestions="inferenceQuestions"
+                      :comprehensiveQuestions="comprehensiveQuestions" :judgmentQuestions="judgmentQuestions"
+                      :discussQuestions="discussQuestions" :shortAnswerQuestions="shortAnswerQuestions"
+        >
+        </PaperContent>
       </div>
       <div slot="footer" style="height: 50px;line-height: 50px">
         <Form ref="form" :model="formData" :rules="formValidate" :label-width="80" style="text-align: center" inline>
@@ -38,11 +45,11 @@
 <script>
   import url from '@/api/url'
   import {post, put, get} from "@/api/ax"
-  import Item from './component/Item'
+  import PaperContent from './component/PaperContent'
 
   export default {
     name: 'Add',
-    components: {Item},
+    components: {PaperContent},
     data() {
       return {
         addModal: false,
@@ -53,8 +60,13 @@
           gradeId: [{required: true, message: '请选择年级', trigger: 'change'}],
           clazzName: [{required: true, type: 'array', min: 1, message: '请选择班级', trigger: 'change'}]
         },
-        grades: [], clazzData: [], choiceQuestions: [], answerQuestions: [],
-        all: false
+        grades: [], clazzData: [], choiceQuestions: [], answerQuestions: [], readingComprehension: [],
+        spelling: [], writing: [], calculationQuestions: [], fillQuestions: [], exploreQuestions: [],
+        inferenceQuestions: [], comprehensiveQuestions: [], judgmentQuestions: [], discussQuestions: [],
+        shortAnswerQuestions: [],
+        all: false,
+        choiceArr: ['2', '3', '6'],
+        answerArr: ['20'],
       }
     },
     methods: {
@@ -67,22 +79,43 @@
       getQuestions(id) {
         this.choiceQuestions = []
         this.answerQuestions = []
+        this.readingComprehension = []
+        this.spelling = []
+        this.writing = []
+        this.calculationQuestions = []
+        this.fillQuestions = []
+        this.exploreQuestions = []
+        this.inferenceQuestions = []
+        this.comprehensiveQuestions = []
+        this.judgmentQuestions = []
+        this.discussQuestions = []
+        this.shortAnswerQuestions = []
         get(url.examPapers + `/${id}/question`, {}).then(res => {
           res.data.forEach(item => {
             const {questionTypeId} = item
-            if (questionTypeId == 2 || questionTypeId == 3) this.choiceQuestions.push(item)
-            if (questionTypeId == 20) this.answerQuestions.push(item)
+            if (this.choiceArr.indexOf(questionTypeId) != -1) this.choiceQuestions.push(item)
+            if (this.answerArr.indexOf(questionTypeId) != -1) this.answerQuestions.push(item)
+            if (questionTypeId == 25) this.readingComprehension.push(item)
+            if (questionTypeId == 32) this.spelling.push(item)
+            if (questionTypeId == 30) this.writing.push(item)
+            if (questionTypeId == 19) this.calculationQuestions.push(item)
+            if (questionTypeId == 18) this.fillQuestions.push(item)
+            if (questionTypeId == 40) this.exploreQuestions.push(item)
+            if (questionTypeId == 43) this.inferenceQuestions.push(item)
+            if (questionTypeId == 23) this.comprehensiveQuestions.push(item)
+            if (questionTypeId == 39) this.judgmentQuestions.push(item)
+            if (questionTypeId == 22) this.discussQuestions.push(item)
+            if (questionTypeId == 21) this.shortAnswerQuestions.push(item)
           })
         }).catch(err => console.log(err))
       },
       getGrades() {
         const {stageId} = this.formData
-        this.grades = []
-        this.formData.gradeId = ''
-        this.clazzData = []
-        this.formData.clazzName = []
-
         if (stageId) {
+          this.grades = []
+          this.formData.gradeId = ''
+          this.clazzData = []
+          this.formData.clazzName = []
           get(url.getGradesByStageId + stageId, {}).then(res =>
             res.data.forEach(item => this.grades.push({label: item.gradeName, value: item.gradeId})
             )).catch(err => console.log(err))
@@ -90,10 +123,9 @@
       },
       getClazzData() {
         const {gradeId} = this.formData
-        this.clazzData = []
-        this.formData.clazzName = []
-
         if (gradeId) {
+          this.clazzData = []
+          this.formData.clazzName = []
           get(url.getClazzByGradeId + gradeId, {}).then(res => {
             const {clazzList} = res.data;
             clazzList.forEach(item =>

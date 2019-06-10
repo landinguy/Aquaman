@@ -17,7 +17,7 @@
       </div>
       <div class="search-div-item width">
         <Button type="primary" @click="search">查询</Button>
-        <Button type="ghost" @click="clear" style="margin-left: 16px">清空</Button>
+        <Button type="default" @click="clear" style="margin-left: 16px">清空</Button>
       </div>
     </div>
 

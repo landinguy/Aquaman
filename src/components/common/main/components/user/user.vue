@@ -1,7 +1,7 @@
 <template>
   <div class="user-avator-dropdown">
     <Dropdown @on-click="handleClick">
-      <!--<Button type="ghost">-->
+      <!--<Button type="default">-->
       <Button type="default" ghost style="background: none;border:none;color: white;font-size: 14px">
         <!--<icon :size="18" type="person"></icon>-->
         <!--&nbsp;{{accountNickname}}&nbsp;-->
@@ -36,7 +36,7 @@
       </div>
       <div slot="footer" style="text-align: center">
         <Button type="primary" shape="circle" class="radio_len" @click="confirm">提交</Button>
-        <Button type="ghost" shape="circle" class="radio_len" style="margin-left: 20px" @click="cancel">取消</Button>
+        <Button type="default" shape="circle" class="radio_len" style="margin-left: 20px" @click="cancel">取消</Button>
       </div>
     </Modal>
   </div>

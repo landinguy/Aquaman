@@ -50,7 +50,7 @@
     </div>
     <div>
       <div style="margin-bottom: 8px;text-align: right">
-        <Button type="ghost" size="small" @click="download">excel下载</Button>
+        <Button type="default" size="small" @click="download">excel下载</Button>
       </div>
       <Table stripe border :columns="columns" :data="tableData"></Table>
       <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>

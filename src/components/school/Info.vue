@@ -39,7 +39,7 @@
         <p class="no-info">暂无学校信息</p>
       </div>
       <div v-if="roleId=='ADMIN'" class="btn">
-        <Button type="ghost" shape="circle" @click="edit()" style="width: 80px">{{school!=null?'编辑':'添加'}}</Button>
+        <Button type="default" shape="circle" @click="edit()" style="width: 80px">{{school!=null?'编辑':'添加'}}</Button>
       </div>
     </div>
   </div>

@@ -17,13 +17,13 @@
     <div class="search-div">
       <div class="search-div-item">
         <label>年级</label>
-        <Select v-model="params.gradeId" class="width" @on-change="getSubjects()">
+        <Select v-model="params.gradeId" class="width" @on-change="getSubjects">
           <Option v-for="item in grades" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </div>
       <div class="search-div-item">
         <label>科目</label>
-        <Select v-model="params.subjectId" class="width" @on-change="getType()">
+        <Select v-model="params.subjectId" class="width" @on-change="getType">
           <Option v-for="item in subjectData" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </div>
@@ -38,14 +38,15 @@
       </div>
     </div>
 
-    <div v-if="roleId=='ADMIN'">
-      <Button type="primary" @click="showModal">
-        <Icon type="plus"></Icon>
-        添加
-      </Button>
-    </div>
+    <!--<div v-if="roleId=='ADMIN'">-->
+    <!--<Button type="primary" @click="showModal">-->
+    <!--<Icon type="plus"></Icon>-->
+    <!--添加-->
+    <!--</Button>-->
+    <!--</div>-->
     <div style="margin-top: 8px">
       <Table stripe border :columns="columns" :data="tableData"></Table>
+      <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>
     </div>
     <Add ref="AddVue"></Add>
   </div>
@@ -107,16 +108,22 @@
           }
         ],
         tableData: [], years: [], provinces: [], grades: [], types: [], subjectData: [],
-        stageId: ''
+        stageId: '',
+        total: 0
       }
     },
     components: {Add},
     methods: {
+      changePage(n) {
+        this.params.pageIndex = n
+        this.getData()
+      },
       getType() {
         this.params.paperType = ''
         this.types = []
         const {subjectId} = this.params
         if (subjectId) {
+          this.types.push({label: '全部', value: 0})
           $get(url.type, {subjectId}).then(res =>
             res.data.forEach(item => this.types.push({label: item.name, value: item.id}))
           ).catch(err => console.log(err))
@@ -152,21 +159,38 @@
         $get(url.examPapers, this.params).then(res => this.tableData = res.data).catch(err => console.log(err))
       },
       search() {
+        const {gradeId, paperType, subjectId} = this.params
+        console.log(this.params);
+        if (!gradeId) {
+          this.$Message.warning('请选择年级')
+          return
+        }
+        if (!subjectId) {
+          this.$Message.warning('请选择科目')
+          return
+        }
+        if (paperType === '' || paperType === undefined) {
+          this.$Message.warning('请选择试卷类型')
+          return
+        }
+        this.params.pageIndex = 1
         this.getData()
       },
       getSomeData() {
-        $get(url.year, {}).then(res =>
+        $get(url.year, {}).then(res => {
           res.data.forEach(item => this.years.push({label: item.name, value: item.id}))
-        ).catch(err => console.log(err))
+          this.params.year = 2019
+        }).catch(err => console.log(err))
         $get(url.grade, {}).then(res => {
           res.data.forEach(item => {
             const {gradeList, stageId} = item
             gradeList.forEach(item => this.grades.push({label: item.name, value: item.id, stageId: stageId}))
           })
         }).catch(err => console.log(err))
-        $get(url.province, {}).then(res =>
+        $get(url.province, {}).then(res => {
           res.data.forEach(item => this.provinces.push({label: item.name, value: item.id}))
-        ).catch(err => console.log(err))
+          this.params.provinceId = 0
+        }).catch(err => console.log(err))
       }
     },
     mounted() {

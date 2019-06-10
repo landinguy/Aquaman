@@ -45,7 +45,7 @@
                 :on-remove="handleRemove"
                 :with-credentials="true"
                 style="display: inline-block">
-          <Button type="ghost" icon="ios-cloud-upload-outline">上传文件</Button>
+          <Button type="default" icon="ios-cloud-upload-outline">上传文件</Button>
         </Upload>
       </FormItem>
     </Form>
