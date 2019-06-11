@@ -15,7 +15,7 @@
     <!--</div>-->
     <div>
       <Button type="primary" @click="showModal">
-        <Icon type="plus"></Icon>
+        <Icon type="md-add"></Icon>
         添加
       </Button>
     </div>

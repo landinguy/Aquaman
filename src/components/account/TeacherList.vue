@@ -40,7 +40,7 @@
     <div v-if="roleId=='ADMIN'">
       <br>
       <Button type="primary" @click="showModal" class="btn-width">
-        <Icon type="plus"></Icon>
+        <Icon type="md-add"></Icon>
         添加
       </Button>
       <Upload ref="upload"
@@ -192,7 +192,7 @@
               roleInfoList.forEach(item => {
                 const {type, tip} = item;
                 let title = type == 'PRESIDENT' ? '学校' : type == 'GRADE_LEADER' ? '年级' : type == 'CLASS_TEACHER' ? '班级' : '任教信息';
-                let t = type == 'PRESIDENT' ? 'error' : type == 'GRADE_LEADER' ? 'primary' : type == 'CLASS_TEACHER' ? 'info' : 'ghost';
+                let t = type == 'PRESIDENT' ? 'error' : type == 'GRADE_LEADER' ? 'primary' : type == 'CLASS_TEACHER' ? 'info' : 'default';
                 let roleName = type == 'PRESIDENT' ? '校领导' : type == 'GRADE_LEADER' ? '年级主任' : type == 'CLASS_TEACHER' ? '班主任' : '任课教师';
                 const icon = h('Poptip', {
                     props: {trigger: 'hover', title: title, content: tip},
@@ -207,9 +207,9 @@
             }
           },
           {
-            title: '操作', align: 'center', width: 200,
+            title: '操作', align: 'center', width: 240,
             render: (h, params) => {
-              // const id = params.row.id;
+              const id = params.row.id
               const edit = h('Button', {
                 props: {
                   type: 'primary',
@@ -226,7 +226,7 @@
               }, '修改');
               const reset = h('Button', {
                 props: {
-                  type: 'ghost',
+                  type: 'default',
                   size: 'small'
                 },
                 style: {
@@ -243,44 +243,41 @@
                     }).catch(err => console.log(err))
                   }
                 }
-              }, '重置密码');
-              // const del = h('Button', {
-              //   props: {
-              //     type: 'error',
-              //     size: 'small'
-              //   },
-              //   style: {
-              //     "margin-left": '5px'
-              //   },
-              //   on: {
-              //     click: function () {
-              //       $vue.$Modal.confirm({
-              //         title: '删除',
-              //         content: '确认删除该模板？',
-              //         onOk() {
-              //           $del(url.delTmpl + id, {accountId: this.accountId}).then(res => {
-              //             if (res.code == 0) {
-              //               $vue.$Message.success({
-              //                 content: '已删除',
-              //                 duration: 1,
-              //                 onClose() {
-              //                   $vue.search();
-              //                 }
-              //               });
-              //             } else {
-              //               $vue.$Message.error('删除失败');
-              //             }
-              //           });
-              //         }
-              //       });
-              //     }
-              //   }
-              // }, '删除');
-              const op = [];
-              op.push(edit);
-              // op.push(update);
-              op.push(reset);
-              return h('div', op);
+              }, '重置密码')
+              const del = h('Button', {
+                props: {
+                  type: 'error',
+                  size: 'small'
+                },
+                style: {
+                  "margin-left": '5px'
+                },
+                on: {
+                  click: () =>
+                    this.$Modal.confirm({
+                      title: '删除',
+                      content: '确认删除该教师？',
+                      onOk: () =>
+                        $del(url.delTmpl + id, {}).then(res => {
+                          if (res.ret_code == 0) {
+                            this.$Message.success({
+                              content: '已删除',
+                              duration: 1,
+                              onClose: () => this.search()
+                            })
+                          } else {
+                            this.$Message.error('删除失败')
+                          }
+                        }).catch(err => console.log(err))
+                    })
+                }
+              }, '删除')
+              const op = []
+              op.push(edit)
+              // op.push(update)
+              op.push(reset)
+              op.push(del)
+              return h('div', op)
             }
           }
         ];

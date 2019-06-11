@@ -2,14 +2,14 @@
   <div class="user-avator-dropdown">
     <Dropdown @on-click="handleClick">
       <!--<Button type="default">-->
-      <Button type="default" ghost style="background: none;border:none;color: white;font-size: 14px">
+      <Button type="default" style="background: none;border:none;color: white;font-size: 14px">
         <!--<icon :size="18" type="person"></icon>-->
         <!--&nbsp;{{accountNickname}}&nbsp;-->
         <!--<Icon :size="12" type="arrow-down-b"></Icon>-->
         <div style="line-height:18px;height: 18px">
           <img :src="user_icon" style="height: 18px; float: left"/>
           <div style=" float: left">{{accountNickname}}</div>
-          <Icon :size="16" type="arrow-down-b"></Icon>
+          <Icon :size="16" type="ios-arrow-down"></Icon>
         </div>
       </Button>
       <DropdownMenu slot="list">

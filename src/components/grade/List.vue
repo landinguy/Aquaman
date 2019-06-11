@@ -16,7 +16,7 @@
 
     <div v-if="roleId=='ADMIN'">
       <Button type="primary" @click="showModal">
-        <Icon type="plus"></Icon>
+        <Icon type="md-add"></Icon>
         添加
       </Button>
     </div>
@@ -51,9 +51,9 @@
             render: (h, params) => showTip(h, params.row.gradeName)
           },
           {
-            title: '操作', align: 'center', width: 200,
+            title: '操作', align: 'center', width: 160,
             render: (h, params) => {
-              // const id = params.row.id;
+              const {id} = params.row
               const edit = h('Button', {
                 props: {
                   type: 'primary',
@@ -67,42 +67,39 @@
                     this.$refs.AddVue.showModal(params.row);
                   }
                 }
-              }, '修改');
-              // const del = h('Button', {
-              //   props: {
-              //     type: 'error',
-              //     size: 'small'
-              //   },
-              //   style: {
-              //     "margin-left": '5px'
-              //   },
-              //   on: {
-              //     click: function () {
-              //       $vue.$Modal.confirm({
-              //         title: '删除',
-              //         content: '确认删除该模板？',
-              //         onOk() {
-              //           $del(url.delTmpl + id, {accountId: this.accountId}).then(res => {
-              //             if (res.code == 0) {
-              //               $vue.$Message.success({
-              //                 content: '已删除',
-              //                 duration: 1,
-              //                 onClose() {
-              //                   $vue.search();
-              //                 }
-              //               });
-              //             } else {
-              //               $vue.$Message.error('删除失败');
-              //             }
-              //           });
-              //         }
-              //       });
-              //     }
-              //   }
-              // }, '删除');
-              const op = [];
-              op.push(edit);
-              return h('div', op);
+              }, '修改')
+              const del = h('Button', {
+                props: {
+                  type: 'error',
+                  size: 'small'
+                },
+                style: {
+                  "margin-left": '5px'
+                },
+                on: {
+                  click: () =>
+                    this.$Modal.confirm({
+                      title: '删除',
+                      content: '确认删除该年级？',
+                      onOk: () =>
+                        $del(url.delTmpl + id, {}).then(res => {
+                          if (res.ret_code == 0) {
+                            this.$Message.success({
+                              content: '已删除',
+                              duration: 1,
+                              onClose: () => this.search()
+                            })
+                          } else {
+                            this.$Message.error('删除失败')
+                          }
+                        }).catch(err => console.log(err))
+                    })
+                }
+              }, '删除')
+              const op = []
+              op.push(edit)
+              op.push(del)
+              return h('div', op)
             }
           }
         ],

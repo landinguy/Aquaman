@@ -52,7 +52,7 @@
     <div class="btn_div">
       <template v-if="op!='view'">
         <Button type="primary" shape="circle" class="radio_len" @click="confirm">提交</Button>
-        <Button type="ghost" shape="circle" class="radio_len" style="margin-left: 20px" @click="cancel">取消</Button>
+        <Button type="default" shape="circle" class="radio_len" style="margin-left: 20px" @click="cancel">取消</Button>
       </template>
     </div>
   </div>

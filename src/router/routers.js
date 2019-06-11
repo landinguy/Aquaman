@@ -26,7 +26,7 @@ export default [
     name: 'school',
     meta: {
       hide: true,
-      access: ['PRESIDENT', 'GRADE_LEADER', 'CLASS_TEACHER', 'TEACHER']
+      access: ['ADMIN', 'PRESIDENT', 'GRADE_LEADER', 'CLASS_TEACHER', 'TEACHER']
     },
     component: Main,
     children: [
