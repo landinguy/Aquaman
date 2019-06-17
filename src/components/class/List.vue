@@ -22,10 +22,21 @@
     </div>
 
     <div v-if="roleId=='ADMIN'">
-      <Button type="primary" @click="showModal">
+      <Button type="primary" @click="showModal" class="btn-width">
         <Icon type="md-add"></Icon>
         添加
       </Button>
+      <Upload ref="upload"
+              :action="uploadUrl"
+              :format="['xlsx']"
+              :show-upload-list="false"
+              :before-upload="handleBeforeUpload"
+              :on-success="handleSuccess"
+              :with-credentials="true"
+              :headers="headers"
+              style="display: inline-block;margin-left: 8px">
+        <Button type="primary" icon="ios-cloud-upload-outline" class="btn-width">导入</Button>
+      </Upload>
     </div>
     <div style="margin-top: 8px">
       <Table stripe border :columns="columns" :data="tableData"></Table>
@@ -38,6 +49,7 @@
   import {mapMutations, mapGetters} from 'vuex'
   import {showTip, timestampToTime} from '@/libs/util'
   import url from '@/api/url'
+  import baseUrl from "@/libs/url"
   import {post, get, $get, $del} from "@/api/ax"
   import Add from './Add.vue'
 
@@ -45,6 +57,7 @@
     name: 'List',
     data() {
       return {
+        uploadUrl: baseUrl.base + url.importClazz,
         params: {pageNum: 1, pageSize: 10, stageId: '', gradeId: ''},
         columns: [
           {
@@ -65,7 +78,7 @@
           {
             title: '操作', align: 'center', width: 160,
             render: (h, params) => {
-              const id = params.row.id
+              const id = params.row.clazzId
               const edit = h('Button', {
                 props: {
                   type: 'primary',
@@ -94,7 +107,7 @@
                       title: '删除',
                       content: '确认删除该班级？',
                       onOk: () =>
-                        $del(url.delTmpl + id, {}).then(res => {
+                        $del(url.addClazz + `?clazzId=${id}`, {}).then(res => {
                           if (res.ret_code == 0) {
                             this.$Message.success({
                               content: '已删除',
@@ -120,6 +133,31 @@
     },
     components: {Add},
     methods: {
+      handleBeforeUpload(file) {
+        let index = file.name.lastIndexOf(".");
+        let type = file.name.substring(index + 1);
+
+        let arr = ['xlsx'];
+        if (arr.indexOf(type.toLowerCase()) == -1) {
+          this.$Message.error('请上传xlsx文件');
+          return false;
+        }
+        if (this.$refs.upload.fileList.length > 0) {
+          this.$refs.upload.clearFiles();
+        }
+      },
+      handleSuccess(res, file) {
+        const {ret_code, error_msg} = res
+        if (ret_code == 0) {
+          this.$Message.success({
+            content: '上传成功',
+            duration: 1,
+            onClose: () => this.search()
+          })
+        } else {
+          this.$Message.error(error_msg ? error_msg : '上传失败')
+        }
+      },
       clear() {
         this.params = {pageNum: 1, pageSize: 10, stageId: '', gradeId: ''}
       },
@@ -159,7 +197,10 @@
       }
     },
     computed: {
-      ...mapGetters(['accountId', 'roleId'])
+      ...mapGetters(['accountId', 'roleId']),
+      headers() {
+        return {'Authorization': 'Bearer ' + sessionStorage.getItem('accessToken')}
+      }
     }
   }
 </script>
@@ -192,5 +233,9 @@
   .width {
     width: 160px;
     margin-right: 32px;
+  }
+
+  .btn-width {
+    width: 80px;
   }
 </style>

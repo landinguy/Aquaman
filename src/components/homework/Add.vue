@@ -1,42 +1,62 @@
 <template>
   <div ref="AddVue">
-    <Modal v-model="addModal" width="960">
+    <Modal v-model="addModal" width="1200" class-name="vertical-center-modal">
       <p slot="header" style="text-align:center">
         <span>查看试卷</span>
       </p>
       <div class="content">
-        <PaperContent :choiceQuestions="choiceQuestions" :answerQuestions="answerQuestions"
+        <PaperContent ref="PaperContent" :choiceQuestions="choiceQuestions" :answerQuestions="answerQuestions"
                       :readingComprehension="readingComprehension" :spelling="spelling" :writing="writing"
                       :calculationQuestions="calculationQuestions" :fillQuestions="fillQuestions"
                       :exploreQuestions="exploreQuestions" :inferenceQuestions="inferenceQuestions"
                       :comprehensiveQuestions="comprehensiveQuestions" :judgmentQuestions="judgmentQuestions"
-                      :discussQuestions="discussQuestions" :shortAnswerQuestions="shortAnswerQuestions"
-        >
+                      :discussQuestions="discussQuestions" :shortAnswerQuestions="shortAnswerQuestions">
         </PaperContent>
       </div>
-      <div slot="footer" style="height: 50px;line-height: 50px">
-        <Form ref="form" :model="formData" :rules="formValidate" :label-width="80" style="text-align: center" inline>
-          <FormItem label="学段" prop="stageId">
-            <Select v-model="formData.stageId" @on-change="getGrades()" class="radio_len">
-              <Option value="1">小学</Option>
-              <Option value="2">初中</Option>
-              <Option value="3">高中</Option>
-            </Select>
-          </FormItem>
-          <FormItem label="年级" prop="gradeId">
-            <Select v-model="formData.gradeId" @on-change="getClazzData()" class="radio_len">
-              <Option v-for="item in grades" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
-          </FormItem>
-          <FormItem label="班级" prop="clazzName">
-            <Select v-model="formData.clazzName" class="width" multiple :max-tag-count="1">
-              <Option v-for="item in clazzData" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
-          </FormItem>
-          <Checkbox v-model="all" @on-change="isSelectAll" style="position: relative;top: -10px">全选</Checkbox>
-          <FormItem>
-            <Button type="primary" shape="circle" size="small" class="radio_len" @click="confirm">布置作业</Button>
-          </FormItem>
+      <div slot="footer" style="height: 100px">
+        <Form ref="form" :model="formData" :rules="formValidate" :label-width="80" style="text-align: center">
+          <div class="row">
+            <FormItem label="学段" prop="stageId">
+              <Select size="small" v-model="formData.stageId" @on-change="getGrades()" class="radio_len">
+                <Option value="1">小学</Option>
+                <Option value="2">初中</Option>
+                <Option value="3">高中</Option>
+              </Select>
+            </FormItem>
+            <FormItem label="年级" prop="gradeId">
+              <Select size="small" v-model="formData.gradeId" @on-change="getClazzData()" class="radio_len">
+                <Option v-for="item in grades" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+            </FormItem>
+            <FormItem label="班级" prop="classList">
+              <Select size="small" v-model="formData.classList" class="width" multiple :max-tag-count="1">
+                <Option v-for="item in clazzData" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+            </FormItem>
+            <Checkbox v-model="all" @on-change="isSelectAll" style="position: relative;top: -10px;margin-left: 10px">
+              班级全选
+            </Checkbox>
+          </div>
+          <div class="row">
+            <FormItem label="开始时间" prop="startTs">
+              <DatePicker v-model="formData.startTs" type="datetime" placeholder="请选择开始时间" class="width" size="small"
+                          @on-change="changeTs('start',$event)"/>
+            </FormItem>
+            <FormItem label="结束时间" prop="endTs">
+              <DatePicker v-model="formData.endTs" type="datetime" placeholder="请选择结束时间" class="width" size="small"
+                          @on-change="changeTs('end',$event)"/>
+            </FormItem>
+            <FormItem label="试卷名称" prop="name">
+              <Input size="small" v-model.trim="formData.name" placeholder="请填写试卷名称" class="width"/>
+            </FormItem>
+            <FormItem label="备注" prop="desc">
+              <Input v-model="formData.desc" placeholder="请填写备注" class="width" size="small"/>
+            </FormItem>
+            <Button type="primary" shape="circle" size="small" class="radio_len" @click="confirm"
+                    style="margin-left: 32px;position: relative;top: -10px">
+              布置作业
+            </Button>
+          </div>
         </Form>
       </div>
     </Modal>
@@ -52,13 +72,21 @@
     components: {PaperContent},
     data() {
       return {
+        startTsVal: '',
+        endTsVal: '',
         addModal: false,
-        formData: {stageId: '1', gradeId: '', clazzName: []},
         id: '',
+        formData: {
+          stageId: '1', gradeId: '', classList: [],
+          name: '', desc: '', startTs: '', endTs: ''
+        },
         formValidate: {
           stageId: [{required: true, message: '请选择学段', trigger: 'change'}],
           gradeId: [{required: true, message: '请选择年级', trigger: 'change'}],
-          clazzName: [{required: true, type: 'array', min: 1, message: '请选择班级', trigger: 'change'}]
+          name: [{required: true, message: '请填写试卷名称', trigger: 'blur'}],
+          startTs: [{required: true, message: '请选择开始时间', trigger: 'change'}],
+          endTs: [{required: true, message: '请选择结束时间', trigger: 'change'}],
+          classList: [{required: true, type: 'array', min: 1, message: '请选择班级', trigger: 'change'}],
         },
         grades: [], clazzData: [], choiceQuestions: [], answerQuestions: [], readingComprehension: [],
         spelling: [], writing: [], calculationQuestions: [], fillQuestions: [], exploreQuestions: [],
@@ -66,14 +94,19 @@
         shortAnswerQuestions: [],
         all: false,
         choiceArr: ['2', '3', '6'],
-        answerArr: ['20'],
+        answerArr: ['20']
       }
     },
     methods: {
+      changeTs(flag, val) {
+        // console.log(flag, val)
+        if (val) flag == 'start' ? this.formData.startTs = val : this.formData.endTs = val
+        else flag == 'start' ? this.formData.startTs = '' : this.formData.endTs = ''
+      },
       isSelectAll() {
-        this.formData.clazzName = []
+        this.formData.classList = []
         if (this.all) {
-          this.clazzData.forEach(item => this.formData.clazzName.push(item.value))
+          this.clazzData.forEach(item => this.formData.classList.push(item.value))
         }
       },
       getQuestions(id) {
@@ -115,7 +148,7 @@
           this.grades = []
           this.formData.gradeId = ''
           this.clazzData = []
-          this.formData.clazzName = []
+          this.formData.classList = []
           get(url.getGradesByStageId + stageId, {}).then(res =>
             res.data.forEach(item => this.grades.push({label: item.gradeName, value: item.gradeId})
             )).catch(err => console.log(err))
@@ -125,7 +158,7 @@
         const {gradeId} = this.formData
         if (gradeId) {
           this.clazzData = []
-          this.formData.clazzName = []
+          this.formData.classList = []
           get(url.getClazzByGradeId + gradeId, {}).then(res => {
             const {clazzList} = res.data;
             clazzList.forEach(item =>
@@ -146,22 +179,21 @@
       confirm() {
         this.$refs.form.validate((valid) => {
           if (valid) {
-            this.$Message.success('布置成功')
-            // post(url.addGrade, this.formData).then(res => {
-            //   if (res.ret_code == 400) {
-            //     this.$Message.error('该年级已存在')
-            //   } else if (res.ret_code == 0) {
-            //     this.$Message.success({
-            //       content: '提交成功',
-            //       duration: 1,
-            //       onClose: () => {
-            //         this.cancel()
-            //         this.$parent.getData()
-            //       }
-            //     })
-            //   }
-            // }).catch(err => console.log(err))
-
+            let examPaperId = this.id
+            let subjectId = this.$parent.params.subjectId
+            let questionScore = this.$refs.PaperContent.questionScore
+            // let reviewTypeCode = 1
+            const params = {...this.formData, examPaperId, subjectId, questionScore}
+            console.log(params)
+            post(url.assignPaper, params).then(res => {
+              if (res.ret_code == 0) {
+                this.$Message.success({
+                  content: '提交成功',
+                  duration: 1,
+                  onClose: () => this.cancel()
+                })
+              }
+            }).catch(err => console.log(err))
           }
         })
       }
@@ -171,6 +203,7 @@
         if (!curVal) {
           this.$refs.form.resetFields()
           this.id = ''
+          this.$refs.PaperContent.questionScore = []
         } else {
           this.getGrades()
         }
@@ -192,6 +225,21 @@
   .content {
     height: 320px;
     overflow: auto;
-    padding: 0px 5px;
+  }
+
+  .row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .vertical-center-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .ivu-modal {
+      top: 0;
+    }
   }
 </style>

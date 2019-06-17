@@ -20,6 +20,7 @@ export default {
   addClazz: '/api/management/clazz',
   updateClazz: '/api/management/clazz',
   getClazz: '/api/management/clazz',
+  importClazz: '/api/management/file/clazz',
 
   //上传图片
   uploadImg: '/image/upload',
@@ -64,5 +65,7 @@ export default {
   type: '/api/basic/exam_papers/type',
   //试卷信息
   examPapers: '/api/basic/exam_papers',
+  //布置试卷
+  assignPaper: '/api/teacher/exam_papers',
 
 };

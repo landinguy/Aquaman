@@ -4,9 +4,19 @@
       <h2>{{title}}</h2>
       <template v-for="(item,index) in data">
         <div class="question">
-          <h3>{{index+1}}.<span v-html="item.stem"></span></h3>
+          <div style="display: flex">
+            <InputNumber value="0" :min="0" size="small" @on-change="changeScore(item.id,$event)"
+                         class="score"></InputNumber>
+            <h3>
+              {{index+1}}.<span v-html="item.stem"></span>
+            </h3>
+          </div>
           <template v-for="childItem in item.listChildQuestion">
-            <span v-html="childItem.stem"></span>
+            <div class="child-question">
+              <InputNumber value="0" :min="0" size="small" @on-change="changeScore(item.id,$event,childItem.id)"
+                           class="score"></InputNumber>
+              <span v-html="childItem.stem"></span>
+            </div>
           </template>
         </div>
       </template>
@@ -23,7 +33,11 @@
     data() {
       return {}
     },
-    methods: {},
+    methods: {
+      changeScore(questionId, score, cid = null) {
+        this.$emit('on-change-score', {questionId, score, cid})
+      }
+    },
     computed: {},
     mounted() {
     }
@@ -35,6 +49,7 @@
 
     h2 {
       margin-bottom: 10px;
+      margin-left: 60px;
     }
 
     .question {
@@ -43,6 +58,17 @@
 
       h3 {
         margin-bottom: 5px;
+      }
+
+      .score {
+        width: 50px;
+        margin-right: 10px;
+        flex-shrink: 0;
+      }
+
+      .child-question {
+        margin-bottom: 5px;
+        display: flex;
       }
     }
   }

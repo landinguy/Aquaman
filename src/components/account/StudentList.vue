@@ -199,7 +199,7 @@
           {
             title: '操作', align: 'center', width: 260,
             render: (h, params) => {
-              const id = params.row.id
+              const id = params.row.userId
               const edit = h('Button', {
                 props: {
                   type: 'primary',
@@ -265,7 +265,7 @@
                       title: '删除',
                       content: '确认删除该学生？',
                       onOk: () =>
-                        $del(url.delTmpl + id, {}).then(res => {
+                        $del(url.updateStudent + `?userId=${id}`, {}).then(res => {
                           if (res.ret_code == 0) {
                             this.$Message.success({
                               content: '已删除',

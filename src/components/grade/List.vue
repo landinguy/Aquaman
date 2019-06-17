@@ -53,7 +53,7 @@
           {
             title: '操作', align: 'center', width: 160,
             render: (h, params) => {
-              const {id} = params.row
+              const id = params.row.gradeId
               const edit = h('Button', {
                 props: {
                   type: 'primary',
@@ -82,7 +82,7 @@
                       title: '删除',
                       content: '确认删除该年级？',
                       onOk: () =>
-                        $del(url.delTmpl + id, {}).then(res => {
+                        $del(url.addGrade + `?gradeId=${id}`, {}).then(res => {
                           if (res.ret_code == 0) {
                             this.$Message.success({
                               content: '已删除',

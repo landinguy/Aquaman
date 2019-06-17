@@ -160,7 +160,6 @@
       },
       search() {
         const {gradeId, paperType, subjectId} = this.params
-        console.log(this.params);
         if (!gradeId) {
           this.$Message.warning('请选择年级')
           return
