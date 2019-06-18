@@ -5,7 +5,7 @@
       <template v-for="(item,index) in data">
         <div class="question">
           <div style="display: flex">
-            <InputNumber value="0" :min="0" size="small" @on-change="changeScore(item.id,$event)"
+            <InputNumber :value="0" :min="0" size="small" @on-change="changeScore(item.id,$event)"
                          class="score"></InputNumber>
             <h3>
               {{index+1}}.<span v-html="item.stem"></span>
@@ -13,7 +13,7 @@
           </div>
           <template v-for="childItem in item.listChildQuestion">
             <div class="child-question">
-              <InputNumber value="0" :min="0" size="small" @on-change="changeScore(item.id,$event,childItem.id)"
+              <InputNumber :value="0" :min="0" size="small" @on-change="changeScore(item.id,$event,childItem.id)"
                            class="score"></InputNumber>
               <span v-html="childItem.stem"></span>
             </div>

@@ -68,17 +68,17 @@
             title: '序号', type: 'index', width: 80, align: 'center'
           },
           {
-            title: '类型', key: 'typeName', align: 'center', ellipsis: true, minWidth: 100,
+            title: '类型', key: 'typeName', align: 'center', ellipsis: true, width: 120,
             render: (h, params) => showTip(h, params.row.typeName)
           },
           {
             title: '标题', key: 'title', align: 'center', ellipsis: true, minWidth: 100,
             render: (h, params) => showTip(h, params.row.title)
           },
-          {
-            title: '题数', key: 'questionCnt', align: 'center', ellipsis: true, width: 80,
-            render: (h, params) => showTip(h, params.row.questionCnt)
-          },
+          // {
+          //   title: '题数', key: 'questionCnt', align: 'center', ellipsis: true, width: 80,
+          //   render: (h, params) => showTip(h, params.row.questionCnt)
+          // },
           {
             title: '时间', key: 'time', align: 'center', ellipsis: true, minWidth: 100,
             render: (h, params) => showTip(h, timestampToTime(params.row.time))

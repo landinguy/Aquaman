@@ -1,6 +1,6 @@
 <template>
   <div ref="AddVue">
-    <Modal v-model="addModal" width="1200" class-name="vertical-center-modal">
+    <Modal v-model="addModal" width="1200" class-name="vertical-center-modal" :mask-closable="false">
       <p slot="header" style="text-align:center">
         <span>查看试卷</span>
       </p>
@@ -40,11 +40,11 @@
           <div class="row">
             <FormItem label="开始时间" prop="startTs">
               <DatePicker v-model="formData.startTs" type="datetime" placeholder="请选择开始时间" class="width" size="small"
-                          @on-change="changeTs('start',$event)"/>
+                          :editable="false" @on-change="changeTs('start',$event)"/>
             </FormItem>
             <FormItem label="结束时间" prop="endTs">
               <DatePicker v-model="formData.endTs" type="datetime" placeholder="请选择结束时间" class="width" size="small"
-                          @on-change="changeTs('end',$event)"/>
+                          :editable="false" @on-change="changeTs('end',$event)"/>
             </FormItem>
             <FormItem label="试卷名称" prop="name">
               <Input size="small" v-model.trim="formData.name" placeholder="请填写试卷名称" class="width"/>
@@ -176,22 +176,38 @@
       cancel() {
         this.addModal = false
       },
+      validateTime() {
+        const {startTs, endTs} = this.formData
+        if (new Date(startTs) < new Date()) {
+          this.$Message.warning('开始时间不能早于当前时间')
+          return false
+        }
+        if (startTs > endTs) {
+          this.$Message.warning('开始时间不能晚于结束时间')
+          return false
+        }
+        return true
+      },
       confirm() {
         this.$refs.form.validate((valid) => {
           if (valid) {
+            if (!this.validateTime()) return
+
             let examPaperId = this.id
             let subjectId = this.$parent.params.subjectId
             let questionScore = this.$refs.PaperContent.questionScore
-            // let reviewTypeCode = 1
             const params = {...this.formData, examPaperId, subjectId, questionScore}
             console.log(params)
             post(url.assignPaper, params).then(res => {
-              if (res.ret_code == 0) {
+              const {error_msg, ret_code} = res
+              if (ret_code == 0) {
                 this.$Message.success({
                   content: '提交成功',
                   duration: 1,
                   onClose: () => this.cancel()
                 })
+              } else {
+                this.$Message.error(error_msg ? error_msg : '提交失败')
               }
             }).catch(err => console.log(err))
           }
