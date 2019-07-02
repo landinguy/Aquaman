@@ -156,7 +156,11 @@
         this.$refs.AddVue.showModal(null)
       },
       getData() {
-        $get(url.examPapers, this.params).then(res => this.tableData = res.data).catch(err => console.log(err))
+        $get(url.examPapers, this.params).then(res => {
+          const {list, total} = res.data
+          this.tableData = list
+          this.total = total
+        }).catch(err => console.log(err))
       },
       search() {
         const {gradeId, paperType, subjectId} = this.params

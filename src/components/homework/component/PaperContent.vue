@@ -34,8 +34,8 @@
     </div>
     <Question @on-change-score="changeScore" title="填空题" :data="fillQuestions"></Question>
     <Question @on-change-score="changeScore" title="判断题" :data="judgmentQuestions"></Question>
-    <Question @on-change-score="changeScore" title="单词拼写" :data="spelling"></Question>
     <Question @on-change-score="changeScore" title="阅读理解" :data="readingComprehension"></Question>
+    <Question @on-change-score="changeScore" title="单词拼写" :data="spelling"></Question>
     <Question @on-change-score="changeScore" title="书面表达" :data="writing"></Question>
     <Question @on-change-score="changeScore" title="推断题" :data="inferenceQuestions"></Question>
     <Question @on-change-score="changeScore" title="探究题" :data="exploreQuestions"></Question>

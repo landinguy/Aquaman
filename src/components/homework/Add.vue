@@ -78,7 +78,7 @@
         id: '',
         formData: {
           stageId: '1', gradeId: '', classList: [],
-          name: '', desc: '', startTs: '', endTs: ''
+          name: '', desc: '无', startTs: '', endTs: ''
         },
         formValidate: {
           stageId: [{required: true, message: '请选择学段', trigger: 'change'}],

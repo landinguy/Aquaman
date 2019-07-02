@@ -53,7 +53,8 @@
         <Button type="default" size="small" @click="download">excel下载</Button>
       </div>
       <Table stripe border :columns="columns" :data="tableData"></Table>
-      <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>
+      <Page :total="total" :page-size="20" show-total show-elevator @on-change="changePage"
+            style="margin-top: 16px"></Page>
     </div>
   </div>
 </template>
