@@ -104,8 +104,8 @@
       handleSuccess(res, file) {
         if (res.data) {
           console.log("res ->" + JSON.stringify(res.data));
-          // this.formData.badge = baseUrl.base + '/' + res.data;
-          this.formData.badge = 'http://220.248.55.84:8888/' + res.data;
+          this.formData.badge = baseUrl.base + '/' + res.data;
+          // this.formData.badge = 'http://220.248.55.84:8888/' + res.data;
           this.$Message.success('上传成功');
         } else {
           this.$Message.error('上传失败');

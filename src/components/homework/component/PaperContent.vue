@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="questionType" v-if="choiceQuestions.length!=0">
-      <h2>选择题</h2>
-      <template v-for="(item,index) in choiceQuestions">
+    <template v-for="(item,index) in questions">
+      <!-- 选择题 -->
+      <div class="questionType" v-if="isSelectQuestion(item.questionTypeId)">
         <div class="question">
           <div style="display: flex">
             <InputNumber :value="0" :min="0" size="small"
@@ -30,20 +30,55 @@
             </div>
           </template>
         </div>
-      </template>
-    </div>
-    <Question @on-change-score="changeScore" title="填空题" :data="fillQuestions"></Question>
-    <Question @on-change-score="changeScore" title="判断题" :data="judgmentQuestions"></Question>
-    <Question @on-change-score="changeScore" title="阅读理解" :data="readingComprehension"></Question>
-    <Question @on-change-score="changeScore" title="单词拼写" :data="spelling"></Question>
-    <Question @on-change-score="changeScore" title="书面表达" :data="writing"></Question>
-    <Question @on-change-score="changeScore" title="推断题" :data="inferenceQuestions"></Question>
-    <Question @on-change-score="changeScore" title="探究题" :data="exploreQuestions"></Question>
-    <Question @on-change-score="changeScore" title="论述题" :data="discussQuestions"></Question>
-    <Question @on-change-score="changeScore" title="解答题" :data="answerQuestions"></Question>
-    <Question @on-change-score="changeScore" title="简答题" :data="shortAnswerQuestions"></Question>
-    <Question @on-change-score="changeScore" title="计算题" :data="calculationQuestions"></Question>
-    <Question @on-change-score="changeScore" title="综合题" :data="comprehensiveQuestions"></Question>
+      </div>
+      <!-- 非选择题 -->
+      <Question v-else @on-change-score="changeScore" :question="item" :index="index+1"></Question>
+    </template>
+    <!--<div class="questionType" v-if="choiceQuestions.length!=0">-->
+    <!--<h2>选择题</h2>-->
+    <!--<template v-for="(item,index) in choiceQuestions">-->
+    <!--<div class="question">-->
+    <!--<div style="display: flex">-->
+    <!--<InputNumber :value="0" :min="0" size="small"-->
+    <!--@on-change="changeScore({questionId:item.id,score:$event,cid:null})"-->
+    <!--class="score"></InputNumber>-->
+    <!--<h3>-->
+    <!--{{index+1}}.<span v-html="item.stem"></span>-->
+    <!--</h3>-->
+    <!--</div>-->
+
+    <!--<div class="questionOptions">-->
+    <!--<template v-for="optionItem in item.questionOptions">-->
+    <!--<div>-->
+    <!--<span v-html="optionItem.option"></span>-->
+    <!--<span v-html="optionItem.value"></span>-->
+    <!--</div>-->
+    <!--</template>-->
+    <!--</div>-->
+    <!--<template v-for="childItem in item.listChildQuestion">-->
+    <!--<div style="display: flex">-->
+    <!--<InputNumber :value="0" :min="0" size="small"-->
+    <!--@on-change="changeScore({questionId:item.id,score:$event,cid:childItem.id})"-->
+    <!--class="score"></InputNumber>-->
+    <!--<span v-html="childItem.stem"></span>-->
+    <!--</div>-->
+    <!--</template>-->
+    <!--</div>-->
+    <!--</template>-->
+    <!--</div>-->
+
+    <!--<Question @on-change-score="changeScore" title="填空题" :data="fillQuestions"></Question>-->
+    <!--<Question @on-change-score="changeScore" title="判断题" :data="judgmentQuestions"></Question>-->
+    <!--<Question @on-change-score="changeScore" title="阅读理解" :data="readingComprehension"></Question>-->
+    <!--<Question @on-change-score="changeScore" title="单词拼写" :data="spelling"></Question>-->
+    <!--<Question @on-change-score="changeScore" title="书面表达" :data="writing"></Question>-->
+    <!--<Question @on-change-score="changeScore" title="推断题" :data="inferenceQuestions"></Question>-->
+    <!--<Question @on-change-score="changeScore" title="探究题" :data="exploreQuestions"></Question>-->
+    <!--<Question @on-change-score="changeScore" title="论述题" :data="discussQuestions"></Question>-->
+    <!--<Question @on-change-score="changeScore" title="解答题" :data="answerQuestions"></Question>-->
+    <!--<Question @on-change-score="changeScore" title="简答题" :data="shortAnswerQuestions"></Question>-->
+    <!--<Question @on-change-score="changeScore" title="计算题" :data="calculationQuestions"></Question>-->
+    <!--<Question @on-change-score="changeScore" title="综合题" :data="comprehensiveQuestions"></Question>-->
 
     <!--<div class="noData" v-if="isNoData">-->
     <!--<h2>暂无内容</h2>-->
@@ -57,19 +92,20 @@
     name: 'PaperContent',
     components: {Question},
     props: {
-      choiceQuestions: {type: Array},
-      answerQuestions: {type: Array},
-      readingComprehension: {type: Array},
-      spelling: {type: Array},
-      writing: {type: Array},
-      calculationQuestions: {type: Array},
-      fillQuestions: {type: Array},
-      exploreQuestions: {type: Array},
-      inferenceQuestions: {type: Array},
-      comprehensiveQuestions: {type: Array},
-      judgmentQuestions: {type: Array},
-      discussQuestions: {type: Array},
-      shortAnswerQuestions: {type: Array},
+      questions: {type: Array},
+      // choiceQuestions: {type: Array},
+      // answerQuestions: {type: Array},
+      // readingComprehension: {type: Array},
+      // spelling: {type: Array},
+      // writing: {type: Array},
+      // calculationQuestions: {type: Array},
+      // fillQuestions: {type: Array},
+      // exploreQuestions: {type: Array},
+      // inferenceQuestions: {type: Array},
+      // comprehensiveQuestions: {type: Array},
+      // judgmentQuestions: {type: Array},
+      // discussQuestions: {type: Array},
+      // shortAnswerQuestions: {type: Array},
     },
     component: {Question},
     data() {
@@ -78,6 +114,10 @@
       }
     },
     methods: {
+      isSelectQuestion(qid) {
+        let arr = ['2', '3', '6']
+        return arr.indexOf(qid) != -1
+      },
       changeScore({questionId, score, cid}) {
         for (let item of this.questionScore) {
           if (item.questionId == questionId) {

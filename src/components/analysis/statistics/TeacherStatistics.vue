@@ -87,8 +87,8 @@
       download() {
         let access_token = sessionStorage.getItem('accessToken')
         $get(url.downloadTeacher + this.paramsStr + `&access_token=${access_token}`, {}).then(res => {
-          if (res.data) window.open('http://220.248.55.84:8888/' + res.data)
-          // if (res.data) window.open(baseUrl.base + '/' + +res.data)
+          // if (res.data) window.open('http://220.248.55.84:8888/' + res.data)
+          if (res.data) window.open(baseUrl.base + '/' + +res.data)
         }).catch(err => console.log(err))
       },
       getClazzData(gradeId) {

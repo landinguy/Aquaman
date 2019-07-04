@@ -1,25 +1,22 @@
 <template>
   <div>
-    <div class="questionType" v-if="data.length!=0">
-      <h2>{{title}}</h2>
-      <template v-for="(item,index) in data">
-        <div class="question">
-          <div style="display: flex">
-            <InputNumber :value="0" :min="0" size="small" @on-change="changeScore(item.id,$event)"
-                         class="score"></InputNumber>
-            <h3>
-              {{index+1}}.<span v-html="item.stem"></span>
-            </h3>
-          </div>
-          <template v-for="childItem in item.listChildQuestion">
-            <div class="child-question">
-              <InputNumber :value="0" :min="0" size="small" @on-change="changeScore(item.id,$event,childItem.id)"
-                           class="score"></InputNumber>
-              <span v-html="childItem.stem"></span>
-            </div>
-          </template>
+    <div class="questionType">
+      <div class="question">
+        <div style="display: flex">
+          <InputNumber :value="0" :min="0" size="small" @on-change="changeScore(question.id,$event)"
+                       class="score"></InputNumber>
+          <h3>
+            {{index}}.<span v-html="question.stem"></span>
+          </h3>
         </div>
-      </template>
+        <template v-for="childItem in question.listChildQuestion">
+          <div class="child-question">
+            <InputNumber :value="0" :min="0" size="small" @on-change="changeScore(question.id,$event,childItem.id)"
+                         class="score"></InputNumber>
+            <span v-html="childItem.stem"></span>
+          </div>
+        </template>
+      </div>
     </div>
   </div>
 </template>
@@ -27,8 +24,8 @@
   export default {
     name: 'Question',
     props: {
-      title: {type: String},
-      data: {type: Array},
+      question: {type: Object},
+      index: {type: Number}
     },
     data() {
       return {}
