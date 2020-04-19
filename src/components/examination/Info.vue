@@ -1,41 +1,46 @@
 <template>
   <div class="bg">
-    <div class="search-div">
-      <div class="search-div-item">
-        <label>题型</label>
-        <Select v-model="params.type" class="width">
-          <Option value="1">选择题</Option>
-          <Option value="2">判断题</Option>
-          <Option value="3">填空题</Option>
-        </Select>
+    <template v-if="content===1">
+      <div class="search-div">
+        <div class="search-div-item">
+          <label>题型</label>
+          <Select v-model="params.type" class="width">
+            <Option value="1">选择题</Option>
+            <Option value="2">判断题</Option>
+            <Option value="3">填空题</Option>
+          </Select>
+        </div>
+        <div class="search-div-item">
+          <label>难度系数</label>
+          <Input v-model="params.difficulty" placeholder="请输入难度系数" class="width"/>
+        </div>
+        <div class="search-div-item">
+          <Button type="primary" @click="search">查询</Button>
+          <Button type="ghost" @click="clear" style="margin-left: 16px">清空</Button>
+        </div>
       </div>
-      <div class="search-div-item">
-        <label>难度系数</label>
-        <Input v-model="params.difficulty" placeholder="请输入难度系数" class="width"/>
+      <div v-if="roleId==='ADMIN' || roleId==='TEACHER' || roleId==='COMPANY'">
+        <!--<br>-->
+        <Button type="primary" @click="showModal">
+          <Icon type="plus"></Icon>
+          录入题库
+        </Button>
+        <Button type="primary" @click="toPaperPage">
+          <Icon type="eye"></Icon>
+          试卷预览
+        </Button>
       </div>
-      <div class="search-div-item">
-        <Button type="primary" @click="search">查询</Button>
-        <Button type="ghost" @click="clear" style="margin-left: 16px">清空</Button>
+      <div style="margin-top: 16px">
+        <Table stripe border :columns="columns" :data="tableData" @on-select-cancel="onCancel"
+               @on-selection-change="changeSelection"></Table>
+        <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>
       </div>
-    </div>
-
-    <div v-if="roleId==='ADMIN' || roleId==='TEACHER' || roleId==='COMPANY'">
-      <!--<br>-->
-      <Button type="primary" @click="showModal">
-        <Icon type="plus"></Icon>
-        录入题库
-      </Button>
-      <Button type="primary" @click="showViewModal">
-        <Icon type="eye"></Icon>
-        试卷预览
-      </Button>
-    </div>
-    <div style="margin-top: 16px">
-      <Table stripe border :columns="columns" :data="tableData" @on-selection-change="changeSelection"></Table>
-      <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>
-    </div>
-    <Add ref="AddVue"></Add>
-<!--    <Paper ref="PaperVue"></Paper>-->
+      <Add ref="AddVue"></Add>
+    </template>
+    <template v-if="content===2">
+      <Button type="ghost" @click="back" style="margin-left: 16px">返回</Button>
+      <Paper title="试卷预览" operation="viewAndSave" :questions="questions"/>
+    </template>
   </div>
 </template>
 <script>
@@ -44,7 +49,7 @@
   import url from '@/api/url'
   import {$get, post} from "@/api/ax"
   import Add from './Add'
-  import Paper from './Paper'
+  import Paper from '../paper/Paper'
 
   export default {
     name: 'Info',
@@ -56,15 +61,40 @@
         },
         tableData: [],
         total: 0,
-        questionIds: []
+        questions: []
       }
     },
     components: {Add, Paper},
     methods: {
+      toPaperPage() {
+        this.content = 2
+      },
+      back() {
+        this.content = 1;
+        this.setCheckedStatus();
+      },
+      setCheckedStatus() {
+        let selected = this.questions.map(it => it.id);
+        this.tableData.forEach(it => it._checked = selected.indexOf(it.id) !== -1)
+
+      },
+      onCancel(selection, row) {
+        this.questions.forEach((it, index) => {
+          if (it.id === row.id) this.questions.splice(index, 1)
+        });
+        this.setCheckedStatus()
+      },
       changeSelection(selection) {
-        this.questionIds = [];
-        selection.forEach(it => this.questionIds.push(it.id));
-        // alert(this.questionIds)
+        // console.log('-------', JSON.stringify(selection));
+        let selected = this.questions.map(it => it.id);
+        // console.log('-------', JSON.stringify(selected));
+        if (selection.length === 0) {
+          this.tableData.forEach(it => this.onCancel(selection, it))
+        } else {
+          selection.forEach(it => {
+            if (selected.indexOf(it.id) === -1) this.questions.push({id: it.id, type: it.type, content: it.content})
+          });
+        }
       },
       clear() {
         this.params = {type: '', difficulty: '', pageNo: 1, pageSize: 10}
@@ -82,10 +112,8 @@
           const {total, list} = res.data;
           this.tableData = list;
           this.total = total;
+          this.setCheckedStatus();
         }).catch(err => console.log(err))
-      },
-      showViewModal() {
-        // this.$refs.PaperVue.showModal(null);
       },
       showModal() {
         this.$refs.AddVue.showModal(null);

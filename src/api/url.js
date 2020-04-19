@@ -16,6 +16,11 @@ export default {
   saveExamination: 'examination/save',
   deleteExamination: 'examination/delete/',
 
+  //试卷管理
+  getPaper: 'paper/get',
+  savePaper: 'paper/save',
+  publishPaper: 'paper/publish',
+
   //车辆管理
   addVehicle: 'addVehicle',
   getVehicle: 'getVehicle',

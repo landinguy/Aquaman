@@ -81,7 +81,7 @@ export default [
     name: 'paper',
     meta: {
       hide: true,
-      // access: ['ADMIN', 'JGS', 'USER']
+      access: ['ADMIN', 'TEACHER', 'COMPANY']
     },
     component: Main,
     children: [
@@ -89,7 +89,7 @@ export default [
         path: '/paper',
         name: 'paper',
         meta: {
-          title: '试卷查看'
+          title: '试卷管理'
         },
         component: () => import('@/components/paper/Info')
       }

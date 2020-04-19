@@ -111,7 +111,6 @@
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    border: 1px solid black;
 
     .text {
       letter-spacing: 2px;
