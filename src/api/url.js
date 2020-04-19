@@ -4,16 +4,17 @@ export default {
   login: "login",
   logout: "logout",
 
-  //首页统计
-
-  //统计
-  statistics: 'statistics',
-
   //账号管理
   addAccount: 'addAccount',
   getAccount: 'getAccount',
   deleteAccount: 'deleteAccount',
   updatePwd: 'updatePwd',
+  updatePassword: 'updatePassword',
+
+  //题库管理
+  getExamination: 'examination/get',
+  saveExamination: 'examination/save',
+  deleteExamination: 'examination/delete/',
 
   //车辆管理
   addVehicle: 'addVehicle',

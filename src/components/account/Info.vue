@@ -15,26 +15,27 @@
     <!--</div>-->
     <!--</div>-->
 
-    <div>
-      <!--<br>-->
-      <Button type="primary" @click="showModal">
-        <Icon type="plus"></Icon>
-        添加
-      </Button>
-    </div>
+    <!--    <div>-->
+    <!--      &lt;!&ndash;<br>&ndash;&gt;-->
+    <!--      <Button type="primary" @click="showModal">-->
+    <!--        <Icon type="plus"></Icon>-->
+    <!--        添加-->
+    <!--      </Button>-->
+    <!--    </div>-->
     <div style="margin-top: 16px">
       <Table stripe border :columns="columns" :data="tableData"></Table>
       <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>
     </div>
-    <Add ref="AddVue"></Add>
+    <!--    <Add ref="AddVue"></Add>-->
+    <UpdatePwd ref="UpdatePwdVue"></UpdatePwd>
   </div>
 </template>
 <script>
-  import {mapMutations, mapGetters} from 'vuex'
-  import {showTip, timestampToTime} from '@/libs/util'
+  import {mapGetters} from 'vuex'
+  import {showTip} from '@/libs/util'
   import url from '@/api/url'
-  import {post, $del, get, $get, patch} from "@/api/ax"
-  import Add from './Add'
+  import {post} from "@/api/ax"
+  import UpdatePwd from "./UpdatePwd";
 
   export default {
     name: 'Info',
@@ -46,7 +47,7 @@
         total: 0
       }
     },
-    components: {Add},
+    components: {UpdatePwd},
     methods: {
       clear() {
         this.params = {username: '', nickname: '', pageNo: 1, pageSize: 10}
@@ -67,7 +68,7 @@
         }).catch(err => console.log(err))
       },
       showModal() {
-        this.$refs.AddVue.showModal(null);
+        // this.$refs.AddVue.showModal(null);
       }
     },
     mounted() {
@@ -81,28 +82,24 @@
             title: '序号', type: 'index', width: 80, align: 'center'
           },
           {
-            title: '姓名', key: 'nickname', align: 'center', ellipsis: true, minWidth: 80,
-            render: (h, params) => showTip(h, params.row.nickname)
-          },
-          {
-            title: '账号', key: 'username', align: 'center', ellipsis: true, minWidth: 80,
+            title: '用户名', key: 'username', align: 'center', ellipsis: true, minWidth: 80,
             render: (h, params) => showTip(h, params.row.username)
           },
           {
             title: '角色', key: 'role', align: 'center', ellipsis: true, minWidth: 80,
             render: (h, params) => {
               const {role} = params.row;
-              return showTip(h, role == 'ADMIN' ? '管理员' : role == 'JGS' ? '交管所人员' : role == 'POLICEMAN' ? '交警' : '车主')
+              return showTip(h, role === 'ADMIN' ? '管理员' : role === 'TEACHER' ? '教师' : role === 'STUDENT' ? '学生' : role === 'COMPANY' ? '用人单位' : '应试者')
             }
           },
-          {
-            title: '手机号', key: 'phoneNumber', align: 'center', ellipsis: true, minWidth: 80,
-            render: (h, params) => showTip(h, params.row.phoneNumber)
-          },
-          {
-            title: '邮箱', key: 'email', align: 'center', ellipsis: true, minWidth: 80,
-            render: (h, params) => showTip(h, params.row.email)
-          },
+          // {
+          //   title: '手机号', key: 'phoneNumber', align: 'center', ellipsis: true, minWidth: 80,
+          //   render: (h, params) => showTip(h, params.row.phoneNumber)
+          // },
+          // {
+          //   title: '邮箱', key: 'email', align: 'center', ellipsis: true, minWidth: 80,
+          //   render: (h, params) => showTip(h, params.row.email)
+          // },
           {
             title: '操作', align: 'center', width: 150,
             render: (h, params) => {
@@ -117,45 +114,59 @@
                 },
                 on: {
                   click: () => {
-                    this.$refs.AddVue.showModal(params.row);
+                    this.$refs.UpdatePwdVue.showModal(params.row);
                   }
                 }
-              }, '修改');
-              const del = h('Button', {
-                props: {
-                  type: 'error',
-                  size: 'small'
-                },
-                style: {
-                  "margin-left": '5px'
-                },
-                on: {
-                  click: () => {
-                    this.$Modal.confirm({
-                      title: '删除',
-                      content: '确认删除该用户？',
-                      onOk: () => {
-                        $get(url.deleteAccount, {id}).then(res => {
-                          if (res.code == 0) {
-                            this.$Message.success({
-                              content: '已删除',
-                              duration: 1,
-                              onClose: () => {
-                                this.search();
-                              }
-                            });
-                          } else {
-                            this.$Message.error('删除失败');
-                          }
-                        });
-                      }
-                    });
-                  }
-                }
-              }, '删除');
+              }, '修改密码');
+              // const edit = h('Button', {
+              //   props: {
+              //     type: 'primary',
+              //     size: 'small'
+              //   },
+              //   style: {
+              //     "margin-left": '5px'
+              //   },
+              //   on: {
+              //     click: () => {
+              //       this.$refs.AddVue.showModal(params.row);
+              //     }
+              //   }
+              // }, '修改');
+              // const del = h('Button', {
+              //   props: {
+              //     type: 'error',
+              //     size: 'small'
+              //   },
+              //   style: {
+              //     "margin-left": '5px'
+              //   },
+              //   on: {
+              //     click: () => {
+              //       this.$Modal.confirm({
+              //         title: '删除',
+              //         content: '确认删除该用户？',
+              //         onOk: () => {
+              //           $get(url.deleteAccount, {id}).then(res => {
+              //             if (res.code == 0) {
+              //               this.$Message.success({
+              //                 content: '已删除',
+              //                 duration: 1,
+              //                 onClose: () => {
+              //                   this.search();
+              //                 }
+              //               });
+              //             } else {
+              //               this.$Message.error('删除失败');
+              //             }
+              //           });
+              //         }
+              //       });
+              //     }
+              //   }
+              // }, '删除');
               const op = [];
               op.push(edit);
-              op.push(del);
+              // op.push(del);
               return h('div', op);
             }
           }

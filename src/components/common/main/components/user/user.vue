@@ -46,7 +46,7 @@
   import './user.less'
   import {mapActions, mapGetters} from 'vuex'
   import user_icon from '@/assets/images/user.png'
-  import {post, get, $get, put} from "@/api/ax"
+  import {$get} from "@/api/ax"
   import url from '@/api/url'
 
   export default {

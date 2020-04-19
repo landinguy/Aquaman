@@ -4,7 +4,7 @@
 
 
     <div style="height: 64px;background-color: #495060;">
-      <span class="name">车辆查询系统</span>
+      <span class="name">多用途安全试题库系统</span>
       <div style="float: right;margin-top: 16px">
         <user style="float: right;"/>
       </div>
@@ -50,8 +50,8 @@
   import HeaderBar from './components/header-bar'
   import TagsNav from './components/tags-nav'
   import User from './components/user'
-  import {mapMutations, mapActions, mapGetters} from 'vuex'
-  import {getNewTagList, getNextName} from '@/libs/util'
+  import {mapActions, mapGetters, mapMutations} from 'vuex'
+  import {getNextName} from '@/libs/util'
   import './main.less'
   import VueEvent from '@/libs/vueEvent.js'
 
@@ -173,7 +173,7 @@
 
   .name {
     color: white;
-    letter-spacing:8px;
+    letter-spacing: 8px;
     width: 320px;
     height: 64px;
     line-height: 64px;

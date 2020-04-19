@@ -1,7 +1,7 @@
 <template>
   <div class="login" @keyup.enter="handleEnter" :style="{backgroundImage:'url(' + bg + ')'}">
     <div class="login-con">
-      <Card icon="log-in" title="车辆查询系统" :bordered="false">
+      <Card icon="log-in" title="多用途安全试题库" :bordered="false">
         <div class="form-con">
           <LoginForm ref="loginForm" @on-register="showModal" @on-success-valid="handleSubmit"></LoginForm>
           <!--<p class="login-tip">输入用户名和密码登录</p>-->

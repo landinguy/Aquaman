@@ -1,5 +1,4 @@
 import Main from '@/components/common/main/Main'
-import parentView from '@/components/common/parent-view'
 
 export default [
   {
@@ -59,58 +58,40 @@ export default [
     ]
   },
   {
-    path: '/vehicle',
-    name: 'vehicle',
+    path: '/examination',
+    name: 'examination',
     meta: {
       hide: true,
-      access: ['ADMIN', 'JGS', 'USER']
+      // access: ['ADMIN', 'JGS', 'USER']
     },
     component: Main,
     children: [
       {
-        path: '/vehicle',
-        name: 'vehicle',
+        path: '/examination',
+        name: 'examination',
         meta: {
-          title: '车辆管理'
+          title: '题库管理'
         },
-        component: () => import('@/components/vehicle/Info')
+        component: () => import('@/components/examination/Info')
       }
     ]
   },
   {
-    path: '/record',
-    name: 'record',
+    path: '/paper',
+    name: 'paper',
     meta: {
       hide: true,
+      // access: ['ADMIN', 'JGS', 'USER']
     },
     component: Main,
     children: [
       {
-        path: '/record',
-        name: 'record',
+        path: '/paper',
+        name: 'paper',
         meta: {
-          title: '违章管理'
+          title: '试卷查看'
         },
-        component: () => import('@/components/record/Info')
-      }
-    ]
-  },
-  {
-    path: '/log',
-    name: 'log',
-    meta: {
-      hide: true,
-      access: ['ADMIN']
-    },
-    component: Main,
-    children: [
-      {
-        path: '/log',
-        name: 'log',
-        meta: {
-          title: '登录日志'
-        },
-        component: () => import('@/components/log/Info')
+        component: () => import('@/components/paper/Info')
       }
     ]
   }

@@ -6,8 +6,8 @@
       </p>
       <div>
         <Form ref="form" :model="formData" :rules="formValidate" :label-width="80">
-          <FormItem label="账号" prop="username">
-            <Input v-model.trim="formData.username" placeholder="请填写账号"/>
+          <FormItem label="用户名" prop="username">
+            <Input v-model.trim="formData.username" placeholder="请填写用户名"/>
           </FormItem>
           <FormItem label="密码" prop="password">
             <Input v-model.trim="formData.password" type="password" placeholder="请填写密码"/>
@@ -15,15 +15,24 @@
           <FormItem label="确认密码" prop="confirmPwd">
             <Input v-model.trim="formData.confirmPwd" type="password" placeholder="请确认密码"/>
           </FormItem>
-          <FormItem label="姓名" prop="nickname">
-            <Input v-model.trim="formData.nickname" placeholder="请填写姓名"/>
+          <!--          <FormItem label="姓名" prop="nickname">-->
+          <!--            <Input v-model.trim="formData.nickname" placeholder="请填写姓名"/>-->
+          <!--          </FormItem>-->
+          <FormItem label="用户角色" prop="role">
+            <Select v-model="formData.role">
+              <Option value="TEACHER">教师</Option>
+              <Option value="STUDENT">学生</Option>
+              <Option value="COMPANY">用人单位</Option>
+              <Option value="INTERVIEWER">应试者</Option>
+            </Select>
           </FormItem>
-          <FormItem label="邮箱" prop="email">
-            <Input v-model.trim="formData.email" placeholder="请填写邮箱"/>
-          </FormItem>
-          <FormItem label="手机号" prop="phoneNumber">
-            <Input v-model.trim="formData.phoneNumber" placeholder="请填写手机号"/>
-          </FormItem>
+
+          <!--          <FormItem label="邮箱" prop="email">-->
+          <!--            <Input v-model.trim="formData.email" placeholder="请填写邮箱"/>-->
+          <!--          </FormItem>-->
+          <!--          <FormItem label="手机号" prop="phoneNumber">-->
+          <!--            <Input v-model.trim="formData.phoneNumber" placeholder="请填写手机号"/>-->
+          <!--          </FormItem>-->
         </Form>
       </div>
       <div slot="footer" style="text-align: center">
@@ -35,7 +44,7 @@
 </template>
 <script>
   import url from '@/api/url'
-  import {post, get, put} from "@/api/ax"
+  import {post} from "@/api/ax"
 
   export default {
     name: 'Register',
@@ -46,24 +55,25 @@
           username: '',
           password: '',
           confirmPwd: '',
-          nickname: '',
-          phoneNumber: '',
-          email: '',
-          role: 'USER'
+          // nickname: '',
+          // phoneNumber: '',
+          // email: '',
+          role: ''
         },
         formValidate: {
-          username: [{required: true, message: '请填写账号', trigger: 'blur'}],
+          username: [{required: true, message: '请填写用户名', trigger: 'blur'}],
           password: [{required: true, message: '请填写密码', trigger: 'blur'}],
           confirmPwd: [{required: true, message: '请再次输入密码', trigger: 'blur'}],
-          nickname: [{required: true, message: '请填写姓名', trigger: 'blur'}],
-          phoneNumber: [
-            {required: true, message: '请填写手机号', trigger: 'blur'},
-            {validator: this.validatePhone, trigger: 'blur'}
-          ],
-          email: [
-            {required: true, message: '请填写邮箱', trigger: 'blur'},
-            {type: 'email', message: '邮箱格式不正确', trigger: 'blur'}
-          ]
+          role: [{required: true, message: '请选择用户角色', trigger: 'change'}],
+          // nickname: [{required: true, message: '请填写姓名', trigger: 'blur'}],
+          // phoneNumber: [
+          //   {required: true, message: '请填写手机号', trigger: 'blur'},
+          //   {validator: this.validatePhone, trigger: 'blur'}
+          // ],
+          // email: [
+          //   {required: true, message: '请填写邮箱', trigger: 'blur'},
+          //   {type: 'email', message: '邮箱格式不正确', trigger: 'blur'}
+          // ]
         },
       }
     },

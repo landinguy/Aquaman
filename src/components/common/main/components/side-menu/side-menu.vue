@@ -20,19 +20,6 @@
         <!--</template>-->
       </template>
     </Menu>
-    <!--<div class="menu-collapsed" v-show="collapsed" :list="menuList">-->
-    <!--<template v-for="item in menuList">-->
-    <!--<collapsed-menu v-if="item.children && item.children.length > 1" @on-click="handleSelect" hide-title-->
-    <!--:root-icon-size="rootIconSize" :icon-size="iconSize" :theme="theme" :parent-item="item"-->
-    <!--:key="`drop-menu-${item.name}`"></collapsed-menu>-->
-    <!--<Tooltip v-else :content="item.children[0].meta.title" placement="right"-->
-    <!--:key="`drop-menu-${item.children[0].name}`">-->
-    <!--<a @click="handleSelect(item.children[0].name)" class="drop-menu-a" :style="{textAlign: 'center'}">-->
-    <!--<Icon :size="rootIconSize" :color="textColor" :type="item.children[0].icon"/>-->
-    <!--</a>-->
-    <!--</Tooltip>-->
-    <!--</template>-->
-    <!--</div>-->
   </div>
 </template>
 <script>
