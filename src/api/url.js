@@ -18,8 +18,14 @@ export default {
 
   //试卷管理
   getPaper: 'paper/get',
+  getPaperById: 'paper/get/',
   savePaper: 'paper/save',
   publishPaper: 'paper/publish',
+  publishRecord: 'paper/publish/record',
+
+  //答题记录
+  getReply: 'reply/get',
+  saveReply: 'reply/save',
 
   //车辆管理
   addVehicle: 'addVehicle',

@@ -38,7 +38,7 @@
     </template>
     <template v-if="content===2">
       <Button type="ghost" @click="back" style="margin-left: 16px">返回</Button>
-      <Paper :paper-id="paperId" operation="viewAndPublish" :questions="questions"/>
+      <Paper :paper-id="paperId" :title="title" :questions="questions" operation="viewAnswer"/>
     </template>
   </div>
 </template>
@@ -47,7 +47,7 @@
   import {showTip} from '@/libs/util'
   import url from '@/api/url'
   import {post} from "@/api/ax"
-  import Paper from './Paper'
+  import Paper from '../paper/Paper'
 
   export default {
     name: 'Info',
@@ -59,9 +59,9 @@
         },
         tableData: [],
         total: 0,
+        paperId: null,
         questions: [],
-        title: '',
-        paperId: null
+        title: ''
       }
     },
     components: {Paper},
@@ -70,7 +70,7 @@
         this.content = 1;
       },
       clear() {
-        this.params = {type: '', difficulty: '', pageNo: 1, pageSize: 10}
+        this.params = {pageNo: 1, pageSize: 10}
       },
       changePage(n) {
         this.params.pageNo = n;
@@ -81,7 +81,7 @@
         this.getData();
       },
       getData() {
-        post(url.getPaper, this.params).then(res => {
+        post(url.getReply, this.params).then(res => {
           const {total, list} = res.data;
           this.tableData = list;
           this.total = total;
@@ -90,8 +90,13 @@
       toPaperPage() {
         this.content = 2
       },
-      showModal() {
-        this.$refs.AddVue.showModal(null);
+      getPaper(paperId) {
+        post(url.getPaperById + paperId, {}).then(res => {
+          const {examinations, title} = res.data;
+          this.title = title;
+          this.questions = examinations;
+          this.content = 2;
+        }).catch(err => console.log(err));
       }
     },
     mounted() {
@@ -109,26 +114,25 @@
             render: (h, params) => showTip(h, params.row.title)
           },
           {
-            title: '状态', key: 'status', align: 'center', ellipsis: true, minWidth: 80,
-            render: (h, params) => {
-              const {status} = params.row;
-              let text = status === 1 ? '未发布' : '已发布';
-              let color = status === 1 ? 'gray' : 'green';
-              return showTip(h, text, color)
-            }
+            title: '答题人', key: 'username', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.username)
           },
           {
-            title: '创建时间', key: 'createTs', align: 'center', ellipsis: true, minWidth: 80,
-            render: (h, params) => showTip(h, params.row.createTs)
+            title: '答题时间', key: 'submitTs', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.submitTs)
           },
           {
-            title: '发布时间', key: 'publishTs', align: 'center', ellipsis: true, minWidth: 80,
-            render: (h, params) => showTip(h, params.row.publishTs)
+            title: '正确题数', key: 'correctNum', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.correctNum, 'green')
+          },
+          {
+            title: '错误题数', key: 'errorNum', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.errorNum, 'red')
           },
           {
             title: '操作', align: 'center', width: 150,
             render: (h, params) => {
-              const {id, title, examinations} = params.row;
+              const {paperId} = params.row;
               const view = h('Button', {
                 props: {
                   type: 'primary',
@@ -136,12 +140,11 @@
                 },
                 on: {
                   click: () => {
-                    this.paperId = id;
-                    this.questions = examinations;
-                    this.content = 2;
+                    this.paperId = paperId;
+                    this.getPaper(paperId);
                   }
                 }
-              }, '预览');
+              }, '详情');
               // const edit = h('Button', {
               //   props: {
               //     type: 'primary',

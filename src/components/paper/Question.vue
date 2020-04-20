@@ -1,7 +1,8 @@
 <template>
   <div class="question">
     {{index}}. <span>{{content}}</span>
-    <Input v-model.trim="answer" placeholder="请填写答案" @on-blur="onBlur" v-if="operation==='answer'"/>
+    <Input v-model.trim="answer" :placeholder="placeholder" @on-blur="onBlur" :disabled="operation==='viewAnswer'"
+           v-if="operation==='answer' || operation==='viewAnswer'"/>
   </div>
 </template>
 <script>
@@ -10,44 +11,30 @@
     name: 'Question',
     props: {
       index: {type: Number},
+      type: {type: String},
       questionId: {type: Number},
       content: {type: String},
       operation: {type: String, default: 'view'},
     },
     data() {
       return {
-        answer: '',
-        formValidate: {
-          answer: [{required: true, message: '请录入题目答案', trigger: 'blur'}],
-        },
+        placeholder: '',
+        answer: ''
       }
     },
     methods: {
       onBlur() {
         this.$emit('on-answer', {questionId: this.questionId, answer: this.answer})
       },
-      confirm() {
-        this.$refs.form.validate((valid) => {
-          if (valid) {
-            // let param = this.formData;
-            // param.id = this.id;
-            // post(url.saveExamination, param).then(res => {
-            //   this.$Message.success({
-            //     content: '提交成功',
-            //     duration: 1,
-            //     onClose: () => {
-            //       this.cancel();
-            //       this.$parent.search();
-            //     }
-            //   })
-            // }).catch(err => console.log(err));
-          }
-        })
-      },
-      cancel() {
+      setPlaceholder() {
+        let type = this.type;
+        let text = type == 1 ? '请填写大写字母。若为多选，多个选项间不能有任何连接符(正确示例：AB)' : type == 2 ? '判断对错，正确填 对，错误填 错' : '请填写答案';
+        this.placeholder = text;
       }
     },
-    watch: {}
+    mounted() {
+      this.setPlaceholder()
+    }
   }
 </script>
 <style scoped lang="less">

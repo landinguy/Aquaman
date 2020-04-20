@@ -39,7 +39,7 @@
     </template>
     <template v-if="content===2">
       <Button type="ghost" @click="back" style="margin-left: 16px">返回</Button>
-      <Paper title="试卷预览" operation="viewAndSave" :questions="questions"/>
+      <Paper operation="viewAndSave" :questions="questions"/>
     </template>
   </div>
 </template>

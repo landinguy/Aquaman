@@ -5,21 +5,21 @@
       <div class="content-part" v-if="XZQuestions.length>0">
         <h3>选择题</h3>
         <template v-for="(item,index) in XZQuestions">
-          <Question :index="index+1" :question-id="item.id" :content="item.content" :operation="operation"
+          <Question :index="index+1" type="1" :question-id="item.id" :content="item.content" :operation="operation"
                     @on-answer="onAnswer"/>
         </template>
       </div>
       <div class="content-part" v-if="PDQuestions.length>0">
         <h3>判断题</h3>
         <template v-for="(item,index) in PDQuestions">
-          <Question :index="index+1" :question-id="item.id" :content="item.content" :operation="operation"
+          <Question :index="index+1" type="2" :question-id="item.id" :content="item.content" :operation="operation"
                     @on-answer="onAnswer"/>
         </template>
       </div>
       <div class="content-part" v-if="TKQuestions.length>0">
         <h3>填空题</h3>
         <template v-for="(item,index) in TKQuestions">
-          <Question :index="index+1" :question-id="item.id" :content="item.content" :operation="operation"
+          <Question :index="index+1" type="3" :question-id="item.id" :content="item.content" :operation="operation"
                     @on-answer="onAnswer"/>
         </template>
       </div>
@@ -31,6 +31,9 @@
       </Button>
       <Button type="primary" shape="circle" class="radio_len" @click="publish" v-if="operation==='viewAndPublish'">
         发布试卷
+      </Button>
+      <Button type="primary" shape="circle" class="radio_len" @click="submitAnswer" v-if="operation==='answer'">
+        提交答案
       </Button>
     </div>
     <Modal
@@ -52,10 +55,11 @@
   export default {
     name: 'Paper',
     props: {
-      title: {type: String, default: "试题练习"},
+      title: {type: String, default: "试卷预览"},
       operation: {type: String, default: "view"},
       questions: {type: Array, default: () => []},
-      paperId: {type: Number, default: null}
+      paperId: {type: Number, default: null},
+      publishId: {type: Number, default: null},
     },
     data() {
       return {
@@ -64,12 +68,38 @@
         PDQuestions: [],
         TKQuestions: [],
         answer: {},
-        paperName: '',
-        publishParams: {}
+        paperName: ''
       }
     },
     components: {Question, Publish},
     methods: {
+      submitAnswer() {
+        //todo 提交前验证
+        this.$Modal.confirm({
+          title: '确认提示',
+          content: '确认要提交吗?',
+          onOk: () => this.submit()
+        });
+      },
+      submit() {
+        let {paperId, publishId, answer} = this;
+        answer = JSON.stringify(answer);
+        // alert(JSON.stringify({paperId, publishId, answer}))
+        post(url.saveReply, {paperId, publishId, answer}).then(res => {
+          const {code} = res;
+          if (code === 0) {
+            this.$Message.success({
+              content: '提交成功',
+              duration: 1,
+              onClose: () => {
+                this.$router.push({name: 'reply'});
+              }
+            })
+          } else {
+            this.$Message.error('提交失败,请联系管理员!')
+          }
+        }).catch(err => console.log(err));
+      },
       publish() {
         this.$refs.PublishVue.showModal(this.paperId)
       },

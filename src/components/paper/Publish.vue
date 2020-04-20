@@ -58,7 +58,6 @@
               answerTs = -1
             } else {
               limitAnswerTime = true;
-              answerTs = answerTs * 60 * 1000;
             }
             let param = {paperId: this.paperId, limitAnswerTime, answerTs};
             // alert(JSON.stringify(param))

@@ -38,7 +38,7 @@
     </template>
     <template v-if="content===2">
       <Button type="ghost" @click="back" style="margin-left: 16px">返回</Button>
-      <Paper :paper-id="paperId" operation="viewAndPublish" :questions="questions"/>
+      <Paper :paper-id="paperId" :publish-id="publishId" :title="title" operation="answer" :questions="questions"/>
     </template>
   </div>
 </template>
@@ -47,7 +47,7 @@
   import {showTip} from '@/libs/util'
   import url from '@/api/url'
   import {post} from "@/api/ax"
-  import Paper from './Paper'
+  import Paper from '../paper/Paper'
 
   export default {
     name: 'Info',
@@ -59,9 +59,10 @@
         },
         tableData: [],
         total: 0,
+        paperId: null,
+        publishId: null,
         questions: [],
-        title: '',
-        paperId: null
+        title: ''
       }
     },
     components: {Paper},
@@ -70,7 +71,7 @@
         this.content = 1;
       },
       clear() {
-        this.params = {type: '', difficulty: '', pageNo: 1, pageSize: 10}
+        this.params = {pageNo: 1, pageSize: 10}
       },
       changePage(n) {
         this.params.pageNo = n;
@@ -81,7 +82,7 @@
         this.getData();
       },
       getData() {
-        post(url.getPaper, this.params).then(res => {
+        post(url.publishRecord, this.params).then(res => {
           const {total, list} = res.data;
           this.tableData = list;
           this.total = total;
@@ -90,8 +91,13 @@
       toPaperPage() {
         this.content = 2
       },
-      showModal() {
-        this.$refs.AddVue.showModal(null);
+      getPaper(paperId) {
+        post(url.getPaperById + paperId, {}).then(res => {
+          const {examinations, title} = res.data;
+          this.title = title;
+          this.questions = examinations;
+          this.content = 2;
+        }).catch(err => console.log(err));
       }
     },
     mounted() {
@@ -109,17 +115,12 @@
             render: (h, params) => showTip(h, params.row.title)
           },
           {
-            title: '状态', key: 'status', align: 'center', ellipsis: true, minWidth: 80,
-            render: (h, params) => {
-              const {status} = params.row;
-              let text = status === 1 ? '未发布' : '已发布';
-              let color = status === 1 ? 'gray' : 'green';
-              return showTip(h, text, color)
-            }
+            title: '发布人', key: 'username', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.username)
           },
           {
-            title: '创建时间', key: 'createTs', align: 'center', ellipsis: true, minWidth: 80,
-            render: (h, params) => showTip(h, params.row.createTs)
+            title: '答题时间(分钟)', key: 'answerTs', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.answerTs)
           },
           {
             title: '发布时间', key: 'publishTs', align: 'center', ellipsis: true, minWidth: 80,
@@ -128,7 +129,7 @@
           {
             title: '操作', align: 'center', width: 150,
             render: (h, params) => {
-              const {id, title, examinations} = params.row;
+              const {paperId, id} = params.row;
               const view = h('Button', {
                 props: {
                   type: 'primary',
@@ -136,12 +137,12 @@
                 },
                 on: {
                   click: () => {
-                    this.paperId = id;
-                    this.questions = examinations;
-                    this.content = 2;
+                    this.paperId = paperId;
+                    this.publishId = id;
+                    this.getPaper(paperId);
                   }
                 }
-              }, '预览');
+              }, '答题');
               // const edit = h('Button', {
               //   props: {
               //     type: 'primary',

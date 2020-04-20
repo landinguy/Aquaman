@@ -94,5 +94,41 @@ export default [
         component: () => import('@/components/paper/Info')
       }
     ]
+  },
+  {
+    path: '/publish',
+    name: 'publish',
+    meta: {
+      hide: true
+    },
+    component: Main,
+    children: [
+      {
+        path: '/publish',
+        name: 'publish',
+        meta: {
+          title: '发布记录'
+        },
+        component: () => import('@/components/publish/Info')
+      }
+    ]
+  },
+  {
+    path: '/reply',
+    name: 'reply',
+    meta: {
+      hide: true
+    },
+    component: Main,
+    children: [
+      {
+        path: '/reply',
+        name: 'reply',
+        meta: {
+          title: '答题记录'
+        },
+        component: () => import('@/components/reply/Info')
+      }
+    ]
   }
 ]
