@@ -5,22 +5,19 @@
       <div class="content-part" v-if="XZQuestions.length>0">
         <h3>选择题</h3>
         <template v-for="(item,index) in XZQuestions">
-          <Question :index="index+1" type="1" :question-id="item.id" :content="item.content" :operation="operation"
-                    @on-answer="onAnswer"/>
+          <Question :index="index+1" type="1" :detail="item" :operation="operation" @on-answer="onAnswer"/>
         </template>
       </div>
       <div class="content-part" v-if="PDQuestions.length>0">
         <h3>判断题</h3>
         <template v-for="(item,index) in PDQuestions">
-          <Question :index="index+1" type="2" :question-id="item.id" :content="item.content" :operation="operation"
-                    @on-answer="onAnswer"/>
+          <Question :index="index+1" type="2" :detail="item" :operation="operation" @on-answer="onAnswer"/>
         </template>
       </div>
       <div class="content-part" v-if="TKQuestions.length>0">
         <h3>填空题</h3>
         <template v-for="(item,index) in TKQuestions">
-          <Question :index="index+1" type="3" :question-id="item.id" :content="item.content" :operation="operation"
-                    @on-answer="onAnswer"/>
+          <Question :index="index+1" type="3" :detail="item" :operation="operation" @on-answer="onAnswer"/>
         </template>
       </div>
     </div>

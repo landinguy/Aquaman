@@ -11,6 +11,14 @@ export default {
   updatePwd: 'updatePwd',
   updatePassword: 'updatePassword',
 
+  //班级管理
+  saveClass: 'class/save',
+  getClass: 'class/get',
+  getClassStudent: 'class/student/get/',
+  saveStudent: 'class/student/save',
+  deleteStudent: 'class/student/delete/',
+  applyClass: 'class/apply',
+
   //题库管理
   getExamination: 'examination/get',
   saveExamination: 'examination/save',

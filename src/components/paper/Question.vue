@@ -1,6 +1,10 @@
 <template>
   <div class="question">
-    {{index}}. <span>{{content}}</span>
+    {{index}}. <span>{{detail.content}}</span>
+    <template v-if="operation==='viewAnswer'" style="margin-left: 16px">
+      <span v-if="answer===detail.answer" style="color: green">【正确】</span>
+      <span v-else style="color: red">【错误】</span>
+    </template>
     <Input v-model.trim="answer" :placeholder="placeholder" @on-blur="onBlur" :disabled="operation==='viewAnswer'"
            v-if="operation==='answer' || operation==='viewAnswer'"/>
   </div>
@@ -12,9 +16,8 @@
     props: {
       index: {type: Number},
       type: {type: String},
-      questionId: {type: Number},
-      content: {type: String},
       operation: {type: String, default: 'view'},
+      detail: {type: Object}
     },
     data() {
       return {
@@ -24,7 +27,7 @@
     },
     methods: {
       onBlur() {
-        this.$emit('on-answer', {questionId: this.questionId, answer: this.answer})
+        this.$emit('on-answer', {questionId: this.detail.id, answer: this.answer})
       },
       setPlaceholder() {
         let type = this.type;
@@ -33,7 +36,9 @@
       }
     },
     mounted() {
-      this.setPlaceholder()
+      this.setPlaceholder();
+      const {reply} = this.detail;
+      this.answer = reply ? reply : '';
     }
   }
 </script>

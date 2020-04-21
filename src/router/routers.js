@@ -130,5 +130,24 @@ export default [
         component: () => import('@/components/reply/Info')
       }
     ]
+  },
+  {
+    path: '/class',
+    name: 'class',
+    meta: {
+      hide: true,
+      access: ['ADMIN', 'TEACHER']
+    },
+    component: Main,
+    children: [
+      {
+        path: '/class',
+        name: 'class',
+        meta: {
+          title: '班级管理'
+        },
+        component: () => import('@/components/class/Info')
+      }
+    ]
   }
 ]
