@@ -27,6 +27,10 @@ export default {
   getReply: 'reply/get',
   saveReply: 'reply/save',
 
+  //备份恢复数据
+  backup: 'backup',
+  restore: 'restore',
+
   //车辆管理
   addVehicle: 'addVehicle',
   getVehicle: 'getVehicle',
