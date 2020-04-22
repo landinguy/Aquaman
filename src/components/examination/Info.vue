@@ -92,7 +92,10 @@
           this.tableData.forEach(it => this.onCancel(selection, it))
         } else {
           selection.forEach(it => {
-            if (selected.indexOf(it.id) === -1) this.questions.push({id: it.id, type: it.type, content: it.content})
+            if (selected.indexOf(it.id) === -1) this.questions.push({
+              id: it.id, type: it.type,
+              content: it.content, difficulty: it.difficulty
+            })
           });
         }
       },

@@ -37,8 +37,11 @@
       </div>
     </template>
     <template v-if="content===2">
-      <Button type="ghost" @click="back" style="margin-left: 16px">返回</Button>
-      <Paper :paper-id="paperId" :publish-id="publishId" :title="title" operation="answer" :questions="questions"/>
+      <Button type="ghost" @click="back" style="margin-left: 16px"
+              v-if="roleId !== 'STUDENT' && roleId !== 'INTERVIEWER'">返回
+      </Button>
+      <Paper :paper-id="paperId" :publish-id="publishId" :title="title" operation="answer" :questions="questions"
+             :answer-ts="answerTs"/>
     </template>
   </div>
 </template>
@@ -62,7 +65,8 @@
         paperId: null,
         publishId: null,
         questions: [],
-        title: ''
+        title: '',
+        answerTs: null
       }
     },
     components: {Paper},
@@ -129,8 +133,8 @@
           {
             title: '操作', align: 'center', width: 150,
             render: (h, params) => {
-              const {paperId, id} = params.row;
-              const view = h('Button', {
+              const {paperId, id, answerTs} = params.row;
+              const answer = h('Button', {
                 props: {
                   type: 'primary',
                   size: 'small'
@@ -139,10 +143,24 @@
                   click: () => {
                     this.paperId = paperId;
                     this.publishId = id;
+                    this.answerTs = answerTs;
                     this.getPaper(paperId);
                   }
                 }
               }, '答题');
+
+              const view = h('Button', {
+                props: {
+                  type: 'primary',
+                  size: 'small'
+                },
+                on: {
+                  click: () => {
+                    this.$router.push({name: 'reply', params: {publishId: id}});
+                  }
+                }
+              }, '答题记录');
+
               // const edit = h('Button', {
               //   props: {
               //     type: 'primary',
@@ -185,11 +203,8 @@
               //   }
               // }, '删除');
               const op = [];
-              op.push(view)
-              // if (this.roleId === 'ADMIN' || this.roleId === 'TEACHER' || this.roleId === 'COMPANY') {
-              //   op.push(edit);
-              //   op.push(del);
-              // }
+              if (this.roleId === 'STUDENT' || this.roleId === 'INTERVIEWER') op.push(answer);
+              if (this.roleId === 'ADMIN' || this.roleId === 'TEACHER' || this.roleId === 'COMPANY') op.push(view);
               return h('div', op);
             }
           }

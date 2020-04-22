@@ -62,7 +62,7 @@ export default [
     name: 'examination',
     meta: {
       hide: true,
-      // access: ['ADMIN', 'JGS', 'USER']
+      access: ['ADMIN', 'TEACHER', 'STUDENT', 'COMPANY']
     },
     component: Main,
     children: [
@@ -117,7 +117,8 @@ export default [
     path: '/reply',
     name: 'reply',
     meta: {
-      hide: true
+      hide: true,
+      access: ['STUDENT', 'INTERVIEWER']
     },
     component: Main,
     children: [

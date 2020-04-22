@@ -20,17 +20,10 @@
       <!--        </div>-->
       <!--      </div>-->
 
-      <!--      <div v-if="roleId==='ADMIN' || roleId==='TEACHER' || roleId==='COMPANY'">-->
-      <!--        &lt;!&ndash;<br>&ndash;&gt;-->
-      <!--        <Button type="primary" @click="showModal">-->
-      <!--          <Icon type="plus"></Icon>-->
-      <!--          录入题库-->
-      <!--        </Button>-->
-      <!--        <Button type="primary" @click="toPaperPage">-->
-      <!--          <Icon type="eye"></Icon>-->
-      <!--          试卷预览-->
-      <!--        </Button>-->
-      <!--      </div>-->
+      <div v-if="params.publishId!=null">
+        <!--<br>-->
+        <Button type="primary" @click="goBack">返回</Button>
+      </div>
       <div style="margin-top: 16px">
         <Table stripe border :columns="columns" :data="tableData"></Table>
         <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>
@@ -55,7 +48,7 @@
       return {
         content: 1,
         params: {
-          pageNo: 1, pageSize: 10
+          publishId: null, pageNo: 1, pageSize: 10
         },
         tableData: [],
         total: 0,
@@ -66,6 +59,9 @@
     },
     components: {Paper},
     methods: {
+      goBack() {
+        window.history.back(-1);
+      },
       back() {
         this.content = 1;
       },
@@ -102,6 +98,8 @@
       }
     },
     mounted() {
+      let {publishId} = this.$route.params;
+      if (publishId) this.params.publishId = publishId;
       this.search();
     },
     computed: {
@@ -116,12 +114,16 @@
             render: (h, params) => showTip(h, params.row.title)
           },
           {
+            title: '试卷总分', key: 'totalScore', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.totalScore)
+          },
+          {
             title: '答题人', key: 'username', align: 'center', ellipsis: true, minWidth: 80,
             render: (h, params) => showTip(h, params.row.username)
           },
           {
-            title: '答题时间', key: 'submitTs', align: 'center', ellipsis: true, minWidth: 80,
-            render: (h, params) => showTip(h, params.row.submitTs)
+            title: '答题得分', key: 'score', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.score)
           },
           {
             title: '正确题数', key: 'correctNum', align: 'center', ellipsis: true, minWidth: 80,
@@ -130,6 +132,10 @@
           {
             title: '错误题数', key: 'errorNum', align: 'center', ellipsis: true, minWidth: 80,
             render: (h, params) => showTip(h, params.row.errorNum, 'red')
+          },
+          {
+            title: '答题时间', key: 'submitTs', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.submitTs)
           },
           {
             title: '操作', align: 'center', width: 150,
@@ -211,7 +217,7 @@
     background-color: white;
     width: 100%;
     height: 100%;
-    padding: 32px;
+    padding: 16px;
   }
 
   .search-div {

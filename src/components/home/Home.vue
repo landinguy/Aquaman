@@ -7,20 +7,28 @@
       <Button type="primary" shape="circle" class="radio_len" @click="backup">备份数据</Button>
       <Button type="ghost" shape="circle" class="radio_len" style="margin-left: 20px" @click="restore">还原数据</Button>
     </div>
+    <div style="margin-top: 32px" v-if="roleId==='STUDENT'">
+      <Button type="primary" shape="circle" class="radio_len" @click="apply">申请班级</Button>
+    </div>
+    <Apply ref="ApplyVue"/>
   </div>
 </template>
 <script>
   import {mapGetters} from 'vuex'
   import {get} from "@/api/ax"
   import url from '@/api/url'
+  import Apply from "../class/Apply";
 
   export default {
     name: 'Home',
     data() {
       return {}
     },
-    components: {},
+    components: {Apply},
     methods: {
+      apply() {
+        this.$refs.ApplyVue.showModal();
+      },
       backup() {
         get(url.backup, {}).then(res => {
           if (res) {

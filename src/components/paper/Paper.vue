@@ -1,6 +1,10 @@
 <template>
   <div ref="PaperVue" class="bg">
-    <h2>{{title}}</h2>
+    <div class="clock" v-if="operation==='answer'">
+      <Icon type="clock"></Icon>
+      <span>{{time}}</span>
+    </div>
+    <h2>{{title}} （总分：{{score}}）</h2>
     <div class="content">
       <div class="content-part" v-if="XZQuestions.length>0">
         <h3>选择题</h3>
@@ -40,7 +44,7 @@
       @on-cancel="cancel">
       <Input v-model.trim="paperName" placeholder="请填写试卷名称"/>
     </Modal>
-    <Publish ref="PublishVue"></Publish>
+    <Publish ref="PublishVue"/>
   </div>
 </template>
 <script>
@@ -57,6 +61,7 @@
       questions: {type: Array, default: () => []},
       paperId: {type: Number, default: null},
       publishId: {type: Number, default: null},
+      answerTs: {type: Number, default: null},
     },
     data() {
       return {
@@ -64,14 +69,16 @@
         XZQuestions: [],
         PDQuestions: [],
         TKQuestions: [],
+        score: 0,
         answer: {},
-        paperName: ''
+        paperName: '',
+        time: '',
+        internal: null
       }
     },
     components: {Question, Publish},
     methods: {
       submitAnswer() {
-        //todo 提交前验证
         this.$Modal.confirm({
           title: '确认提示',
           content: '确认要提交吗?',
@@ -143,6 +150,28 @@
           // this.formData.answer = answer;
           // this.formData.difficulty = difficulty.toLocaleString();
         }
+      },
+      countdown() {
+        let time = this.answerTs * 60;
+        this.getTime(time);
+        this.internal = setInterval(() => this.getTime(time--), 1000);
+      },
+      getTime(time) {
+        let now = new Date(time * 1000);
+        let minutes = now.getMinutes();
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        let seconds = now.getSeconds();
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+        this.time = minutes + ' : ' + seconds;
+        if (time === 0) {
+          window.clearInterval(this.internal);
+          this.$Modal.confirm({
+            title: '答题结束',
+            content: '确认提交此次作答吗？取消后将不保存此次作答记录！',
+            onOk: () => this.submit(),
+            onCancel: () => this.$parent.content = 1
+          });
+        }
       }
     },
     mounted() {
@@ -155,8 +184,13 @@
           } else if (it.type === 3) {
             this.TKQuestions.push(it)
           }
+          this.score += it.difficulty;
         });
       }
+      if (this.operation === 'answer') this.countdown();
+    },
+    destroyed() {
+      if (this.internal) window.clearInterval(this.internal);
     },
     watch: {
       isShowModal(curVal, oldVal) {
@@ -177,6 +211,18 @@
     h2 {
       display: flex;
       justify-content: center;
+    }
+
+    .clock {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      position: relative;
+      top: -32px;
+
+      span {
+        margin-left: 8px;
+      }
     }
 
     .content {

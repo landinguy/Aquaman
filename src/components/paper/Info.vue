@@ -118,6 +118,10 @@
             }
           },
           {
+            title: '试卷总分', key: 'score', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.score)
+          },
+          {
             title: '创建时间', key: 'createTs', align: 'center', ellipsis: true, minWidth: 80,
             render: (h, params) => showTip(h, params.row.createTs)
           },
