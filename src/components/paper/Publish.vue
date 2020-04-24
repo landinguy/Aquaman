@@ -15,6 +15,9 @@
           <FormItem label="答题时间" prop="answerTs" v-if="formData.limitAnswerTime==='1'">
             <Input v-model.trim="formData.answerTs" placeholder="请设置答题时间(单位：分钟)"/>
           </FormItem>
+          <FormItem label="截止时间" prop="endTs">
+            <DatePicker v-model="formData.endTs" type="datetime" placeholder="请设置截止时间" style="width: 200px"/>
+          </FormItem>
         </Form>
       </div>
       <div slot="footer" style="text-align: center">
@@ -27,6 +30,7 @@
 <script>
   import url from '@/api/url'
   import {post} from "@/api/ax"
+  import {timestampToTime} from "@/libs/util"
 
   export default {
     name: 'Publish',
@@ -35,7 +39,8 @@
         isShowModal: false,
         formData: {
           limitAnswerTime: '1',
-          answerTs: '30'
+          answerTs: '30',
+          endTs: ''
         },
         formValidate: {
           limitAnswerTime: [{required: true, message: '请选择是否限制答题时间', trigger: 'change'}],
@@ -52,14 +57,17 @@
       publish() {
         this.$refs.form.validate((valid) => {
           if (valid) {
-            let {limitAnswerTime, answerTs} = this.formData;
+            let {limitAnswerTime, answerTs, endTs} = this.formData;
             if (limitAnswerTime === '0') {
               limitAnswerTime = false;
               answerTs = -1
             } else {
               limitAnswerTime = true;
             }
-            let param = {paperId: this.paperId, limitAnswerTime, answerTs};
+            if (endTs) {
+              endTs = timestampToTime(endTs);
+            }
+            let param = {paperId: this.paperId, limitAnswerTime, answerTs, endTs};
             // alert(JSON.stringify(param))
             post(url.publishPaper, param).then(res => {
               const {code, msg} = res;

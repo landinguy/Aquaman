@@ -131,9 +131,13 @@
             render: (h, params) => showTip(h, params.row.publishTs)
           },
           {
+            title: '答题截止时间', key: 'endTs', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.endTs)
+          },
+          {
             title: '操作', align: 'center', width: 150,
             render: (h, params) => {
-              const {paperId, id, answerTs} = params.row;
+              const {paperId, id, answerTs, endTs} = params.row;
               const answer = h('Button', {
                 props: {
                   type: 'primary',
@@ -141,10 +145,15 @@
                 },
                 on: {
                   click: () => {
-                    this.paperId = paperId;
-                    this.publishId = id;
-                    this.answerTs = answerTs;
-                    this.getPaper(paperId);
+                    let now = new Date();
+                    if (now <= new Date(endTs)) {
+                      this.paperId = paperId;
+                      this.publishId = id;
+                      this.answerTs = answerTs;
+                      this.getPaper(paperId);
+                    } else {
+                      this.$Message.warning('答题时间已过，不能作答！');
+                    }
                   }
                 }
               }, '答题');

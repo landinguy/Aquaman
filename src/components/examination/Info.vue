@@ -94,7 +94,7 @@
           selection.forEach(it => {
             if (selected.indexOf(it.id) === -1) this.questions.push({
               id: it.id, type: it.type,
-              content: it.content, difficulty: it.difficulty
+              content: it.content, score: it.score
             })
           });
         }
@@ -155,6 +155,10 @@
             render: (h, params) => showTip(h, params.row.difficulty)
           },
           {
+            title: '分值', key: 'score', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.score)
+          },
+          {
             title: '操作', align: 'center', width: 150,
             render: (h, params) => {
               const {id} = params.row;
@@ -184,7 +188,7 @@
                       content: '确认删除该题目？',
                       onOk: () => {
                         $get(url.deleteExamination + id, {}).then(res => {
-                          if (res.code == 0) {
+                          if (res.code === 0) {
                             this.$Message.success({
                               content: '已删除',
                               duration: 1,
@@ -209,7 +213,7 @@
           }
         ];
         if (this.roleId === 'STUDENT' || this.roleId === 'INTERVIEWER') {
-          columns.splice(5, 1)
+          columns.splice(6, 1)
         }
         return columns;
       }

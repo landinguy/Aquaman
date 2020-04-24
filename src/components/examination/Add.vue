@@ -22,6 +22,9 @@
           <FormItem label="难度系数" prop="difficulty">
             <Input v-model.trim="formData.difficulty" placeholder="请设置难度系数"/>
           </FormItem>
+          <FormItem label="分值" prop="score">
+            <Input v-model.trim="formData.score" placeholder="请设置题目分值"/>
+          </FormItem>
         </Form>
       </div>
       <div slot="footer" style="text-align: center">
@@ -45,6 +48,7 @@
           content: '',
           answer: '',
           difficulty: '',
+          score: '',
         },
         id: '',
         formValidate: {
@@ -52,6 +56,7 @@
           content: [{required: true, message: '请录入题目内容', trigger: 'blur'}],
           answer: [{required: true, message: '请录入题目答案', trigger: 'blur'}],
           difficulty: [{required: true, message: '请设置难度系数', trigger: 'blur'}],
+          score: [{required: true, message: '请设置题目分值', trigger: 'blur'}],
         },
         op: 'add'
       }
@@ -87,12 +92,13 @@
       },
       setData(data) {
         if (data) {
-          const {answer, content, id, type, difficulty} = data;
+          const {answer, content, id, type, difficulty,score} = data;
           this.id = id;
           this.formData.type = type.toString();
           this.formData.content = content;
           this.formData.answer = answer;
           this.formData.difficulty = difficulty.toLocaleString();
+          this.formData.score = score.toLocaleString();
         }
       }
     },

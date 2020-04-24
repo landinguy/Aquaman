@@ -1,6 +1,6 @@
 <template>
   <div class="question">
-    {{index}}. <span>{{detail.content}} （{{detail.difficulty}}分）</span>
+    {{index}}. <span>{{detail.content}} （{{detail.score}}分）</span>
     <template v-if="operation==='viewAnswer'" style="margin-left: 16px">
       <span v-if="answer===detail.answer" style="color: green">【正确】</span>
       <span v-else style="color: red">【错误】</span>

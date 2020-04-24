@@ -7,19 +7,19 @@
     <h2>{{title}} （总分：{{score}}）</h2>
     <div class="content">
       <div class="content-part" v-if="XZQuestions.length>0">
-        <h3>选择题</h3>
+        <h3>选择题 （{{calculateScore(XZQuestions)}}分）</h3>
         <template v-for="(item,index) in XZQuestions">
           <Question :index="index+1" type="1" :detail="item" :operation="operation" @on-answer="onAnswer"/>
         </template>
       </div>
       <div class="content-part" v-if="PDQuestions.length>0">
-        <h3>判断题</h3>
+        <h3>判断题 （{{calculateScore(PDQuestions)}}分）</h3>
         <template v-for="(item,index) in PDQuestions">
           <Question :index="index+1" type="2" :detail="item" :operation="operation" @on-answer="onAnswer"/>
         </template>
       </div>
       <div class="content-part" v-if="TKQuestions.length>0">
-        <h3>填空题</h3>
+        <h3>填空题 （{{calculateScore(TKQuestions)}}分）</h3>
         <template v-for="(item,index) in TKQuestions">
           <Question :index="index+1" type="3" :detail="item" :operation="operation" @on-answer="onAnswer"/>
         </template>
@@ -78,6 +78,11 @@
     },
     components: {Question, Publish},
     methods: {
+      calculateScore(questions) {
+        let score = 0;
+        questions.forEach(it => score += it.score);
+        return score;
+      },
       submitAnswer() {
         this.$Modal.confirm({
           title: '确认提示',
@@ -87,6 +92,9 @@
       },
       submit() {
         let {paperId, publishId, answer} = this;
+        this.questions.forEach(it => {
+          if (answer[it.id] == null) answer[it.id] = ''
+        });
         answer = JSON.stringify(answer);
         // alert(JSON.stringify({paperId, publishId, answer}))
         post(url.saveReply, {paperId, publishId, answer}).then(res => {
@@ -184,7 +192,7 @@
           } else if (it.type === 3) {
             this.TKQuestions.push(it)
           }
-          this.score += it.difficulty;
+          this.score += it.score;
         });
       }
       if (this.operation === 'answer') this.countdown();

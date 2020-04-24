@@ -99,11 +99,16 @@
             }
             let param = this.formData;
             post(url.addAccount, param).then(res => {
-              this.$Message.success({
-                content: '提交成功',
-                duration: 1,
-                onClose: () => this.cancel()
-              })
+              const {code, msg} = res;
+              if (code === 0) {
+                this.$Message.success({
+                  content: '提交成功',
+                  duration: 1,
+                  onClose: () => this.cancel()
+                })
+              } else {
+                this.$Message.error(msg);
+              }
             }).catch(err => console.log(err));
           }
         })
