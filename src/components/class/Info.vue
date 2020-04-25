@@ -1,7 +1,7 @@
 <template>
   <div class="bg">
     <template v-if="content===1">
-      <div v-if="roleId==='ADMIN' || roleId==='TEACHER'">
+      <div v-if="roleId==='TEACHER'">
         <!--<br>-->
         <Button type="primary" @click="showModal">
           <Icon type="plus"></Icon>

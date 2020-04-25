@@ -137,7 +137,7 @@ export default [
     name: 'class',
     meta: {
       hide: true,
-      access: ['ADMIN', 'TEACHER']
+      access: ['TEACHER']
     },
     component: Main,
     children: [

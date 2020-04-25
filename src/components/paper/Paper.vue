@@ -9,21 +9,39 @@
       <div class="content-part" v-if="XZQuestions.length>0">
         <h3>选择题 （{{calculateScore(XZQuestions)}}分）</h3>
         <template v-for="(item,index) in XZQuestions">
-          <Question :index="index+1" type="1" :detail="item" :operation="operation" @on-answer="onAnswer"/>
+          <Question :index="index+1" type="1" :detail="item" :operation="operation"
+                    :is-show-practise-result="isShowPractiseResult"
+                    @on-answer="onAnswer"/>
         </template>
       </div>
       <div class="content-part" v-if="PDQuestions.length>0">
         <h3>判断题 （{{calculateScore(PDQuestions)}}分）</h3>
         <template v-for="(item,index) in PDQuestions">
-          <Question :index="index+1" type="2" :detail="item" :operation="operation" @on-answer="onAnswer"/>
+          <Question :index="index+1" type="2" :detail="item" :operation="operation"
+                    :is-show-practise-result="isShowPractiseResult"
+                    @on-answer="onAnswer"/>
         </template>
       </div>
       <div class="content-part" v-if="TKQuestions.length>0">
         <h3>填空题 （{{calculateScore(TKQuestions)}}分）</h3>
         <template v-for="(item,index) in TKQuestions">
-          <Question :index="index+1" type="3" :detail="item" :operation="operation" @on-answer="onAnswer"/>
+          <Question :index="index+1" type="3" :detail="item" :operation="operation"
+                    :is-show-practise-result="isShowPractiseResult"
+                    @on-answer="onAnswer"/>
         </template>
       </div>
+    </div>
+    <div class="analysis" v-if="operation==='viewAnswer'">
+      <h3>学生答题分析:</h3>
+      <p>
+        答题结果：容易（{{analysis.easyCorrect}}/{{analysis.easy}}）; 中等难度（{{analysis.mediumCorrect}}/{{analysis.medium}}）;
+        较难（{{analysis.difficultCorrect}}/{{analysis.difficult}}）
+      </p>
+      <p>
+        掌握情况：该学⽣针对较为容易知识<span>{{graspingState(analysis.easyCorrect,analysis.easy)}}</span>；
+        中等难度知识<span>{{graspingState(analysis.mediumCorrect,analysis.medium)}}</span>；
+        较难知识<span>{{graspingState(analysis.difficultCorrect,analysis.difficult)}}</span>。
+      </p>
     </div>
     <div style="text-align: center;margin-top: 16px">
       <Button type="primary" shape="circle" class="radio_len" @click="setPaperInfo"
@@ -35,6 +53,9 @@
       </Button>
       <Button type="primary" shape="circle" class="radio_len" @click="submitAnswer" v-if="operation==='answer'">
         提交答案
+      </Button>
+      <Button type="primary" shape="circle" @click="viewResult" v-if="operation==='practise'">
+        查看练习结果
       </Button>
     </div>
     <Modal
@@ -73,11 +94,27 @@
         answer: {},
         paperName: '',
         time: '',
-        internal: null
+        internal: null,
+        isShowPractiseResult: false,
+        analysis: {
+          easy: 0,
+          easyCorrect: 0,
+          medium: 0,
+          mediumCorrect: 0,
+          difficult: 0,
+          difficultCorrect: 0
+        }
       }
     },
     components: {Question, Publish},
     methods: {
+      viewResult() {
+        // let answer = this.answer;
+        // this.questions.forEach(it => {
+        //   if (answer[it.id] == null) answer[it.id] = ''
+        // });
+        this.isShowPractiseResult = true;
+      },
       calculateScore(questions) {
         let score = 0;
         questions.forEach(it => score += it.score);
@@ -180,6 +217,25 @@
             onCancel: () => this.$parent.content = 1
           });
         }
+      },
+      analysisResult() {
+        this.questions.forEach(it => {
+          const {difficulty, reply, answer} = it;
+          if (difficulty === 1 || difficulty === 2) {
+            this.analysis.easy++;
+            if (reply == answer) this.analysis.easyCorrect++;
+          } else if (difficulty === 3) {
+            this.analysis.medium++;
+            if (reply == answer) this.analysis.mediumCorrect++;
+          } else {
+            this.analysis.difficult++;
+            if (reply == answer) this.analysis.difficultCorrect++;
+          }
+        })
+      },
+      graspingState(a, b) {
+        let c = a / b;
+        return c >= 0.8 ? '掌握很好' : c >= 0.4 ? '掌握⼀般' : '掌握较差';
       }
     },
     mounted() {
@@ -196,6 +252,7 @@
         });
       }
       if (this.operation === 'answer') this.countdown();
+      if (this.operation === 'viewAnswer') this.analysisResult()
     },
     destroyed() {
       if (this.internal) window.clearInterval(this.internal);
@@ -242,6 +299,15 @@
         h3 {
           margin-bottom: 8px;
         }
+      }
+    }
+
+    .analysis {
+      margin-top: 32px;
+      font-weight: bold;
+
+      span {
+        color: red;
       }
     }
   }

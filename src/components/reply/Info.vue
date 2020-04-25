@@ -23,6 +23,7 @@
       <div v-if="params.publishId!=null">
         <!--<br>-->
         <Button type="primary" @click="goBack">返回</Button>
+        <Button type="primary" @click="analysis">班级答题分析</Button>
       </div>
       <div style="margin-top: 16px">
         <Table stripe border :columns="columns" :data="tableData"></Table>
@@ -33,13 +34,32 @@
       <Button type="ghost" @click="back" style="margin-left: 16px">返回</Button>
       <Paper :paper-id="paperId" :title="title" :questions="questions" operation="viewAnswer"/>
     </template>
+    <Modal v-model="isShow" width="640">
+      <p slot="header" style="text-align:center">
+        <span>各班级答题结果分析</span>
+      </p>
+      <div class="analysis" style="margin-bottom: 16px" v-for="item in analysisData">
+        <h3>班级名称：{{item.className}}</h3>
+        <p>班级总人数：{{item.total}}</p>
+        <P>未答题学生：{{item.students.join(",")}}</P>
+        <P>简单题结果分析：掌握较差{{item.easy.bad}}人；掌握一般{{item.easy.normal}}人；掌握很好{{item.easy.good}}人；</P>
+        <P>中等难度题结果分析：掌握较差{{item.medium.bad}}人；掌握一般{{item.medium.normal}}人；掌握很好{{item.medium.good}}人；</P>
+        <P>较难题结果分析：掌握较差{{item.difficult.bad}}人；掌握一般{{item.difficult.normal}}人；掌握很好{{item.difficult.good}}人；</P>
+        <p>
+          改班级针对较为容易知识<span>{{graspingState(item.easy)}}</span>；中等难度知识<span>{{graspingState(item.medium)}}</span>；较难题<span>{{graspingState(item.difficult)}}</span>
+        </p>
+      </div>
+      <div slot="footer" style="text-align: center">
+        <Button type="ghost" shape="circle" class="radio_len" @click="close">关闭</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
   import {mapGetters} from 'vuex'
   import {showTip} from '@/libs/util'
   import url from '@/api/url'
-  import {post} from "@/api/ax"
+  import {$get, post} from "@/api/ax"
   import Paper from '../paper/Paper'
 
   export default {
@@ -54,11 +74,28 @@
         total: 0,
         paperId: null,
         questions: [],
-        title: ''
+        title: '',
+        isShow: false,
+        analysisData: []
       }
     },
     components: {Paper},
     methods: {
+      graspingState(obj) {
+        const {bad, normal, good} = obj;
+        if (good >= normal && good >= bad) return "掌握很好";
+        if (normal > good && normal >= bad) return "掌握一般";
+        if (bad > normal && bad > good) return "掌握较差";
+      },
+      close() {
+        this.isShow = false;
+      },
+      analysis() {
+        $get(url.analysisReply + this.params.publishId, null).then(res => {
+          this.analysisData = res.data;
+          this.isShow = true;
+        }).catch(err => console.log(err))
+      },
       goBack() {
         window.history.back(-1);
       },
@@ -140,7 +177,7 @@
           {
             title: '操作', align: 'center', width: 150,
             render: (h, params) => {
-              const {paperId, answer} = params.row;
+              const {paperId, answer, endTs} = params.row;
               const view = h('Button', {
                 props: {
                   type: 'primary',
@@ -148,8 +185,13 @@
                 },
                 on: {
                   click: () => {
-                    this.paperId = paperId;
-                    this.getPaper(paperId, answer);
+                    let now = new Date();
+                    if (now <= new Date(endTs) && this.roleId === 'STUDENT') {
+                      this.$Message.warning(`答题截止时间：${endTs},请在截止时间后查看！`);
+                    } else {
+                      this.paperId = paperId;
+                      this.getPaper(paperId, answer);
+                    }
                   }
                 }
               }, '详情');
@@ -241,5 +283,18 @@
   .width {
     width: 160px;
     margin-right: 32px;
+  }
+
+  .radio_len {
+    width: 80px;
+    text-align: center;
+  }
+
+  .analysis {
+    margin-bottom: 16px;
+
+    span {
+      color: red;
+    }
   }
 </style>

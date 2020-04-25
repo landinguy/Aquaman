@@ -15,6 +15,10 @@
           <Input v-model="params.difficulty" placeholder="请输入难度系数" class="width"/>
         </div>
         <div class="search-div-item">
+          <label>关键字</label>
+          <Input v-model="params.keyword" placeholder="请输入关键字" class="width"/>
+        </div>
+        <div class="search-div-item">
           <Button type="primary" @click="search">查询</Button>
           <Button type="ghost" @click="clear" style="margin-left: 16px">清空</Button>
         </div>
@@ -25,21 +29,29 @@
           <Icon type="plus"></Icon>
           录入题库
         </Button>
-        <Button type="primary" @click="toPaperPage">
+        <Button type="primary" @click="toPaperPage(2)">
           <Icon type="eye"></Icon>
           试卷预览
         </Button>
       </div>
+      <div v-if="roleId==='STUDENT'">
+        <Button type="primary" @click="toPaperPage(3)">自我练习</Button>
+      </div>
       <div style="margin-top: 16px">
         <Table stripe border :columns="columns" :data="tableData" @on-select-cancel="onCancel"
                @on-selection-change="changeSelection"></Table>
-        <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>
+        <Page :total="total" :page-size="params.pageSize" show-total show-elevator show-sizer @on-change="changePage"
+              @on-page-size-change="changePageSize" style="margin-top: 16px"></Page>
       </div>
       <Add ref="AddVue"></Add>
     </template>
     <template v-if="content===2">
       <Button type="ghost" @click="back" style="margin-left: 16px">返回</Button>
       <Paper operation="viewAndSave" :questions="questions"/>
+    </template>
+    <template v-if="content===3">
+      <Button type="ghost" @click="back" style="margin-left: 16px">返回</Button>
+      <Paper operation="practise" title="自我练习" :questions="questions"/>
     </template>
   </div>
 </template>
@@ -57,7 +69,7 @@
       return {
         content: 1,
         params: {
-          type: '', difficulty: '', pageNo: 1, pageSize: 10
+          type: '', difficulty: '', keyword: '', pageNo: 1, pageSize: 10
         },
         tableData: [],
         total: 0,
@@ -66,8 +78,8 @@
     },
     components: {Add, Paper},
     methods: {
-      toPaperPage() {
-        this.content = 2
+      toPaperPage(n) {
+        this.content = n
       },
       back() {
         this.content = 1;
@@ -94,13 +106,17 @@
           selection.forEach(it => {
             if (selected.indexOf(it.id) === -1) this.questions.push({
               id: it.id, type: it.type,
-              content: it.content, score: it.score
+              content: it.content, score: it.score, answer: it.answer
             })
           });
         }
       },
       clear() {
-        this.params = {type: '', difficulty: '', pageNo: 1, pageSize: 10}
+        this.params = {type: '', difficulty: '', keyword: '', pageNo: 1, pageSize: 10}
+      },
+      changePageSize(pageSize) {
+        this.params.pageSize = pageSize
+        this.getData();
       },
       changePage(n) {
         this.params.pageNo = n;
@@ -111,6 +127,7 @@
         this.getData();
       },
       getData() {
+        // alert(JSON.stringify(this.params))
         post(url.getExamination, this.params).then(res => {
           const {total, list} = res.data;
           this.tableData = list;

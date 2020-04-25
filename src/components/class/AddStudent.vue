@@ -9,6 +9,9 @@
           <FormItem label="姓名" prop="name">
             <Input v-model.trim="formData.name" placeholder="请填写姓名"/>
           </FormItem>
+          <FormItem label="账号" prop="accountName">
+            <Input v-model.trim="formData.accountName" placeholder="请填写账号"/>
+          </FormItem>
         </Form>
       </div>
       <div slot="footer" style="text-align: center">
@@ -28,11 +31,13 @@
       return {
         addModal: false,
         formData: {
-          name: ''
+          name: '',
+          accountName: ''
         },
         classId: null,
         formValidate: {
-          name: [{required: true, message: '请填写姓名', trigger: 'blur'}]
+          name: [{required: true, message: '请填写姓名', trigger: 'blur'}],
+          accountName: [{required: true, message: '请填写账号', trigger: 'blur'}],
         },
       }
     },
@@ -46,7 +51,7 @@
       confirm() {
         this.$refs.form.validate((valid) => {
           if (valid) {
-            let params = {classId: this.classId, name: this.formData.name};
+            let params = {classId: this.classId, name: this.formData.name, accountName: this.formData.accountName};
             $get(url.saveStudent, params).then(res => {
               const {code, msg} = res;
               if (code === 0) {

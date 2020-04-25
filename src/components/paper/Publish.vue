@@ -77,7 +77,7 @@
                   duration: 1,
                   onClose: () => {
                     this.cancel();
-                    this.$parent.$parent.content = 1
+                    this.$router.push({name: 'publish'});
                   }
                 })
               } else {

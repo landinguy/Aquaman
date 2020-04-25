@@ -34,6 +34,7 @@ export default {
   //答题记录
   getReply: 'reply/get',
   saveReply: 'reply/save',
+  analysisReply: 'reply/analysis/',
 
   //备份恢复数据
   backup: 'backup',
