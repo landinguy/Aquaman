@@ -18,14 +18,14 @@
           <!--          <FormItem label="姓名" prop="nickname">-->
           <!--            <Input v-model.trim="formData.nickname" placeholder="请填写姓名"/>-->
           <!--          </FormItem>-->
-          <FormItem label="用户角色" prop="role">
-            <Select v-model="formData.role">
-              <Option value="TEACHER">教师</Option>
-              <Option value="STUDENT">学生</Option>
-              <Option value="COMPANY">用人单位</Option>
-              <Option value="INTERVIEWER">应试者</Option>
-            </Select>
-          </FormItem>
+          <!--          <FormItem label="用户角色" prop="role">-->
+          <!--            <Select v-model="formData.role">-->
+          <!--              <Option value="TEACHER">教师</Option>-->
+          <!--              <Option value="STUDENT">学生</Option>-->
+          <!--              <Option value="COMPANY">用人单位</Option>-->
+          <!--              <Option value="INTERVIEWER">应试者</Option>-->
+          <!--            </Select>-->
+          <!--          </FormItem>-->
 
           <!--          <FormItem label="邮箱" prop="email">-->
           <!--            <Input v-model.trim="formData.email" placeholder="请填写邮箱"/>-->
@@ -58,13 +58,13 @@
           // nickname: '',
           // phoneNumber: '',
           // email: '',
-          role: ''
+          // role: 'Normal'
         },
         formValidate: {
           username: [{required: true, message: '请填写用户名', trigger: 'blur'}],
           password: [{required: true, message: '请填写密码', trigger: 'blur'}],
           confirmPwd: [{required: true, message: '请再次输入密码', trigger: 'blur'}],
-          role: [{required: true, message: '请选择用户角色', trigger: 'change'}],
+          // role: [{required: true, message: '请选择用户角色', trigger: 'change'}],
           // nickname: [{required: true, message: '请填写姓名', trigger: 'blur'}],
           // phoneNumber: [
           //   {required: true, message: '请填写手机号', trigger: 'blur'},
@@ -98,7 +98,7 @@
               return
             }
             let param = this.formData;
-            post(url.addAccount, param).then(res => {
+            post(url.register, param).then(res => {
               const {code, msg} = res;
               if (code === 0) {
                 this.$Message.success({

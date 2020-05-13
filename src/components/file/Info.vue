@@ -1,32 +1,44 @@
 <template>
   <div class="bg">
-    <template v-if="content===1">
-      <div v-if="roleId==='TEACHER'">
-        <!--<br>-->
-        <Button type="primary" @click="showModal">
-          <Icon type="plus"></Icon>
-          创建班级
-        </Button>
-      </div>
-      <div style="margin-top: 16px">
-        <Table stripe border :columns="columns" :data="tableData"></Table>
-        <!--      <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>-->
-      </div>
-    </template>
-    <template v-if="content===2">
-      <Button type="ghost" shape="circle" class="radio_len" @click="back" style="margin-left: 16px">返回</Button>
-      <StudentInfo ref="StudentInfoVue"/>
-    </template>
-    <Add ref="AddVue"/>
+
+    <!--      <div class="search-div">-->
+    <!--        <div class="search-div-item">-->
+    <!--          <label>题型</label>-->
+    <!--          <Select v-model="params.type" class="width">-->
+    <!--            <Option value="1">选择题</Option>-->
+    <!--            <Option value="2">判断题</Option>-->
+    <!--            <Option value="3">填空题</Option>-->
+    <!--          </Select>-->
+    <!--        </div>-->
+    <!--        <div class="search-div-item">-->
+    <!--          <label>难度系数</label>-->
+    <!--          <Input v-model="params.difficulty" placeholder="请输入难度系数" class="width"/>-->
+    <!--        </div>-->
+    <!--        <div class="search-div-item">-->
+    <!--          <label>关键字</label>-->
+    <!--          <Input v-model="params.keyword" placeholder="请输入关键字" class="width"/>-->
+    <!--        </div>-->
+    <!--        <div class="search-div-item">-->
+    <!--          <Button type="primary" @click="search">查询</Button>-->
+    <!--          <Button type="ghost" @click="clear" style="margin-left: 16px">清空</Button>-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <div>
+      <Button type="primary" @click="showModal">上传文件</Button>
+    </div>
+    <div style="margin-top: 16px">
+      <Table stripe border :columns="columns" :data="tableData"></Table>
+      <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>
+    </div>
+    <Add ref="AddVue"></Add>
   </div>
 </template>
 <script>
   import {mapGetters} from 'vuex'
   import {showTip} from '@/libs/util'
   import url from '@/api/url'
-  import {get} from "@/api/ax"
-  import Add from "./Add";
-  import StudentInfo from "./StudentInfo";
+  import {post} from "@/api/ax"
+  import Add from './Add'
 
   export default {
     name: 'Info',
@@ -37,17 +49,11 @@
         },
         tableData: [],
         total: 0,
-        content: 1
+        questions: []
       }
     },
-    components: {Add, StudentInfo},
+    components: {Add},
     methods: {
-      back() {
-        this.content = 1;
-      },
-      showModal() {
-        this.$refs.AddVue.showModal(null);
-      },
       clear() {
         this.params = {pageNo: 1, pageSize: 10}
       },
@@ -60,9 +66,15 @@
         this.getData();
       },
       getData() {
-        get(url.getClass, {}).then(res => {
-          this.tableData = res.data;
+        // alert(JSON.stringify(this.params))
+        post(url.files, {...this.params, uid: this.accountId}).then(res => {
+          const {total, list} = res.data;
+          this.tableData = list;
+          this.total = total;
         }).catch(err => console.log(err))
+      },
+      showModal() {
+        this.$refs.AddVue.showModal(null);
       }
     },
     mounted() {
@@ -73,28 +85,28 @@
       columns() {
         const columns = [
           {
-            title: '序号', type: 'index', width: 80, align: 'center'
+            title: '文件名', key: 'name', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.name)
           },
           {
-            title: '班级名称', key: 'classname', align: 'center', ellipsis: true, minWidth: 80,
-            render: (h, params) => showTip(h, params.row.classname)
+            title: '创建时间', key: 'create_ts', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.create_ts)
+          },
+          {
+            title: '文件大小（字节）', key: 'size', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.size)
+          },
+          {
+            title: '加密方式', key: 'encryption_type', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => {
+              let type = params.row.encryption_type;
+              return showTip(h, type === 1 ? 'Base64' : 'AES')
+            }
           },
           {
             title: '操作', align: 'center', width: 150,
             render: (h, params) => {
               const {id} = params.row;
-              const view = h('Button', {
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                on: {
-                  click: () => {
-                    this.content = 2;
-                    setTimeout(() => this.$refs.StudentInfoVue.getData(id), 100)
-                  }
-                }
-              }, '详情');
               // const edit = h('Button', {
               //   props: {
               //     type: 'primary',
@@ -121,7 +133,7 @@
               //         content: '确认删除该题目？',
               //         onOk: () => {
               //           $get(url.deleteExamination + id, {}).then(res => {
-              //             if (res.code == 0) {
+              //             if (res.code === 0) {
               //               this.$Message.success({
               //                 content: '已删除',
               //                 duration: 1,
@@ -136,18 +148,17 @@
               //     }
               //   }
               // }, '删除');
-              const op = [];
-              op.push(view)
+              // const op = [];
               // if (this.roleId === 'ADMIN' || this.roleId === 'TEACHER' || this.roleId === 'COMPANY') {
               //   op.push(edit);
               //   op.push(del);
               // }
-              return h('div', op);
+              // return h('div', op);
             }
           }
         ];
         // if (this.roleId === 'STUDENT' || this.roleId === 'INTERVIEWER') {
-        //   columns.splice(5, 1)
+        //   columns.splice(6, 1)
         // }
         return columns;
       }
@@ -178,11 +189,6 @@
     margin-right: 8px;
     font-weight: bold;
     display: inline-block;
-  }
-
-  .radio_len {
-    width: 80px;
-    text-align: center;
   }
 
   .width {

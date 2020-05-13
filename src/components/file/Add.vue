@@ -2,28 +2,19 @@
   <div ref="AddVue">
     <Modal v-model="addModal" width="640">
       <p slot="header" style="text-align:center">
-        <span>{{op==='add'?'录入':'修改'}}题库</span>
+        <span>上传文件</span>
       </p>
       <div>
         <Form ref="form" :model="formData" :rules="formValidate" :label-width="100">
-          <FormItem label="题型" prop="type">
-            <Select v-model="formData.type">
-              <Option value="1">选择题</Option>
-              <Option value="2">判断题</Option>
-              <Option value="3">填空题</Option>
-            </Select>
-          </FormItem>
-          <FormItem label="题目内容" prop="content">
+          <FormItem label="文件" prop="content">
             <Input v-model.trim="formData.content" type="textarea" :rows="4" placeholder="请录入题目内容"/>
           </FormItem>
-          <FormItem label="题目答案" prop="answer">
-            <Input v-model.trim="formData.answer" type="textarea" :rows="4" placeholder="请录入题目答案"/>
-          </FormItem>
-          <FormItem label="难度系数" prop="difficulty">
-            <Input v-model.trim="formData.difficulty" placeholder="请设置难度系数"/>
-          </FormItem>
-          <FormItem label="分值" prop="score">
-            <Input v-model.trim="formData.score" placeholder="请设置题目分值"/>
+
+          <FormItem label="加密方式" prop="type">
+            <Select v-model="formData.type">
+              <Option value="1">Base64</Option>
+              <Option value="2">AES</Option>
+            </Select>
           </FormItem>
         </Form>
       </div>
@@ -52,19 +43,14 @@
         },
         id: '',
         formValidate: {
-          type: [{required: true, message: '请选择题型', trigger: 'change'}],
-          content: [{required: true, message: '请录入题目内容', trigger: 'blur'}],
-          answer: [{required: true, message: '请录入题目答案', trigger: 'blur'}],
-          difficulty: [{required: true, message: '请设置难度系数', trigger: 'blur'}],
-          score: [{required: true, message: '请设置题目分值', trigger: 'blur'}],
-        },
-        op: 'add'
+          type: [{required: true, message: '请选择加密类型', trigger: 'change'}],
+          content: [{required: true, message: '请录入题目内容', trigger: 'blur'}]
+        }
       }
     },
     methods: {
       showModal(data) {
         if (data) {
-          this.op = 'edit';
           this.setData(data);
         }
         this.addModal = true;
@@ -74,7 +60,7 @@
           if (valid) {
             let param = this.formData;
             param.id = this.id;
-            post(url.saveExamination, param).then(res => {
+            post(url.upload, param).then(res => {
               this.$Message.success({
                 content: '提交成功',
                 duration: 1,
@@ -92,13 +78,10 @@
       },
       setData(data) {
         if (data) {
-          const {answer, content, id, type, difficulty,score} = data;
+          const {answer, content, id, type, difficulty, score} = data;
           this.id = id;
           this.formData.type = type.toString();
           this.formData.content = content;
-          this.formData.answer = answer;
-          this.formData.difficulty = difficulty.toLocaleString();
-          this.formData.score = score.toLocaleString();
         }
       }
     },
@@ -106,7 +89,6 @@
       addModal(curVal, oldVal) {
         if (!curVal) {
           this.$refs.form.resetFields();
-          this.op = 'add';
           this.id = '';
         }
       }
