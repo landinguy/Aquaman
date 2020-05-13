@@ -6,20 +6,27 @@
       </p>
       <div>
         <Form ref="form" :model="formData" :rules="formValidate" :label-width="100">
-          <FormItem label="文件" prop="content">
-            <Input v-model.trim="formData.content" type="textarea" :rows="4" placeholder="请录入题目内容"/>
-          </FormItem>
-
-          <FormItem label="加密方式" prop="type">
-            <Select v-model="formData.type">
+          <FormItem label="加密方式" prop="encryption_type">
+            <Select v-model="formData.encryption_type">
               <Option value="1">Base64</Option>
               <Option value="2">AES</Option>
             </Select>
           </FormItem>
+          <FormItem label="上传文件">
+            <Upload ref="upload"
+                    :action="uploadUrl"
+                    :format="['txt','jpg']"
+                    :show-upload-list="false"
+                    :before-upload="handleBeforeUpload"
+                    :on-success="handleSuccess"
+                    :with-credentials="true"
+                    :data="formData">
+              <Button type="ghost" class="radio_len">上传</Button>
+            </Upload>
+          </FormItem>
         </Form>
       </div>
       <div slot="footer" style="text-align: center">
-        <Button type="primary" shape="circle" class="radio_len" @click="confirm">提交</Button>
         <Button type="ghost" shape="circle" class="radio_len" style="margin-left: 20px" @click="cancel">取消</Button>
       </div>
     </Modal>
@@ -27,7 +34,7 @@
 </template>
 <script>
   import url from '@/api/url'
-  import {post} from "@/api/ax"
+  import baseUrl from "@/libs/url"
 
   export default {
     name: 'Add',
@@ -35,61 +42,55 @@
       return {
         addModal: false,
         formData: {
-          type: '',
-          content: '',
-          answer: '',
-          difficulty: '',
-          score: '',
+          encryption_type: '1',
+          uid: null
         },
-        id: '',
         formValidate: {
-          type: [{required: true, message: '请选择加密类型', trigger: 'change'}],
-          content: [{required: true, message: '请录入题目内容', trigger: 'blur'}]
-        }
+          encryption_type: [{required: true, message: '请选择加密类型', trigger: 'change'}]
+        },
+        uploadUrl: baseUrl.base + url.upload
       }
     },
     methods: {
-      showModal(data) {
-        if (data) {
-          this.setData(data);
+      handleSuccess(res, file) {
+        const {code, msg} = res;
+        if (code === 0) {
+          this.$Message.success({
+            content: '上传成功',
+            duration: 1,
+            onClose: () => {
+              this.cancel();
+              this.$parent.search();
+            }
+          })
+        } else {
+          this.$Message.error(msg ? msg : '上传失败')
         }
-        this.addModal = true;
       },
-      confirm() {
-        this.$refs.form.validate((valid) => {
-          if (valid) {
-            let param = this.formData;
-            param.id = this.id;
-            post(url.upload, param).then(res => {
-              this.$Message.success({
-                content: '提交成功',
-                duration: 1,
-                onClose: () => {
-                  this.cancel();
-                  this.$parent.search();
-                }
-              })
-            }).catch(err => console.log(err));
-          }
-        })
+      handleBeforeUpload(file) {
+        let index = file.name.lastIndexOf(".");
+        let type = file.name.substring(index + 1);
+        let arr = ['txt', 'jpg'];
+        if (arr.indexOf(type.toLowerCase()) === -1) {
+          this.$Message.error('请上传txt,jpg文件');
+          return false;
+        }
+        this.formData.uid = this.$parent.accountId;
+        if (this.$refs.upload.fileList.length > 0) {
+          this.$refs.upload.clearFiles();
+        }
+      },
+      showModal(data) {
+        this.addModal = true;
       },
       cancel() {
         this.addModal = false;
-      },
-      setData(data) {
-        if (data) {
-          const {answer, content, id, type, difficulty, score} = data;
-          this.id = id;
-          this.formData.type = type.toString();
-          this.formData.content = content;
-        }
       }
     },
     watch: {
       addModal(curVal, oldVal) {
         if (!curVal) {
-          this.$refs.form.resetFields();
-          this.id = '';
+          this.$refs.form.resetFields()
         }
       }
     }

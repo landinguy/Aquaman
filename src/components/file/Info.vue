@@ -1,6 +1,5 @@
 <template>
   <div class="bg">
-
     <!--      <div class="search-div">-->
     <!--        <div class="search-div-item">-->
     <!--          <label>题型</label>-->
@@ -31,14 +30,17 @@
       <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>
     </div>
     <Add ref="AddVue"></Add>
+    <Share ref="ShareVue"></Share>
   </div>
 </template>
 <script>
   import {mapGetters} from 'vuex'
   import {showTip} from '@/libs/util'
   import url from '@/api/url'
+  import baseUrl from "@/libs/url"
   import {post} from "@/api/ax"
   import Add from './Add'
+  import Share from './Share'
 
   export default {
     name: 'Info',
@@ -52,7 +54,7 @@
         questions: []
       }
     },
-    components: {Add},
+    components: {Add, Share},
     methods: {
       clear() {
         this.params = {pageNo: 1, pageSize: 10}
@@ -75,6 +77,9 @@
       },
       showModal() {
         this.$refs.AddVue.showModal(null);
+      },
+      download(id) {
+        window.open(`${baseUrl.base}${url.download}?id=${id}`)
       }
     },
     mounted() {
@@ -107,53 +112,34 @@
             title: '操作', align: 'center', width: 150,
             render: (h, params) => {
               const {id} = params.row;
-              // const edit = h('Button', {
-              //   props: {
-              //     type: 'primary',
-              //     size: 'small'
-              //   },
-              //   on: {
-              //     click: () => {
-              //       this.$refs.AddVue.showModal(params.row);
-              //     }
-              //   }
-              // }, '修改');
-              // const del = h('Button', {
-              //   props: {
-              //     type: 'error',
-              //     size: 'small'
-              //   },
-              //   style: {
-              //     "margin-left": '5px'
-              //   },
-              //   on: {
-              //     click: () => {
-              //       this.$Modal.confirm({
-              //         title: '删除',
-              //         content: '确认删除该题目？',
-              //         onOk: () => {
-              //           $get(url.deleteExamination + id, {}).then(res => {
-              //             if (res.code === 0) {
-              //               this.$Message.success({
-              //                 content: '已删除',
-              //                 duration: 1,
-              //                 onClose: () => this.search()
-              //               });
-              //             } else {
-              //               this.$Message.error('删除失败');
-              //             }
-              //           });
-              //         }
-              //       });
-              //     }
-              //   }
-              // }, '删除');
-              // const op = [];
+              const download = h('Button', {
+                props: {
+                  type: 'primary',
+                  size: 'small'
+                },
+                on: {
+                  click: () => this.download(id)
+                }
+              }, '下载');
+              const share = h('Button', {
+                props: {
+                  type: 'primary',
+                  size: 'small'
+                },
+                style: {
+                  "margin-left": '5px'
+                },
+                on: {
+                  click: () => this.$refs.ShareVue.showModal(id)
+                }
+              }, '分享');
+              const op = [];
               // if (this.roleId === 'ADMIN' || this.roleId === 'TEACHER' || this.roleId === 'COMPANY') {
-              //   op.push(edit);
+              op.push(download);
+              op.push(share);
               //   op.push(del);
               // }
-              // return h('div', op);
+              return h('div', op);
             }
           }
         ];

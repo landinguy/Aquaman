@@ -13,7 +13,7 @@
         </div>
       </Button>
       <DropdownMenu slot="list">
-        <DropdownItem name="password">修改密码</DropdownItem>
+<!--        <DropdownItem name="password">修改密码</DropdownItem>-->
         <DropdownItem name="logout">退出登录</DropdownItem>
       </DropdownMenu>
     </Dropdown>
