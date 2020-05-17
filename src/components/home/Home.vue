@@ -8,7 +8,8 @@
       <Button type="ghost" shape="circle" class="radio_len" style="margin-left: 20px" @click="restore">还原数据</Button>
     </div>
     <div style="margin-top: 32px" v-if="roleId==='STUDENT'">
-      <Button type="primary" shape="circle" class="radio_len" @click="apply">申请班级</Button>
+      <p v-if="className!=null">所在班级：{{className}}</p>
+      <Button type="primary" shape="circle" class="radio_len" @click="apply" v-if="className==null">申请班级</Button>
     </div>
     <Apply ref="ApplyVue"/>
   </div>
@@ -22,7 +23,9 @@
   export default {
     name: 'Home',
     data() {
-      return {}
+      return {
+        className: null
+      }
     },
     components: {Apply},
     methods: {
@@ -47,9 +50,20 @@
             this.$Message.error(msg)
           }
         }).catch(err => console.log(err));
+      },
+      getClassName() {
+        get(url.getClassName + this.accountId, {}).then(res => {
+          const {code, msg, data} = res;
+          if (code === 0) {
+            this.className = data;
+          } else {
+            this.$Message.error(msg)
+          }
+        }).catch(err => console.log(err));
       }
     },
     mounted() {
+      if (this.roleId === 'STUDENT') this.getClassName();
     },
     computed: {
       ...mapGetters(['accountId', 'roleId', 'accountNickname'])

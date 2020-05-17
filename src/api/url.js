@@ -15,6 +15,7 @@ export default {
   saveClass: 'class/save',
   getClass: 'class/get',
   getClassStudent: 'class/student/get/',
+  getClassName: 'class/',
   saveStudent: 'class/student/save',
   deleteStudent: 'class/student/delete/',
   applyClass: 'class/apply',

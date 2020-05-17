@@ -54,7 +54,10 @@
                 this.$Message.success({
                   content: '提交成功',
                   duration: 1,
-                  onClose: () => this.cancel()
+                  onClose: () => {
+                    this.cancel();
+                    this.$parent.getClassName();
+                  }
                 })
               } else {
                 this.$Message.error(msg);
