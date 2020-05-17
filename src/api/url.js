@@ -39,29 +39,5 @@ export default {
 
   //备份恢复数据
   backup: 'backup',
-  restore: 'restore',
-
-  //车辆管理
-  addVehicle: 'addVehicle',
-  getVehicle: 'getVehicle',
-  deleteVehicle: 'deleteVehicle',
-
-  //设备管理
-  addDevice: 'addDevice',
-  getDevice: 'getDevice',
-  deleteDevice: 'deleteDevice',
-
-  //违章记录
-  getRecord: 'getRecord',
-  addRecord: 'addRecord',
-  closeRecord: 'closeRecord',
-  deleteRecord: 'deleteRecord',
-  pay: 'pay',
-
-  //系统日志
-  getLog: 'getLog',
-
-  //上传文件
-  upload: 'upload'
-
+  restore: 'restore'
 };
