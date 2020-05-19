@@ -1,16 +1,15 @@
 <template>
   <div class="bg">
     <div class="welcome-div">
-      <span class="text">{{accountNickname}}，您好！  欢迎使用多文件管理系统 ~</span>
+      <span class="text">{{accountNickname}}，您好！  欢迎使用文件管理系统 ~</span>
     </div>
-    <!--    <div style="margin-top: 32px" v-if="roleId==='ADMIN'">-->
-    <!--      <Button type="primary" shape="circle" class="radio_len" @click="backup">备份数据</Button>-->
-    <!--      <Button type="ghost" shape="circle" class="radio_len" style="margin-left: 20px" @click="restore">还原数据</Button>-->
-    <!--    </div>-->
-    <!--    <div style="margin-top: 32px" v-if="roleId==='STUDENT'">-->
-    <!--      <Button type="primary" shape="circle" class="radio_len" @click="apply">申请班级</Button>-->
-    <!--    </div>-->
-    <!--    <Apply ref="ApplyVue"/>-->
+
+    <div style="margin-top: 32px">
+      <h3 style="margin-bottom: 8px">用户信息</h3>
+      <p>账号： {{accountNickname}}</p>
+      <p>手机号： {{phone}}</p>
+      <p>邮箱： {{email}}</p>
+    </div>
   </div>
 </template>
 <script>
@@ -48,7 +47,7 @@
     mounted() {
     },
     computed: {
-      ...mapGetters(['accountId', 'roleId', 'accountNickname'])
+      ...mapGetters(['accountId', 'roleId', 'accountNickname', 'phone', 'email'])
     }
   }
 </script>

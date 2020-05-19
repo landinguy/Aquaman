@@ -6,16 +6,10 @@
       </p>
       <div>
         <Form ref="form" :model="formData" :rules="formValidate" :label-width="100">
-          <FormItem label="加密方式" prop="encryption_type">
-            <Select v-model="formData.encryption_type">
-              <Option value="1">Base64</Option>
-              <Option value="2">AES</Option>
-            </Select>
-          </FormItem>
           <FormItem label="上传文件">
             <Upload ref="upload"
                     :action="uploadUrl"
-                    :format="['txt','jpg']"
+                    :format="['txt','jpg','doc','xls','ppt']"
                     :show-upload-list="false"
                     :before-upload="handleBeforeUpload"
                     :on-success="handleSuccess"
@@ -42,12 +36,9 @@
       return {
         addModal: false,
         formData: {
-          encryption_type: '1',
           uid: null
         },
-        formValidate: {
-          encryption_type: [{required: true, message: '请选择加密类型', trigger: 'change'}]
-        },
+        formValidate: {},
         uploadUrl: baseUrl.base + url.upload
       }
     },
@@ -70,9 +61,9 @@
       handleBeforeUpload(file) {
         let index = file.name.lastIndexOf(".");
         let type = file.name.substring(index + 1);
-        let arr = ['txt', 'jpg'];
+        let arr = ['txt', 'jpg', 'doc', 'xls', 'ppt'];
         if (arr.indexOf(type.toLowerCase()) === -1) {
-          this.$Message.error('请上传txt,jpg文件');
+          this.$Message.error('请上传txt,jpg,doc,xls,ppt文件');
           return false;
         }
         this.formData.uid = this.$parent.accountId;

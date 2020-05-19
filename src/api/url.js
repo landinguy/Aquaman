@@ -5,7 +5,7 @@ export default {
   logout: "logout",
   register: "register",
   files: "files",
-  share: "share",
+  deleteFile: "file/delete",
   upload: "upload",
   download: "download",
 

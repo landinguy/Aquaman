@@ -1,27 +1,5 @@
 <template>
   <div class="bg">
-    <!--      <div class="search-div">-->
-    <!--        <div class="search-div-item">-->
-    <!--          <label>题型</label>-->
-    <!--          <Select v-model="params.type" class="width">-->
-    <!--            <Option value="1">选择题</Option>-->
-    <!--            <Option value="2">判断题</Option>-->
-    <!--            <Option value="3">填空题</Option>-->
-    <!--          </Select>-->
-    <!--        </div>-->
-    <!--        <div class="search-div-item">-->
-    <!--          <label>难度系数</label>-->
-    <!--          <Input v-model="params.difficulty" placeholder="请输入难度系数" class="width"/>-->
-    <!--        </div>-->
-    <!--        <div class="search-div-item">-->
-    <!--          <label>关键字</label>-->
-    <!--          <Input v-model="params.keyword" placeholder="请输入关键字" class="width"/>-->
-    <!--        </div>-->
-    <!--        <div class="search-div-item">-->
-    <!--          <Button type="primary" @click="search">查询</Button>-->
-    <!--          <Button type="ghost" @click="clear" style="margin-left: 16px">清空</Button>-->
-    <!--        </div>-->
-    <!--      </div>-->
     <div>
       <Button type="primary" @click="showModal">上传文件</Button>
     </div>
@@ -30,17 +8,15 @@
       <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"></Page>
     </div>
     <Add ref="AddVue"></Add>
-    <Share ref="ShareVue"></Share>
   </div>
 </template>
 <script>
   import {mapGetters} from 'vuex'
   import {showTip} from '@/libs/util'
   import url from '@/api/url'
-  import baseUrl from "@/libs/url"
-  import {post} from "@/api/ax"
+  import {$get, post} from "@/api/ax"
   import Add from './Add'
-  import Share from './Share'
+  import baseUrl from "@/libs/url"
 
   export default {
     name: 'Info',
@@ -54,7 +30,7 @@
         questions: []
       }
     },
-    components: {Add, Share},
+    components: {Add},
     methods: {
       clear() {
         this.params = {pageNo: 1, pageSize: 10}
@@ -78,8 +54,23 @@
       showModal() {
         this.$refs.AddVue.showModal(null);
       },
+      deleteFile(id) {
+        $get(url.deleteFile, {id}).then(res => {
+          if (res.code === 0) {
+            this.$Message.success({
+              content: '已删除',
+              duration: 1,
+              onClose: () => {
+                this.search();
+              }
+            });
+          } else {
+            this.$Message.error('删除失败');
+          }
+        });
+      },
       download(id) {
-        window.open(`${baseUrl.base}${url.download}?id=${id}`)
+        window.open(`${baseUrl.base}${url.download}?fid=${id}`)
       }
     },
     mounted() {
@@ -102,16 +93,9 @@
             render: (h, params) => showTip(h, params.row.size)
           },
           {
-            title: '加密方式', key: 'encryption_type', align: 'center', ellipsis: true, minWidth: 80,
+            title: '操作', align: 'center', width: 180,
             render: (h, params) => {
-              let type = params.row.encryption_type;
-              return showTip(h, type === 1 ? 'Base64' : 'AES')
-            }
-          },
-          {
-            title: '操作', align: 'center', width: 150,
-            render: (h, params) => {
-              const {id} = params.row;
+              const {id, url} = params.row;
               const download = h('Button', {
                 props: {
                   type: 'primary',
@@ -130,14 +114,36 @@
                   "margin-left": '5px'
                 },
                 on: {
-                  click: () => this.$refs.ShareVue.showModal(id)
+                  click: () => this.$Message.info({
+                    content: `文件下载链接：${url}`,
+                    duration: 10,
+                    closable: true
+                  })
                 }
               }, '分享');
+              const del = h('Button', {
+                props: {
+                  type: 'error',
+                  size: 'small'
+                },
+                style: {
+                  "margin-left": '5px'
+                },
+                on: {
+                  click: () => {
+                    this.$Modal.confirm({
+                      title: '删除',
+                      content: '确认删除该文件？',
+                      onOk: () => this.deleteFile(id)
+                    });
+                  }
+                }
+              }, '删除');
               const op = [];
               // if (this.roleId === 'ADMIN' || this.roleId === 'TEACHER' || this.roleId === 'COMPANY') {
               op.push(download);
               op.push(share);
-              //   op.push(del);
+              op.push(del);
               // }
               return h('div', op);
             }
