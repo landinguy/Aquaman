@@ -1,15 +1,15 @@
 <template>
   <div class="bg">
     <div class="welcome-div">
-      <span class="text">{{accountNickname}}，您好！  欢迎使用文件管理系统 ~</span>
+      <span class="text">{{accountNickname}}，您好！  建业至尊卡在线连锁超市系统 ~</span>
     </div>
 
-    <div style="margin-top: 32px">
-      <h3 style="margin-bottom: 8px">用户信息</h3>
-      <p>账号： {{accountNickname}}</p>
-      <p>手机号： {{phone}}</p>
-      <p>邮箱： {{email}}</p>
-    </div>
+<!--    <div style="margin-top: 32px">-->
+<!--      <h3 style="margin-bottom: 8px">用户信息</h3>-->
+<!--      <p>账号： {{accountNickname}}</p>-->
+<!--      <p>手机号： {{phone}}</p>-->
+<!--      <p>邮箱： {{email}}</p>-->
+<!--    </div>-->
   </div>
 </template>
 <script>

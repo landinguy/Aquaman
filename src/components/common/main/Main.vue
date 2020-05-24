@@ -4,7 +4,7 @@
 
 
     <div style="height: 64px;background-color: #495060;">
-      <span class="name">文件管理系统</span>
+      <span class="name">建业至尊卡在线连锁超市系统</span>
       <div style="float: right;margin-top: 16px">
         <user style="float: right;"/>
       </div>
