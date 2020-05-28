@@ -27,11 +27,11 @@
           <!--            </Select>-->
           <!--          </FormItem>-->
 
-          <FormItem label="邮箱" prop="email">
-            <Input v-model.trim="formData.email" placeholder="请填写邮箱"/>
-          </FormItem>
-          <FormItem label="手机号" prop="phoneNumber">
-            <Input v-model.trim="formData.phoneNumber" placeholder="请填写手机号"/>
+          <!--          <FormItem label="邮箱" prop="email">-->
+          <!--            <Input v-model.trim="formData.email" placeholder="请填写邮箱"/>-->
+          <!--          </FormItem>-->
+          <FormItem label="手机号" prop="phone">
+            <Input v-model.trim="formData.phone" placeholder="请填写手机号"/>
           </FormItem>
         </Form>
       </div>
@@ -56,8 +56,8 @@
           password: '',
           confirmPwd: '',
           // nickname: '',
-          phoneNumber: '',
-          email: '',
+          phone: '',
+          // email: '',
           // role: 'Normal'
         },
         formValidate: {
@@ -66,14 +66,14 @@
           confirmPwd: [{required: true, message: '请再次输入密码', trigger: 'blur'}],
           // role: [{required: true, message: '请选择用户角色', trigger: 'change'}],
           // nickname: [{required: true, message: '请填写姓名', trigger: 'blur'}],
-          phoneNumber: [
+          phone: [
             {required: true, message: '请填写手机号', trigger: 'blur'},
             {validator: this.validatePhone, trigger: 'blur'}
           ],
-          email: [
-            {required: true, message: '请填写邮箱', trigger: 'blur'},
-            {type: 'email', message: '邮箱格式不正确', trigger: 'blur'}
-          ]
+          // email: [
+          //   {required: true, message: '请填写邮箱', trigger: 'blur'},
+          //   {type: 'email', message: '邮箱格式不正确', trigger: 'blur'}
+          // ]
         },
       }
     },
@@ -98,7 +98,7 @@
               return
             }
             let param = this.formData;
-            post(url.register, param).then(res => {
+            post(url.addAccount, param).then(res => {
               const {code, msg} = res;
               if (code === 0) {
                 this.$Message.success({

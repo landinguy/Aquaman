@@ -1,7 +1,7 @@
 <template>
   <div class="login" @keyup.enter="handleEnter" :style="{backgroundImage:'url(' + bg + ')'}">
     <div class="login-con">
-      <Card icon="log-in" title="文件管理系统" :bordered="false">
+      <Card icon="log-in" title="建业至尊卡在线连锁超市系统" :bordered="false">
         <div class="form-con">
           <LoginForm ref="loginForm" @on-register="showModal" @on-success-valid="handleSubmit"></LoginForm>
           <!--<p class="login-tip">输入用户名和密码登录</p>-->

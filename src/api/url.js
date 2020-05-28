@@ -3,11 +3,7 @@ export default {
   //登录
   login: "login",
   logout: "logout",
-  register: "register",
-  files: "files",
-  deleteFile: "file/delete",
   upload: "upload",
-  download: "download",
 
 
   //账号管理
@@ -16,4 +12,19 @@ export default {
   deleteAccount: 'deleteAccount',
   updatePwd: 'updatePwd',
   updatePassword: 'updatePassword',
+
+  //商品管理
+  addGoodsType: 'goods/type/',
+  getGoodsType: 'goods/types',
+  getGoods: 'goods/get',
+  addGoods: 'goods/add',
+
+  //订单管理
+  addOrder: 'order/add',
+  getOrder: 'order/get',
+
+  //账单管理
+  getBill: 'bill/get',
+  addBill: 'bill/add',
+  getTransaction: 'transaction/get',
 };

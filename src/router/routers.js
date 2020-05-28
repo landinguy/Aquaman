@@ -58,22 +58,93 @@ export default [
   //   ]
   // },
   {
-    path: '/file',
-    name: 'file',
+    path: '/goods',
+    name: 'goods',
     meta: {
       hide: true,
+      title: '商品管理'
       // access: ['ADMIN']
     },
     component: Main,
     children: [
       {
-        path: '/file',
-        name: 'file',
+        path: '/goods_type',
+        name: 'goods_type',
         meta: {
-          title: '文件管理'
+          title: '商品类别',
+          access: ['ADMIN']
         },
-        component: () => import('@/components/file/Info')
+        component: () => import('@/components/goods/type/Info')
+      },
+      {
+        path: '/goods_list',
+        name: 'goods_list',
+        meta: {
+          title: '商品列表'
+        },
+        component: () => import('@/components/goods/Info')
       }
     ]
-  }
+  },
+  {
+    path: '/order',
+    name: 'order',
+    meta: {
+      hide: true,
+      title: '订单管理'
+      // access: ['ADMIN']
+    },
+    component: Main,
+    children: [
+      {
+        path: '/order_list',
+        name: 'order_list',
+        meta: {
+          title: '订单列表'
+        },
+        component: () => import('@/components/order/Info')
+      }
+    ]
+  },
+  {
+    path: '/transaction',
+    name: 'transaction',
+    meta: {
+      hide: true,
+      title: '交易管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/transaction_info',
+        name: 'transaction_info',
+        meta: {
+          title: '交易管理'
+        },
+        component: () => import('@/components/transaction/Info')
+      }
+    ]
+  },
+  {
+    path: '/bill',
+    name: 'bil',
+    meta: {
+      hide: true,
+      title: '账单管理',
+      access: ['ADMIN']
+    },
+    component: Main,
+    children: [
+      {
+        path: '/bill_list',
+        name: 'bill_list',
+        meta: {
+          title: '账单管理'
+        },
+        component: () => import('@/components/bill/Info')
+      }
+    ]
+  },
+
+
 ]
