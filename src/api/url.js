@@ -18,6 +18,7 @@ export default {
   getGoodsType: 'goods/types',
   getGoods: 'goods/get',
   addGoods: 'goods/add',
+  deleteGoods: 'goods/delete/',
 
   //订单管理
   addOrder: 'order/add',

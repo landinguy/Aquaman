@@ -23,9 +23,10 @@
     <div style="margin-top: 16px">
       <div class="goods">
         <template v-for="item in tableData">
-          <Card style="width: 200px">
+          <Card style="width: 200px;">
             <Button type="ghost" shape="circle" icon="plus" size="small" @click="onSelectGoods(item.id)"/>
-            <div style="text-align:center">
+            <Button type="error" shape="circle" icon="minus" size="small" v-if="roleId==='ADMIN'" @click="deleteGoods(item.id)"/>
+            <div style="text-align:center;margin-top:16px">
               <img :src="item.image">
               <h5>{{item.name}}</h5>
             </div>
@@ -62,6 +63,28 @@
     },
     components: {Add, Order},
     methods: {
+      deleteGoods(id) {
+        this.$Modal.confirm({
+          title: '删除',
+          content: '确认删除该商品？',
+          onOk: () => {
+            $get(url.deleteGoods + id, {}).then(res => {
+              const {code, msg} = res;
+              if (code === 0) {
+                this.$Message.success({
+                  content: '已删除',
+                  duration: 1,
+                  onClose: () => {
+                    this.search();
+                  }
+                });
+              } else {
+                this.$Message.error(msg);
+              }
+            })
+          }
+        })
+      },
       clearGoods() {
         this.goodsIds.clear();
         this.number = 0;
@@ -108,9 +131,11 @@
     mounted() {
       this.getTypes();
       this.search();
-    },
+    }
+    ,
     computed: {
-      ...mapGetters(['accountId', 'roleId']),
+      ...
+        mapGetters(['accountId', 'roleId']),
     }
   }
 </script>
