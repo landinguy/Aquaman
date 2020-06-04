@@ -34,6 +34,8 @@
 <script>
   import url from '@/api/url'
   import baseUrl from "@/libs/url"
+  import {handleSpinCustom} from "@/libs/util"
+  import {Spin} from 'iview'
 
   export default {
     name: 'Add',
@@ -52,6 +54,7 @@
     },
     methods: {
       handleSuccess(res, file) {
+        Spin.hide();
         const {code, msg} = res;
         if (code === 0) {
           this.$Message.success({
@@ -74,6 +77,7 @@
         //   this.$Message.error('请上传txt,jpg文件');
         //   return false;
         // }
+        handleSpinCustom();
         this.formData.uid = this.$parent.accountId;
         if (this.$refs.upload.fileList.length > 0) {
           this.$refs.upload.clearFiles();
