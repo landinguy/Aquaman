@@ -8,14 +8,13 @@
         <Form ref="form" :model="formData" :rules="formValidate" :label-width="100">
           <FormItem label="加密方式" prop="encryption_type">
             <Select v-model="formData.encryption_type">
-              <Option value="1">Base64</Option>
-              <Option value="2">AES</Option>
+              <Option value="1">算法1</Option>
+              <Option value="2">算法2</Option>
             </Select>
           </FormItem>
           <FormItem label="上传文件">
             <Upload ref="upload"
                     :action="uploadUrl"
-                    :format="['txt','jpg']"
                     :show-upload-list="false"
                     :before-upload="handleBeforeUpload"
                     :on-success="handleSuccess"
@@ -68,13 +67,13 @@
         }
       },
       handleBeforeUpload(file) {
-        let index = file.name.lastIndexOf(".");
-        let type = file.name.substring(index + 1);
-        let arr = ['txt', 'jpg'];
-        if (arr.indexOf(type.toLowerCase()) === -1) {
-          this.$Message.error('请上传txt,jpg文件');
-          return false;
-        }
+        // let index = file.name.lastIndexOf(".");
+        // let type = file.name.substring(index + 1);
+        // let arr = ['txt', 'jpg'];
+        // if (arr.indexOf(type.toLowerCase()) === -1) {
+        //   this.$Message.error('请上传txt,jpg文件');
+        //   return false;
+        // }
         this.formData.uid = this.$parent.accountId;
         if (this.$refs.upload.fileList.length > 0) {
           this.$refs.upload.clearFiles();

@@ -105,7 +105,7 @@
             title: '加密方式', key: 'encryption_type', align: 'center', ellipsis: true, minWidth: 80,
             render: (h, params) => {
               let type = params.row.encryption_type;
-              return showTip(h, type === 1 ? 'Base64' : 'AES')
+              return showTip(h, type === 1 ? '算法1' : '算法2')
             }
           },
           {
