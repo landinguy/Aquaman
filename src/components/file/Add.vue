@@ -8,8 +8,8 @@
         <Form ref="form" :model="formData" :rules="formValidate" :label-width="100">
           <FormItem label="加密方式" prop="encryption_type">
             <Select v-model="formData.encryption_type">
-              <Option value="1">算法1</Option>
-              <Option value="2">算法2</Option>
+              <Option value="1">Base64</Option>
+              <Option value="2">AES</Option>
             </Select>
           </FormItem>
           <FormItem label="上传文件">
