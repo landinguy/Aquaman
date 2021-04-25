@@ -1,7 +1,7 @@
 <template>
   <div class="bg">
     <div class="welcome-div">
-      <span class="text">{{accountNickname}}，您好！  欢迎使用文件管理系统 ~</span>
+      <span class="text">{{accountNickname}}，您好！  欢迎使用农资电商系统 ~</span>
     </div>
 
     <div style="margin-top: 32px">

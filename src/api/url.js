@@ -3,14 +3,11 @@ export default {
   //登录
   login: "login",
   logout: "logout",
-  register: "register",
-  files: "files",
-  deleteFile: "file/delete",
-  upload: "upload",
-  download: "download",
 
+  //用户管理
+  register: "/user/register",
 
-  //账号管理
+  //客户管理
   addAccount: 'addAccount',
   getAccount: 'getAccount',
   deleteAccount: 'deleteAccount',

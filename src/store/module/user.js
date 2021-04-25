@@ -75,12 +75,11 @@ export default {
         }).then(res => {
           let data = res.data;
           if (data && data.code === 0) {
-            const {uid, username, role, phone, email} = data.data;
+            const {uid, username, role, phone} = data.data;
             commit('setAccountId', uid);
             commit('setAccountNickname', username);
             commit('setRoleId', role);
             commit('setPhone', phone);
-            commit('setEmail', email);
             resolve(res)
           } else {
             Message.error(data.msg);
