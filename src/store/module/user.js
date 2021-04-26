@@ -5,8 +5,8 @@ export default {
   state: {
     accountId: '',
     accountNumber: '',
-    accountNickname: '',
-    roleId: '',
+    username: '',
+    role: '',
     access: "",
     phone: "",
     email: "",
@@ -20,17 +20,18 @@ export default {
       state.accountNumber = accountNumber
       sessionStorage.setItem("accountNumber", accountNumber);
     },
-    setAccountNickname(state, accountNickname) {
-      state.accountNickname = accountNickname;
-      sessionStorage.setItem("accountNickname", accountNickname);
+    setUsername(state, username) {
+      state.username = username;
+      sessionStorage.setItem("username", username);
     },
-    setRoleId(state, roleId) {
-      state.roleId = roleId;
-      sessionStorage.setItem("roleId", roleId);
-      state.access = roleId;
+    setRole(state, role) {
+      state.role = role;
+      sessionStorage.setItem("role", role);
+      state.access = role;
     },
     setPhone(state, phone) {
       state.phone = phone;
+      sessionStorage.setItem("phone", phone)
     },
     setEmail(state, email) {
       state.email = email;
@@ -45,40 +46,40 @@ export default {
       state.accountNumber = state.accountNumber;
       return sessionStorage.getItem("accountNumber")
     },
-    roleId: state => {
-      state.roleId = state.roleId;
-      state.access = sessionStorage.getItem("roleId");
-      return sessionStorage.getItem("roleId")
+    role: state => {
+      state.role = state.role;
+      state.access = sessionStorage.getItem("role");
+      return sessionStorage.getItem("role")
     },
-    accountNickname: state => {
-      state.accountNickname = state.accountNickname;
-      return sessionStorage.getItem("accountNickname")
+    username: state => {
+      state.username = state.username;
+      return sessionStorage.getItem("username")
     },
     accessToken: state => {
       state.accessToken = state.accessToken;
       return sessionStorage.getItem("accessToken")
     },
-    phone: state => state.phone,
+    phone: state => {
+      state.phone = state.phone
+      return sessionStorage.getItem("phone")
+    },
     email: state => state.email
   },
 
   actions: {
-    updateNickName({commit}, {accountNickname}) {
-      commit('setAccountNickname', accountNickname);
+    updateNickName({commit}, {username}) {
+      commit('setUsername', username);
     },
     // 登录
     handleLogin({commit}, {username, password}) {
       return new Promise((resolve, reject) => {
-        login({
-          username,
-          password
-        }).then(res => {
+        login({username, password}).then(res => {
           let data = res.data;
           if (data && data.code === 0) {
             const {uid, username, role, phone} = data.data;
             commit('setAccountId', uid);
-            commit('setAccountNickname', username);
-            commit('setRoleId', role);
+            commit('setUsername', username);
+            commit('setRole', role);
             commit('setPhone', phone);
             resolve(res)
           } else {
@@ -93,8 +94,9 @@ export default {
       return new Promise((resolve, reject) => {
         logout().then(res => {
           sessionStorage.removeItem('accountId');
-          sessionStorage.removeItem('accountNickname');
-          sessionStorage.removeItem('roleId');
+          sessionStorage.removeItem('username');
+          sessionStorage.removeItem('role');
+          sessionStorage.removeItem('phone');
           resolve(res)
         }).catch(err => reject(err))
       })

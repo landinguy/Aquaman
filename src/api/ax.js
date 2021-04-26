@@ -26,7 +26,7 @@ export const post = (url, data) => {
   })
 }
 
-export const get = (url, data) => {
+export const get = (url, data=null) => {
   return new Promise((resolve, reject) => {
     send(url, "get", data).then(res => {
       resolve(res)

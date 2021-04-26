@@ -38,28 +38,9 @@ export default [
       }
     ]
   },
-  // {
-  //   path: '/account',
-  //   name: 'account',
-  //   meta: {
-  //     hide: true,
-  //     access: ['ADMIN']
-  //   },
-  //   component: Main,
-  //   children: [
-  //     {
-  //       path: '/account',
-  //       name: 'account',
-  //       meta: {
-  //         title: '用户管理'
-  //       },
-  //       component: () => import('@/components/account/Info')
-  //     }
-  //   ]
-  // },
   {
-    path: '/file',
-    name: 'file',
+    path: '/account',
+    name: 'account',
     meta: {
       hide: true,
       // access: ['ADMIN']
@@ -67,13 +48,51 @@ export default [
     component: Main,
     children: [
       {
-        path: '/file',
-        name: 'file',
+        path: '/account',
+        name: 'account',
         meta: {
-          title: '文件管理'
+          title: '用户管理'
         },
-        component: () => import('@/components/file/Info')
+        component: () => import('@/components/account/Info')
       }
     ]
-  }
+  },
+  {
+    path: '/goods',
+    name: 'goods',
+    meta: {
+      hide: true,
+      // access: ['ADMIN']
+    },
+    component: Main,
+    children: [
+      {
+        path: '/goods',
+        name: 'goods',
+        meta: {
+          title: '商品管理'
+        },
+        component: () => import('@/components/goods/Info')
+      }
+    ]
+  },
+  // {
+  //   path: '/file',
+  //   name: 'file',
+  //   meta: {
+  //     hide: true,
+  //     // access: ['ADMIN']
+  //   },
+  //   component: Main,
+  //   children: [
+  //     {
+  //       path: '/file',
+  //       name: 'file',
+  //       meta: {
+  //         title: '文件管理'
+  //       },
+  //       component: () => import('@/components/file/Info')
+  //     }
+  //   ]
+  // }
 ]

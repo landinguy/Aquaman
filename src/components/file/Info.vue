@@ -77,7 +77,7 @@
       this.search();
     },
     computed: {
-      ...mapGetters(['accountId', 'roleId']),
+      ...mapGetters(['accountId', 'role']),
       columns() {
         const columns = [
           {
@@ -140,7 +140,7 @@
                 }
               }, '删除');
               const op = [];
-              // if (this.roleId === 'ADMIN' || this.roleId === 'TEACHER' || this.roleId === 'COMPANY') {
+              // if (this.role === 'ADMIN' || this.role === 'TEACHER' || this.role === 'COMPANY') {
               op.push(download);
               op.push(share);
               op.push(del);
@@ -149,7 +149,7 @@
             }
           }
         ];
-        // if (this.roleId === 'STUDENT' || this.roleId === 'INTERVIEWER') {
+        // if (this.role === 'STUDENT' || this.role === 'INTERVIEWER') {
         //   columns.splice(6, 1)
         // }
         return columns;

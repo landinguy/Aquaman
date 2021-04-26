@@ -13,7 +13,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   iView.LoadingBar.start();
   let accountId = sessionStorage.getItem("accountId");
-  if (to.name != "login" && accountId == null) {
+  if (to.name !== "login" && accountId == null) {
     next({replace: true, name: 'login'})
     iView.LoadingBar.finish()
   } else {

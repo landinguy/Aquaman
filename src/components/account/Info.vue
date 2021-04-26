@@ -72,10 +72,10 @@
       }
     },
     mounted() {
-      this.search()
+      // this.search()
     },
     computed: {
-      ...mapGetters(['accountId', 'roleId']),
+      ...mapGetters(['accountId', 'role']),
       columns() {
         const columns = [
           {
@@ -171,7 +171,7 @@
             }
           }
         ];
-        // if (this.roleId != 'ADMIN') {
+        // if (this.role != 'ADMIN') {
         //   columns.splice(7, 1)
         // }
         return columns;
@@ -185,28 +185,5 @@
     width: 100%;
     height: 100%;
     padding: 32px;
-  }
-
-  .search-div {
-    display: flex;
-    justify-content: left;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
-
-    &-item {
-      margin-bottom: 16px;
-    }
-  }
-
-  label {
-    margin-right: 8px;
-    font-weight: bold;
-    display: inline-block;
-  }
-
-  .width {
-    width: 160px;
-    margin-right: 32px;
   }
 </style>

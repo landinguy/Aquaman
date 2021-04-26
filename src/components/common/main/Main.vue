@@ -4,7 +4,7 @@
 
 
     <div style="height: 64px;background-color: #495060;">
-      <span class="name">农资电商系统</span>
+      <span class="name">Demo</span>
       <div style="float: right;margin-top: 16px">
         <user style="float: right;"/>
       </div>
