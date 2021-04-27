@@ -76,9 +76,28 @@ export default [
       }
     ]
   },
+  {
+    path: '/purchase',
+    name: 'purchase',
+    meta: {
+      hide: true,
+      // access: ['ADMIN']
+    },
+    component: Main,
+    children: [
+      {
+        path: '/purchase',
+        name: 'purchase',
+        meta: {
+          title: '采购管理'
+        },
+        component: () => import('@/components/purchase/Info')
+      }
+    ]
+  },
   // {
-  //   path: '/file',
-  //   name: 'file',
+  //   path: '/storage',
+  //   name: 'storage',
   //   meta: {
   //     hide: true,
   //     // access: ['ADMIN']
@@ -86,13 +105,33 @@ export default [
   //   component: Main,
   //   children: [
   //     {
-  //       path: '/file',
-  //       name: 'file',
+  //       path: '/storage',
+  //       name: 'storage',
   //       meta: {
-  //         title: '文件管理'
+  //         title: '仓储管理'
   //       },
-  //       component: () => import('@/components/file/Info')
+  //       component: () => import('@/components/storage/Info')
   //     }
   //   ]
-  // }
+  // },
+  // {
+  //   path: '/sale',
+  //   name: 'sale',
+  //   meta: {
+  //     hide: true,
+  //     // access: ['ADMIN']
+  //   },
+  //   component: Main,
+  //   children: [
+  //     {
+  //       path: '/sale',
+  //       name: 'sale',
+  //       meta: {
+  //         title: '销售管理'
+  //       },
+  //       component: () => import('@/components/sale/Info')
+  //     }
+  //   ]
+  // },
+
 ]

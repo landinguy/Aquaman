@@ -1,4 +1,4 @@
-import {login, logout} from '@/api/user'
+import userApi from '@/api/user'
 import {Message} from 'iview'
 
 export default {
@@ -73,17 +73,17 @@ export default {
     // 登录
     handleLogin({commit}, {username, password}) {
       return new Promise((resolve, reject) => {
-        login({username, password}).then(res => {
-          let data = res.data;
-          if (data && data.code === 0) {
-            const {uid, username, role, phone} = data.data;
+        userApi.login({username, password}).then(res => {
+          const {code, msg, data} = res
+          if (code === 0) {
+            const {uid, username, role, phone} = data;
             commit('setAccountId', uid);
             commit('setUsername', username);
             commit('setRole', role);
             commit('setPhone', phone);
             resolve(res)
           } else {
-            Message.error(data.msg);
+            Message.error(msg);
             reject(res)
           }
         }).catch(err => reject(err))
@@ -92,7 +92,7 @@ export default {
     // 退出登录
     handleLogOut({state, commit}) {
       return new Promise((resolve, reject) => {
-        logout().then(res => {
+        userApi.logout().then(res => {
           sessionStorage.removeItem('accountId');
           sessionStorage.removeItem('username');
           sessionStorage.removeItem('role');

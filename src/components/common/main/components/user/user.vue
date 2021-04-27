@@ -13,7 +13,7 @@
         </div>
       </Button>
       <DropdownMenu slot="list">
-<!--        <DropdownItem name="password">修改密码</DropdownItem>-->
+        <!--        <DropdownItem name="password">修改密码</DropdownItem>-->
         <DropdownItem name="logout">退出登录</DropdownItem>
       </DropdownMenu>
     </Dropdown>
@@ -47,7 +47,7 @@
   import {mapActions, mapGetters} from 'vuex'
   import user_icon from '@/assets/images/user.png'
   import {$get} from "@/api/ax"
-  import url from '@/api/url'
+
 
   export default {
     name: 'User',
@@ -69,7 +69,7 @@
         switch (name) {
           case 'logout':
             this.handleLogOut().then(res => {
-              if (res.status == 200) this.$router.push({name: 'login'});
+              if (res.code === 0) this.$router.push({name: 'login'});
             }).catch(err => console.log(err));
             break;
           case 'password':

@@ -26,16 +26,14 @@
       <Table stripe border :columns="columns" :data="tableData"/>
       <Page :total="total" show-total show-elevator @on-change="changePage" style="margin-top: 16px"/>
     </div>
-    <Add ref="AddVue"/>
-    <UpdatePwd ref="UpdatePwdVue"/>
+    <Add ref="AddVue" :goods-type-data="goodsTypeData"/>
   </div>
 </template>
 <script>
   import {mapGetters} from 'vuex'
-  import {showTip} from '@/libs/util'
-  import {ROLE} from '@/libs/constant'
-  import userApi from '@/api/user'
-  import UpdatePwd from "./UpdatePwd"
+  import {showTip, timestampToTime} from '@/libs/util'
+  import workApi from '@/api/work'
+  import goodsApi from '@/api/goods'
   import Add from "./Add"
 
   export default {
@@ -48,10 +46,11 @@
           pageNo: 1, pageSize: 10
         },
         tableData: [],
-        total: 0
+        total: 0,
+        goodsTypeData: []
       }
     },
-    components: {UpdatePwd, Add},
+    components: {Add},
     methods: {
       clear() {
         this.params = {
@@ -68,7 +67,7 @@
         this.getData();
       },
       getData() {
-        userApi.getUser(this.params).then(res => {
+        workApi.getPurchaseDetail(this.params).then(res => {
           const {total, list} = res.data;
           this.tableData = list;
           this.total = total;
@@ -76,34 +75,48 @@
       },
       showModal() {
         this.$refs.AddVue.showModal(null);
-      }
+      },
+      getGoodsType() {
+        goodsApi.getGoodsType().then(res => {
+          this.goodsTypeData = res.data
+        }).finally(err => console.log(err))
+      },
     },
     mounted() {
-      this.search()
+      this.search();
+      this.getGoodsType();
     },
     computed: {
       ...mapGetters(['accountId', 'role']),
       columns() {
         const columns = [
           {
-            title: '序号', type: 'index', width: 80, align: 'center'
+            title: '商品名', key: 'goodsName', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.goodsName)
           },
           {
-            title: '用户名', key: 'username', align: 'center', ellipsis: true, minWidth: 80,
-            render: (h, params) => showTip(h, params.row.username)
+            title: '商品类别', key: 'goodsType', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.goodsType)
           },
           {
-            title: '角色', key: 'role', align: 'center', ellipsis: true, minWidth: 80,
-            render: (h, params) => {
-              const {role} = params.row;
-              const text = role === ROLE.admin ? '管理员' : role === ROLE.customer ? '顾客' :
-                role === ROLE.buyer ? '采购人员' : role === ROLE.warehouseman ? '仓储人员' : '销售人员';
-              return showTip(h, text);
-            }
+            title: '采购数量', key: 'purchaseNumber', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.purchaseNumber)
           },
           {
-            title: '手机号', key: 'phoneNumber', align: 'center', ellipsis: true, minWidth: 80,
-            render: (h, params) => showTip(h, params.row.phoneNumber)
+            title: '生产日期', key: 'productionDate', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.productionDate)
+          },
+          {
+            title: '采购日期', key: 'date', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, timestampToTime(params.row.date))
+          },
+          {
+            title: '厂家地址', key: 'manufacturerAddress', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.manufacturerAddress)
+          },
+          {
+            title: '厂家联系方式', key: 'manufacturerPhone', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.manufacturerPhone)
           },
           // {
           // title: '操作', align: 'center', width: 150,

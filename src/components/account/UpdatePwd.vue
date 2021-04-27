@@ -19,7 +19,7 @@
   </div>
 </template>
 <script>
-  import url from '@/api/url'
+
   import {$get} from "@/api/ax"
 
   export default {

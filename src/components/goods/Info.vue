@@ -28,7 +28,7 @@
   import AddGoods from './AddGoods'
   import AddGoodsType from './AddGoodsType'
   import goodsApi from '@/api/goods'
-  import {goodsColumn} from '@/libs/column'
+  import {showTip, timestampToTime} from '@/libs/util'
 
   export default {
     name: 'Info',
@@ -69,21 +69,19 @@
       showAddGoodsModal() {
         this.$refs.AddGoodsVue.showModal(null);
       },
-      // deleteFile(id) {
-      //   $get(url.deleteFile, {id}).then(res => {
-      //     if (res.code === 0) {
-      //       this.$Message.success({
-      //         content: '已删除',
-      //         duration: 1,
-      //         onClose: () => {
-      //           this.search();
-      //         }
-      //       });
-      //     } else {
-      //       this.$Message.error('删除失败');
-      //     }
-      //   });
-      // },
+      deleteGoods(id) {
+        goodsApi.deleteGoods(id).then(res => {
+          if (res.code === 0) {
+            this.$Message.success({
+              content: '已删除',
+              duration: 1,
+              onClose: () => this.search()
+            });
+          } else {
+            this.$Message.error('删除失败');
+          }
+        });
+      },
       // download(id) {
       //   window.open(`${baseUrl.base}${url.download}?fid=${id}`)
       // }
@@ -95,7 +93,67 @@
     computed: {
       ...mapGetters(['accountId', 'role']),
       columns() {
-        return goodsColumn()
+        const columns = [
+          {
+            title: '商品名称', key: 'goodsName', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.goodsName)
+          },
+          {
+            title: '商品类别', key: 'goodsType', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.goodsType)
+          },
+          {
+            title: '商品价格（元）', key: 'price', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, params.row.price)
+          },
+          {
+            title: '创建时间', key: 'date', align: 'center', ellipsis: true, minWidth: 80,
+            render: (h, params) => showTip(h, timestampToTime(params.row.date))
+          },
+          {
+            title: '操作', align: 'center', width: 180,
+            render: (h, params) => {
+              const {id} = params.row;
+              const edit = h('Button', {
+                props: {
+                  type: 'primary',
+                  size: 'small'
+                },
+                style: {
+                  // "margin-left": '5px'
+                },
+                on: {
+                  click: () => {
+                    this.$refs.AddGoodsVue.showModal(params.row);
+                  }
+                }
+              }, '修改');
+              const del = h('Button', {
+                props: {
+                  type: 'error',
+                  size: 'small'
+                },
+                style: {
+                  "margin-left": '5px'
+                },
+                on: {
+                  click: () => {
+                    this.$Modal.confirm({
+                      title: '删除',
+                      content: '确认删除该商品？',
+                      onOk: () => this.deleteGoods(id)
+                    });
+                  }
+                }
+              }, '删除');
+              const op = [];
+              op.push(edit);
+              op.push(del);
+              return h('div', op);
+            }
+          }
+        ];
+        return columns
       }
     }
   }

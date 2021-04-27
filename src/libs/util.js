@@ -294,6 +294,15 @@ export const validateNumber = (rule, value, callback) => {
   }
 };
 
+export const validatePhone = (rule, value, callback) => {
+  let telRegexp = /^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/;
+  if (!telRegexp.test(value)) {
+    callback(new Error("手机号格式不正确"));
+  } else {
+    callback();
+  }
+};
+
 /*** 加载中效果 ***/
 export const handleSpinCustom = () => {
   Spin.show({

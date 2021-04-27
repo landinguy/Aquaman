@@ -27,7 +27,6 @@ const template = `<template>
   </div>
 </template>
 <script>
-  import url from '@/api/url';
   import {post, get} from "@/api/ax";
 
   export default {

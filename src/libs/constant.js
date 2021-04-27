@@ -1,4 +1,4 @@
-export const ROLE_ENUM = {
+export const ROLE = {
   admin: 'ADMIN',
   customer: 'CUSTOMER',
   buyer: 'BUYER',

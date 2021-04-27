@@ -8,7 +8,7 @@ export const send = (url, type, data) => {
   })
 }
 
-export const $get = (url, data) => {
+export const $get = (url, data=null) => {
   return axios.request({
     url: url,
     params: data,
@@ -26,7 +26,7 @@ export const post = (url, data) => {
   })
 }
 
-export const get = (url, data=null) => {
+export const get = (url, data = null) => {
   return new Promise((resolve, reject) => {
     send(url, "get", data).then(res => {
       resolve(res)
@@ -36,7 +36,7 @@ export const get = (url, data=null) => {
   })
 }
 
-export const $del = (url, data) => {
+export const $del = (url, data = null) => {
   return new Promise((resolve, reject) => {
     send(url, "delete", data).then(res => {
       resolve(res)

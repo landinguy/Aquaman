@@ -43,8 +43,7 @@
   </div>
 </template>
 <script>
-  import url from '@/api/url'
-  import {post} from "@/api/ax"
+  import userApi from "@/api/user"
 
   export default {
     name: 'Register',
@@ -98,7 +97,7 @@
               return
             }
             let param = this.formData;
-            post(url.register, param).then(res => {
+            userApi.register(param).then(res => {
               const {code, msg} = res;
               if (code === 0) {
                 this.$Message.success({

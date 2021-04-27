@@ -2,12 +2,12 @@
   <div ref="AddVue">
     <Modal v-model="addModal" width="640">
       <p slot="header" style="text-align:center">
-        <span>{{op==='add'?'添加':'编辑'}}用户</span>
+        <span>{{op==='add'?'添加':'编辑'}}工作人员</span>
       </p>
       <div>
         <Form ref="form" :model="formData" :rules="formValidate" :label-width="80">
-          <FormItem label="账号" prop="username">
-            <Input v-model.trim="formData.username" placeholder="请填写账号"/>
+          <FormItem label="用户名" prop="username">
+            <Input v-model.trim="formData.username" placeholder="请填写用户名"/>
           </FormItem>
           <FormItem label="密码" prop="password" v-if="op==='add'">
             <Input v-model.trim="formData.password" type="password" placeholder="请填写密码"/>
@@ -15,20 +15,19 @@
           <FormItem label="确认密码" prop="confirmPwd" v-if="op==='add'">
             <Input v-model.trim="formData.confirmPwd" type="password" placeholder="请确认密码"/>
           </FormItem>
-          <FormItem label="姓名" prop="nickname">
-            <Input v-model.trim="formData.nickname" placeholder="请填写姓名"/>
-          </FormItem>
           <FormItem label="角色" prop="role">
             <Select v-model="formData.role">
-              <Option value="ADMIN">管理员</Option>
-              <Option value="JGS">交管所人员</Option>
-              <Option value="POLICEMAN">交警</Option>
-              <Option value="USER">车主</Option>
+              <Option :value="ROLE.buyer">采购</Option>
+              <Option :value="ROLE.warehouseman">仓储</Option>
+              <Option :value="ROLE.salesman">销售</Option>
             </Select>
           </FormItem>
-          <FormItem label="邮箱" prop="email">
-            <Input v-model.trim="formData.email" placeholder="请填写邮箱"/>
+          <FormItem label="工号" prop="workNumber">
+            <Input v-model.trim="formData.workNumber" placeholder="请填写工号"/>
           </FormItem>
+          <!--          <FormItem label="邮箱" prop="email">-->
+          <!--            <Input v-model.trim="formData.email" placeholder="请填写邮箱"/>-->
+          <!--          </FormItem>-->
           <FormItem label="手机号" prop="phoneNumber">
             <Input v-model.trim="formData.phoneNumber" placeholder="请填写手机号"/>
           </FormItem>
@@ -42,8 +41,8 @@
   </div>
 </template>
 <script>
-  import url from '@/api/url'
-  import {post, get, put} from "@/api/ax"
+  import userApi from '@/api/user'
+  import {ROLE} from "@/libs/constant";
 
   export default {
     name: 'Add',
@@ -54,26 +53,26 @@
           username: '',
           password: '',
           confirmPwd: '',
-          nickname: '',
           role: '',
           phoneNumber: '',
-          email: '',
+          workNumber: '',
+          // email: '',
         },
         id: '',
         formValidate: {
-          username: [{required: true, message: '请填写账号', trigger: 'blur'}],
+          username: [{required: true, message: '请填写用户名', trigger: 'blur'}],
           password: [{required: true, message: '请填写密码', trigger: 'blur'}],
           confirmPwd: [{required: true, message: '请再次输入密码', trigger: 'blur'}],
-          nickname: [{required: true, message: '请填写姓名', trigger: 'blur'}],
           role: [{required: true, message: '请选择用户角色', trigger: 'change'}],
+          workNumber: [{required: true, message: '请填写工号', trigger: 'blur'}],
           phoneNumber: [
             {required: true, message: '请填写手机号', trigger: 'blur'},
             {validator: this.validatePhone, trigger: 'blur'}
           ],
-          email: [
-            {required: true, message: '请填写邮箱', trigger: 'blur'},
-            {type: 'email', message: '邮箱格式不正确', trigger: 'blur'}
-          ]
+          // email: [
+          //   {required: true, message: '请填写邮箱', trigger: 'blur'},
+          //   {type: 'email', message: '邮箱格式不正确', trigger: 'blur'}
+          // ]
         },
         op: 'add'
       }
@@ -96,7 +95,7 @@
             }
             let param = this.formData;
             param.id = this.id;
-            post(url.addAccount, param).then(res => {
+            userApi.saveUser(param).then(res => {
               this.$Message.success({
                 content: '提交成功',
                 duration: 1,
@@ -114,14 +113,18 @@
       },
       setData(data) {
         if (data) {
-          const {username, nickname, id, role, phoneNumber, email} = data;
+          const {username, id, role, phoneNumber, workNumber} = data;
           this.id = id;
           this.formData.username = username;
-          this.formData.nickname = nickname;
           this.formData.role = role;
+          this.formData.workNumber = workNumber;
           this.formData.phoneNumber = phoneNumber;
-          this.formData.email = email;
         }
+      }
+    },
+    computed: {
+      ROLE() {
+        return ROLE
       }
     },
     watch: {

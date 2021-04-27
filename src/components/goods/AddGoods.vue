@@ -2,7 +2,7 @@
   <div ref="AddGoodsVue">
     <Modal v-model="addModal" width="640">
       <p slot="header" style="text-align:center">
-        <span>添加商品</span>
+        <span>{{op==='add'?'添加':'修改'}}商品</span>
       </p>
       <div>
         <Form ref="form" :model="formData" :rules="formValidate" :label-width="80">
@@ -11,7 +11,7 @@
           </FormItem>
           <FormItem label="商品类别" prop="goodsType">
             <Select v-model="formData.goodsType">
-              <Option v-for="item in goodsTypeData" :value="item.name">{{item.name}}</Option>
+              <Option v-for="item in goodsTypeData" :key="item.id" :value="item.name">{{item.name}}</Option>
             </Select>
           </FormItem>
           <FormItem label="商品价格" prop="price">
@@ -38,7 +38,7 @@
         formData: {
           goodsName: '',
           goodsType: '',
-          price: '',
+          price: ''
         },
         formValidate: {
           goodsName: [{required: true, message: '请填写商品名称', trigger: 'blur'}],
@@ -48,7 +48,9 @@
             {validator: validateNumber, trigger: 'blur'}
           ],
         },
-        goodsTypeData: []
+        goodsTypeData: [],
+        op: 'add',
+        id: ''
       }
     },
     methods: {
@@ -60,9 +62,10 @@
       confirm() {
         this.$refs.form.validate((valid) => {
           if (valid) {
-            const {price} = this.formData;
-            this.formData.price = Number.parseInt(price);
-            goodsApi.addGoods(this.formData).then(res => {
+            let param = this.formData;
+            param.price = Number.parseInt(param.price);
+            param.id = this.id;
+            goodsApi.saveGoods(param).then(res => {
               this.$Message.success({
                 content: '提交成功',
                 duration: 1,
@@ -76,8 +79,21 @@
         })
       },
       showModal(data) {
+        if (data) {
+          this.op = 'edit';
+          this.setData(data);
+        }
         this.getGoodsType();
         this.addModal = true;
+      },
+      setData(data) {
+        if (data) {
+          const {id, goodsName, goodsType, price} = data;
+          this.id = id;
+          this.formData.goodsName = goodsName;
+          this.formData.goodsType = goodsType;
+          this.formData.price = price.toString();
+        }
       },
       cancel() {
         this.addModal = false;
@@ -86,7 +102,9 @@
     watch: {
       addModal(curVal, oldVal) {
         if (!curVal) {
-          this.$refs.form.resetFields()
+          this.$refs.form.resetFields();
+          this.op = 'add';
+          this.id = '';
         }
       }
     }
